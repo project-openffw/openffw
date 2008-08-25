@@ -1,0 +1,45 @@
+\documentclass[10pt,pdftex]{amsart}
+\input{FFW_header}
+
+\title{\FFW Documentation}
+\author[Byfut]{A. Byfut}
+\author[Gedicke]{J. Gedicke}
+\author[G\"unther]{D. G\"unther}
+\author[Reininghaus]{J. Reininghaus}
+\author[Wiedemann]{S. Wiedemann}
+
+\hypersetup{
+pdftitle = {FFW Documentation},
+pdfsubject = {Finite Elements},
+pdfauthor = {A. Byfut, J. Gedicke, D. G\"unther, J. Reininghaus, S. Wiedemann},
+pdfkeywords = {FEM},
+pdfcreator = {pdflatex},
+pdfproducer = {}
+}
+
+
+\begin{document}
+\maketitle
+
+\newpage
+\setcounter{tocdepth}{3}
+\tableofcontents
+\pagebreak
+
+\include{sect_Introduction}
+\include{sect_QuickStart}
+\include{sect_FlowChart}
+\include{sect_ImplementedProblems}
+\include{sect_DataStructures}
+\include{sect_PDESolver}
+\include{sect_MeshGeneration}
+\include{sect_GraphicalOutput}
+\include{sect_Appendix}
+
+
+\nocite{*}
+% \bibliographystyle{amsalpha} %plainnat
+\bibliographystyle{abbrv} %plainnat
+\bibliography{FFW_Bibliography}
+
+\end{document}
