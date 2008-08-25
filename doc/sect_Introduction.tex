@@ -1,0 +1,37 @@
+\section{Introduction}
+
+\noindent This document describes how to use and extend the \textbf{F}inite
+Element \textbf{F}rame\textbf{W}ork, from here on referred to as
+\FFW. The goal of this software package is to provide a tool which presents 
+various methods in $2$D in a reference implementation, and to provide a platform for 
+future research and development. The target audience consists of students and 
+researchers in the field of mathematical finite element research. Therefore, 
+the \FFW provides mechanisms for interpreting and visualizing the numerical results, 
+and a clean and readable implementation is preferred over performance. Following 
+these design goals we have chosen the MATLAB programming language. 
+
+\bigskip
+
+\noindent The \FFW currently features conforming, nonconforming and mixed methods for general 
+linear elliptic, and elastic partial differential equations (PDE). The complexity
+of the methods ranges from basic linear discretizations for scalar elliptic problems 
+to a mixed higher order, locking free discretization for elasticity problems.
+
+\bigskip
+
+\noindent An edge oriented mesh refinement that produces shape regular, nested triangulations with 
+no hanging nodes is included in this package. This algorithm is used for local mesh
+refinement guided by reliable and efficient residual based error estimators.
+
+\bigskip
+
+\noindent To avoid data redundancy, a global structure containing all computed data, 
+including complete mesh information is maintained. Furthermore, this structure 
+is used to analyze and to debug methods and to visualize the results. 
+
+\bigskip
+
+\noindent New methods can be verified by analytic model problems which are created automatically using the 
+Symbolic Toolbox. Fast and precise numerical Gaussian integration routines of arbitrary order
+are included.
+

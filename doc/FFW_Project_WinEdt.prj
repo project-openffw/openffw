@@ -1,0 +1,123 @@
+272 Patch Control
+
+0
+0
+1
+FFW_MAIN.tex
+25
+21
+14
+
+
+
+
+
+
+sect_Introduction.tex
+TeX
+1060859 0 -1 1 -1 36 110 145 1006 501 0 102 34 -1 -1 0 0 22 -1 -1 22 1 0 36 -1   0
+sect_MeshGeneration.tex
+TeX
+1060859 2 -1 1 -1 8 66 87 962 443 0 86 0 -1 -1 0 0 27 -1 -1 27 1 0 8 -1   0
+sect_MeshGeneration_closure.tex
+TeX
+1060858 2 1 2 1 12 88 116 984 472 0 110 17 -1 -1 0 0 1 0 0 1 1 0 12 1   0
+sect_MeshGeneration_mark.tex
+TeX
+1060850 2 0 2 0 12 0 0 918 366 0 110 0 -1 -1 0 0 1 0 0 1 1 0 12 0   0
+sect_MeshGeneration_refine.tex
+TeX
+1060859 2 -1 1 -1 11 22 29 940 395 0 110 0 -1 -1 0 0 0 -1 -1 0 1 0 11 -1   0
+sect_ImplementedProblems_FEM4Elasticity.tex
+TeX
+1060859 2 -1 1 -1 11 132 174 897 600 0 110 0 -1 -1 0 0 31 -1 -1 31 1 0 11 -1   0
+sect_ImplementedProblems.tex
+TeX
+1060859 2 -1 1 -1 8 110 145 875 571 0 86 0 -1 -1 0 0 30 -1 -1 30 1 0 8 -1   0
+sect_ImplementedProblems_FEM4Eigenvalue.tex
+TeX
+1060859 2 -1 1 -1 11 0 0 765 426 0 110 0 -1 -1 0 0 31 -1 -1 31 1 0 11 -1   0
+sect_ImplementedProblems_FEM4Elliptic.tex
+TeX
+1060859 2 -1 1 -1 11 0 0 765 426 0 110 0 -1 -1 0 0 0 -1 -1 0 1 0 11 -1   0
+FFW_MAIN.tex
+TeX
+135278578 0 32 1 29 35 44 58 962 424 0 294 289 -1 -1 0 0 36 0 0 36 1 0 35 29   0
+FFW_header.tex
+TeX:DE
+1060858 0 26 1 24 23 66 87 962 443 0 198 306 -1 -1 0 0 32 0 0 32 1 0 23 24   0
+sect_QuickStart.tex
+TeX
+17838075 7 -1 131 -1 170 132 174 1028 530 0 334 68 -1 -1 0 0 21 -1 -1 21 1 0 170 -1   0
+sect_QuickStart_gettingStarted.tex
+TeX
+1060859 0 -1 4029 -1 4188 0 0 743 416 0 22 459 -1 -1 0 0 41 -1 -1 41 1 0 4188 -1   0
+sect_QuickStart_problemDefinition.tex
+TeX
+1060859 0 -1 1823 -1 1823 66 87 831 513 0 278 357 -1 -1 0 0 31 -1 -1 31 1 0 1823 -1   0
+C:\Dokumente und Einstellungen\Andreas Byfut\Eigene Dateien\Eigene Dokumente\Arbeit - Carstensen\scripting\25 - CHA - dG FEM\ver 5\Bearbeitung\jaccsh-dg.tex
+TeX:UNIX
+269594619 0 -1 0 -1 0 132 174 905 600 0 22 0 -1 -1 0 0 28 -1 -1 28 1 0 0 -1   0
+sect_QuickStart_howToOwnProblem.tex
+TeX:UNIX
+1159163 0 -1 1491 -1 1490 88 116 853 542 0 814 204 -1 -1 0 0 3615 -1 -1 3615 1 0 1490 -1   0
+sect_Appendix.tex
+TeX
+1060859 2 -1 1 -1 8 110 145 1006 501 0 86 0 -1 -1 0 0 18 -1 -1 18 1 0 8 -1   0
+sect_Appendix_Integration.tex
+TeX
+1060859 0 -1 1 -1 440 0 0 896 356 0 342 136 -1 -1 0 0 0 -1 -1 0 1 0 440 -1   0
+sect_DataStructures.tex
+TeX
+1060858 2 0 2 0 9 88 116 984 472 0 86 0 -1 -1 0 0 1 1 1 1 1 0 9 0   0
+sect_FlowChart.tex
+TeX
+1060859 0 -1 1652 -1 1651 22 29 918 385 0 414 85 -1 -1 0 0 22 -1 -1 22 1 0 1651 -1   0
+sect_GraphicalOutput.tex
+TeX
+1060859 0 -1 6958 -1 5659 88 116 984 472 0 750 153 -1 -1 0 0 28 -1 -1 28 1 0 5659 -1   0
+C:\Dokumente und Einstellungen\Andreas Byfut\Eigene Dateien\Eigene Dokumente\Arbeit - Carstensen\scripting\13 - CC - MFEM Skript\ver 9\MFEM Skript-TEX\cc4cism_section_02.tex
+TeX
+269496315 1 -1 9484 -1 9503 22 29 787 455 0 310 272 -1 -1 0 0 -1 -1 -1 -1 1 0 9503 -1   0
+C:\Dokumente und Einstellungen\Andreas Byfut\Eigene Dateien\Eigene Dokumente\Arbeit - Carstensen\scripting\13 - CC - MFEM Skript\ver 9\MFEM Skript-TEX\cc4cism_section_01.tex
+TeX
+269496315 0 -1 0 -1 0 0 0 765 426 0 22 0 -1 -1 0 0 -1 -1 -1 -1 1 0 0 -1   0
+C:\Dokumente und Einstellungen\Andreas Byfut\Eigene Dateien\Eigene Dokumente\Arbeit - Carstensen\scripting\13 - CC - MFEM Skript\ver 9\MFEM Skript-TEX\cc4cism_header.tex
+TeX
+269496315 1 -1 399 -1 377 132 174 897 600 0 22 272 -1 -1 0 0 -1 -1 -1 -1 1 0 377 -1   0
+C:\Programme\Officesoftware\WinEdt\WinEdtEx.ini
+DATA:INI
+273678578 0 0 1 0 1 44 58 1055 425 1 78 1 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0   0
+
+*FFW_MAIN.tex
+>
+*FFW_header
+*sect_Introduction
+*sect_QuickStart
+>
+*sect_QuickStart_gettingStarted
+*sect_QuickStart_problemDefinition
+*sect_QuickStart_howToOwnProblem
+<
+*sect_FlowChart
+*sect_ImplementedProblems
+>
+*sect_ImplementedProblems_FEM4Elliptic
+*sect_ImplementedProblems_FEM4Elasticity
+*sect_ImplementedProblems_ProblemDefinition
+*sect_ImplementedProblems_Geometries
+<
+*sect_DataStructures
+*sect_MeshGeneration
+>
+*sect_MeshGeneration_mark
+*sect_MeshGeneration_closure
+*sect_MeshGeneration_refine
+<
+*sect_GraphicalOutput
+*sect_Appendix
+>
+*sect_Appendix_Integration
+<
+*FFW_Bibliography.bib
+<
