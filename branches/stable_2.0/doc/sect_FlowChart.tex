@@ -1,0 +1,71 @@
+\section{Flow Chart}
+\label{sect:FlowChart}
+
+\noindent This Section is devoted to the structure of the \FFW and illustrates to flow of the framework. In Figure~\ref{sect:FlowChart.fig.FFW-flowchart} one can see this structure in a flow chart.
+
+\begin{figure}[ht!]
+\footnotesize
+\begin{equation*}
+\xymatrix@-1eM{
+    *+<2ex>[F]{ \phantom{I}\text{script}\phantom{I} }           \ar@{=>}[r]
+&   *+<2ex>[F]{ \phantom{I}\code{initFFW}\phantom{I} }          \ar@{=>}[r]\ar@{->}[d]
+&   *+<2ex>[F]{ \phantom{I}\code{computeSolution}\phantom{I} }  \ar@{=>}[r] \ar@{->}[d]^{\text{loop}}
+&   *+<2ex>[F]{ \phantom{I}\text{output}\phantom{I} }
+\\
+& *+[F-:<3pt>]{ \code{problemType-init}} \ar@{->}[d]   &  *+[F-:<3pt>]{ \code{afem} }            \ar@{->}[d]
+\\
+&*+[F-:<3pt>]{ \code{pdeSolver-init}} &  *+[F-:<3pt>]{ \code{mark} }            \ar@{->}[d]
+\\
+&& *+[F-:<3pt>]{ \code{refine} }          \ar@{->}[d]
+\\
+&& *+[F-:<3pt>]{ \code{enumerate} }       \ar@{.>}[r] \ar@{->}[d]
+&   *+[F-:<3pt>]{ \code{genericEnumerate} }
+\\
+&& *+[F-:<3pt>]{ \code{createLinSys} }    \ar@{->}[d]
+\\
+&& *+[F-:<3pt>]{ \code{solve} }           \ar@{->}[d]
+\\
+&& *+[F-:<3pt>]{ \code{postProc} }        \ar@{->}[d]
+\\
+&& *+[F-:<3pt>]{ \code{estimate} }        \ar@{->}'l[u] '[uu] [uu]
+}
+\end{equation*}
+\normalsize \caption{Flow chart of the \FFW.}\label{sect:FlowChart.fig.FFW-flowchart}
+\end{figure}
+
+\begin{longtable}{p{0.25\textwidth}p{0.65\textwidth}}
+function name & description\\\hline\\[-1ex]
+
+\text{script} & control script, examples are \code{start\-Scalar}
+                and \code{start\-Elasticity}\\
+\code{initFFW} & sets paths, loads default parameters,
+                 sets supplied parameters and loads problem definition and geometry\\
+\code{problemType-init} & creates method specific
+             function handles, e.g. a function handle to evaluate
+             the discrete solution\\
+\code{pdeSolver-init} & creates finite element space specific
+             function handles, e.g. a function handle to eval the basis functions\\
+\code{computeSolution} & calls \code{afem} as long as some abort criteria defined
+                         in the configuration file, e.g., \code{maxNrDoF},
+                         is not fulfilled and supplies method type specific
+                         function handles, e.g. a function to evaluate
+                         the energy error\\
+\code{afem} & calls \code{mark}, \code{refine}, \code{enumerate},
+              \code{createLinSys}, \code{solve}, \code{postProc} and
+              \code{estimate}\\
+\code{mark} & marks edges and triangles for refinement based on an error
+              estimator (\code{bulk}, \code{max}) with additional edges to
+              maintain shape regularity, or marks all edges (\code{uniform})\\
+\code{refine} & refines the list of edges supplied by mark\\
+\code{enumerate} & calls \code{genericEnumerate} and computes method
+                   specific data structures from the triangulation,
+                   e.g., the number of degrees of freedom\\
+\code{genericEnumerate} & creates useful data structures from the current
+                          triangulation, e.g., normals, tangents, areas\\
+\code{createLinSys} & assembles the global linear system of equations $Ax=b$\\
+\code{solve} & computes $x$\\
+\code{postProc} & post processing of the solution, e.g., separating Lagrange
+                  multipliers form the discrete solution\\
+\code{estimate} & locally estimates the error based on the discrete solution\\
+\text{output} & user specific data evaluation
+\end{longtable}

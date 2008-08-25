@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of elliptic_init</title>
+  <meta name="keywords" content="elliptic_init">
+  <meta name="description" content="initialisations for elliptic pde's">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../../menu.html ffw -->
+<!-- ../menu.html PDEsolvers -->
+<!-- menu.html Elliptic -->
+<h1>elliptic_init
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function p = elliptic_init(p) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> initialisations for elliptic pde's</pre></div>
+
+
+
+
+<h2><a name="_output"></a>OUTPUT <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>p.statics.H1semiError = @<a href="#_sub2" class="code" title="subfunction val = H1semiErrorElliptic(x,y,curElem,lvl,p)">H1semiErrorElliptic</a>;
+p.statics.L2error = @<a href="#_sub1" class="code" title="subfunction val = L2errorElliptic(x,y,curElem,lvl,p)">L2errorElliptic</a>;
+p.statics.sigma_h = @<a href="#_sub3" class="code" title="subfunction val = getSigma_h(x,y,curElem,curKappa,lvl,p)">getSigma_h</a>;
+p.statics.u_h = @<a href="#_sub4" class="code" title="subfunction val = getU_h(x,y,curElem,lvl,p)">getU_h</a>;
+p.statics.gradU_h = @<a href="#_sub5" class="code" title="subfunction val = getGradU_h(x,y,curElem,lvl,p)">getGradU_h</a>;
+p.statics.d2U_h = @<a href="#_sub6" class="code" title="subfunction val = getD2U_h(x,y,curElem,lvl,p)">getD2U_h</a>;
+
+p.statics.H1semiErrorVectorised = @<a href="#_sub8" class="code" title="subfunction val = H1semiErrorEllipticVectorised(x,y,x_ref,y_ref,parts,lvl,p)">H1semiErrorEllipticVectorised</a>;
+p.statics.L2errorVectorised = @<a href="#_sub7" class="code" title="subfunction val = L2errorEllipticVectorised(x,y,x_ref,y_ref,parts,lvl,p)">L2errorEllipticVectorised</a>;
+p.statics.sigma_hVectorised = @<a href="#_sub9" class="code" title="subfunction val = getSigma_hVectorised(x,y,x_ref,y_ref,parts,lvl,p)">getSigma_hVectorised</a>;
+p.statics.u_hVectorised = @<a href="#_sub10" class="code" title="subfunction val = getU_hVectorised(x,y,x_ref,y_ref,parts,lvl,p)">getU_hVectorised</a>;
+p.statics.gradU_hVectorised = @<a href="#_sub11" class="code" title="subfunction val = getGradU_hVectorised(x,y,x_ref,y_ref,parts,lvl,p)">getGradU_hVectorised</a>;
+p.statics.d2U_hVectorised = @<a href="#_sub12" class="code" title="subfunction val = getD2U_hVectorised(x,y,x_ref,y_ref,parts,lvl,p)">getD2U_hVectorised</a>;</pre></div>
+
+
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+
+<li><a href="../../../ffw/helpers/matMul.html" class="code" title="function val = matMul(A,B)">matMul</a>	For given 3-dimensional matrices A ( dim(A) = [n m k] ) and</li>
+</ul>
+
+
+
+
+
+
+<hr><address>Generated on Thu 27-Sep-2007 10:19:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,22 @@
+\subsection{Properties of the meshes}
+\label{sec:Mesh:Properties}
+This subsection lists a few results on the triangulation $\T_\ell$ obtained by \emph{red}-\emph{green}-\emph{blue} refinement under the assumptions on $\T_0$ of subsection~\ref{sec:mesh:input}. The non-elementary proofs can be found in~\cite{CC2004}.\\[1.5ex]
+\indent\textbf{(i) } $\T_\ell$ is a regular triangulation of $\Omega$ into triangles; for each $T\in\T_\ell $ there exists one reference edge $E(T)$ which depends only on $T$ but not on the level $\ell$.\\
+\indent\textbf{(ii) } For each $K\in\T_0$, $\T_\ell|_K:=\{T\in\T_\ell\,|\,T\subseteq K\}$ is the picture under an affine map $\Phi: K\to T_{ref}$ onto the reference triangle $T_{ref}=\textrm{conv}\{(0,0),(0,1),(1,0)\}$ by $\Phi(E(K))=\textrm{conv}\{(0,0),(1,0)\}$ and $\det D\Phi>0$. The triangulation $\widehat{T}_K :=\{\Phi(T): T\in\T,T\subseteq K\}$ of $K$ consists of right isosceles triangles. (A right isosceles triangle results from a square halved along a diagonal.)\\
+\indent\textbf{(iii) }
+The $L^2$ projection onto $V_\ell$ is $H^1$ stable, in the sense that 
+$V_\ell:=\mathcal{P}_1(\T_\ell)$ denotes the piecewise affine space, i.e.
+\begin{align*}
+\mathcal{P}_1(\T_\ell \mathbb{R}^m) &:= \left\{ v\in C^\infty(T;\mathbb{R}^m): v\textrm{ affine on }T \right\},\\
+\mathcal{P}_1(\T_\ell \mathbb{R}^m) &:= \left\{ v\in L^\infty(\Omega;\mathbb{R}^m): \forall T\in\T_\ell, v|_T\in \mathcal{P}_1(T;\mathbb{R}^m) \right\}.
+\end{align*}
+For any $v\in H_0^1(\Omega)$ the $L^2$ projection $\Pi v$ on $V_\ell$ satisfies
+\begin{equation*}
+\norm{\nabla\Pi v}{L^2(\Omega)} \leq C_1\norm{\nabla v}{L^2(\Omega)}\textrm{ and }
+\norm{h^{-1}_\T\Pi v}{L^2(\Omega)} \leq C_2\norm{h^{-1}_\T v}{L^2(\Omega)}.
+\end{equation*}
+The constants $C_1$ and $C_2$ exclusively depend on $\T_0$.\\
+\indent\textbf{(iv) } Approximation property of the $L^2$ projection
+\begin{align*}
+\sum_{T\in\T_\ell} \norm{h_{T}^{-1}(v-\Pi v)}{L^2(T)}^2+\sum_{E\in\E_\ell}\norm{h_{E}^{-1/2}(v-\Pi v)}{L^2(E)}^2 \leq C_3 \norm{\nabla v}{L^2(\Omega)}^2.
+\end{align*}

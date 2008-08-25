@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of P1P1enumerate</title>
+  <meta name="keywords" content="P1P1enumerate">
+  <meta name="description" content="creates all necessarily data for a P1-FE method">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../../../menu.html ffw -->
+<!-- ../../menu.html PDEsolvers -->
+<!-- ../menu.html Elasticity -->
+<!-- menu.html P1-P1-Elasticity -->
+<h1>P1P1enumerate
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function p = P1P1enumerate(p) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> creates all necessarily data for a P1-FE method 
+ in linear elasticity.</pre></div>
+
+
+<h2><a name="_input"></a>INPUT <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>n4e = p.level(end).geom.n4e;
+c4n = p.level(end).geom.c4n;
+nrNodes = p.level(end).nrNodes;
+area4e = p.level(end).enum.area4e;
+Db = p.level(end).geom.Db;</pre></div>
+
+
+<h2><a name="_output"></a>OUTPUT <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>p.level(end).enum.dofU4e = dofU4e;
+p.level(end).enum.grad4e = grad4e;
+p.level(end).enum.freeNodes = freeNodes;
+p.level(end).enum.fixedNodes = fixedNodes;
+p.level(end).nrDoF = nrDoF;</pre></div>
+
+
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+
+<li><a href="../../../../ffw/algorithms/enum/getGrad4e.html" class="code" title="function grad4e = getGrad4e(c4n,n4e,area4e)">getGrad4e</a>	grad4e</li>
+<li><a href="../../../../ffw/algorithms/misc/genericEnumerate.html" class="code" title="function p = genericEnumerate(p)">genericEnumerate</a>	generate the generic data structures</li>
+</ul>
+
+
+
+
+
+
+<hr><address>Generated on Thu 27-Sep-2007 10:19:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

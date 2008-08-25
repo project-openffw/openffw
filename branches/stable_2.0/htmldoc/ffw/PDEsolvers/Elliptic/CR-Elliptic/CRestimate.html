@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CRestimate</title>
+  <meta name="keywords" content="CRestimate">
+  <meta name="description" content="estimate the energy error for a nonconforming CR-FE method">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../../../menu.html ffw -->
+<!-- ../../menu.html PDEsolvers -->
+<!-- ../menu.html Elliptic -->
+<!-- menu.html CR-Elliptic -->
+<h1>CRestimate
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function p = CRestimate(p) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> estimate the energy error for a nonconforming CR-FE method 
+ through computing the oscillations of f, and
+ the jump of the flux.</pre></div>
+
+
+<h2><a name="_input"></a>INPUT <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre><span class="comment">% load discrete solution</span>
+ph = p.level(end).grad4e;
+
+<span class="comment">% problem data</span>
+f = p.problem.f;
+g = p.problem.g;
+
+<span class="comment">% load enumerated data</span>
+e4ed = p.level(end).enum.e4ed;
+NbEd = p.level(end).enum.NbEd;
+length4ed = p.level(end).enum.length4ed;
+area4e = p.level(end).enum.area4e;
+midpoint4e = p.level(end).enum.midPoint4e;
+midPoint4ed = p.level(end).enum.midPoint4ed;
+normals4NbEd = p.level(end).enum.normals4NbEd;</pre></div>
+
+
+<h2><a name="_output"></a>OUTPUT <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>p.level(end).jump4ed = sqrt(jump4ed);
+p.level(end).osc4ed = sqrt(osc4ed);
+p.level(end).etaEd = eta4ed;
+p.level(end).estimatedError = norm(eta4ed,2);</pre></div>
+
+
+
+
+
+
+
+<hr><address>Generated on Thu 27-Sep-2007 10:19:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

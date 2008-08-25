@@ -1,0 +1,234 @@
+\section{PDE solver}
+\label{sect:PDESolver}
+\noindent In this section we give an overview in which way discretization methods are provided in the \FFW. All necessary files are listed and described. An example is used to explain how to implement an own finite element method in the context of the \FFW. To understand the complete data-flow one has to keep in mind that every information, which is computed during the computation, is stored in a structure \code{p}. Each cycle of the AFEM-loop represents here one level. The $k$-th level is stored in \code{p} by \code{p.level(k)}. One can understand the structure \code{p} as a directory tree. All information which belongs to the $k$-th level are then stored in subdirectories, e.g. \code{p.level(k).enum}. The actual level is always addressed by \code{p.level(end)}. Sometimes we will call this the ``last level''.
+\bigskip
+
+\noindent In table~\ref{sect:PDESolver:table:pdeSolver} the implemented finite element methods are described. Each implemented finite element method has the same folder and file structure in the {\FFW\!}.
+
+\medskip
+
+\begin{pcode}
+Folder: .\PDEsolvers\<pdeType>\<pdeSolver>-<pdeType>\
+\end{pcode}
+
+\begin{pcode}
+Files:  <pdeType>init.m
+        <pdeType>enumerate.m
+        <pdeType>createLinSys.m
+        <pdeType>postProc.m        
+        <pdeType>estimate.m
+\end{pcode}
+
+\bigskip
+
+\noindent The different finite element methods are initialized by setting the parameter \code{pdeSolver}
+in the \code{initFFW} function call, refer to Section~\ref{sect:QuickStart:Initialization}.
+\bigskip
+
+\noindent To get a better understanding of what is done in the files above, the necessary files for the $P_1$ finite element method are described in detail below. Those files are located at \path{.\PDEsolvers\Elliptic\P1-Elliptic\}. Every file contains an input block where all necessary information is extracted from the structure \code{p} and an output block where the computed information will be saved in the structure. Reading from and writing to a structure is shown in the following short example:
+
+\bigskip
+
+\noindent Input: \code{A = p.level(k).A;} The matrix $A$ is extracted from \code{p}.
+
+\medskip
+
+\noindent Output: \code{p.level(k).A = A;} The matrix $A$ is stored in \code{p}.
+
+\clearpage
+\begin{table}[!ht]
+\begin{tabular}[h]{l p{10cm}}
+\code{Elliptic} &   \\\hline\\[-1ex]
+
+\code{'P1'} & Conforming $P_1$ finite element method. Solution is piecewise affine and globally continuous.\\
+
+\code{'CR'} & Non-conforming $P_1$ finite element method. Solution is piecewise affine and continuous in the normal directions of the midpoints of edges bit discontinuous in the midpoints in tangential direction. Note that $P^{NC}_1\subseteq H^1(\T)$ but in general $H^1(\Omega)\subset H^1(\T)$.\\
+
+\code{'P2'} & Higher order conforming $P_2$ finite element method using quadratic basis functions.\\
+
+\code{'P3'} & Higher order conforming $P_3$ finite element method using cubic basis functions.\\
+
+\code{'RT0P0'} & Raviart-Thomas mixed finite element method. The gradients are piecewise affine and continuous in their normal component. Note that $RT^0(\T)\subseteq H(\textrm{div};\Omega)$.\\
+
+\\
+\code{Ellasticity} &   \\\hline\\[-1ex]
+\code{'P1P1'} & A standard conforming mixed $P_1-P_1$ finite element method for elasticity problems.\\
+\code{'P1CR'} & A non-conforming and locking free $P_1-P^{NC}_1$ finite element method for elasticity problems.\\
+\code{'AW'} & A mixed, higher order, locking free finite element method for elasticity problems, by Arnold and Winther.\\
+\end{tabular}
+
+\caption{Overview of the implemented finite element methods}\label{sect:PDESolver:table:pdeSolver}
+\end{table}
+
+\subsection{P1init}
+\code{p = P1init(p)}\\
+
+\noindent This function is only called during initialization of the \FFW\!\!.
+It creates the function handles for the evaluation of the basis functions, their gradients and second derivatives.
+
+\begin{longtable}[h]{p{5.5cm}p{6cm}}
+
+\multicolumn{2}{l}{output structure p}\\\hline\\[-1ex]
+
+\code{p.statics.basis} & function handle to basis functions\\
+\\
+\code{p.statics.gradBasis} & function handle to gradient of basis functions\\
+\\
+\code{p.statics.d2Basis} & function handle to second derivatives of basis functions\\
+\end{longtable}
+
+\noindent Furthermore, the integration parameters, controlling up to which polynomial degree integration shall be exact, are set at \code{p.params.integrationDegrees.<variable>}.
+\begin{longtable}[h]{p{5.5cm}p{6cm}}
+\code{<variable>} & Description\\\hline\\[-1ex]
+\code{createLinSys.Rhs} & Degree for right-hand side.\\
+\\
+\code{createLinSys.Neumann} & Degree for Neumann boundary data.\\
+\\
+\code{estimate.jumpTerm} & Degree for jump term of residual-based error estimator.\\
+\\
+\code{estimate.volumeTerm} & Degree for volume term of residual-based error estimator.
+\end{longtable}
+
+
+\subsection{P1enumerate}
+\code{p = P1enumerate(p)}\\
+
+\noindent This function only acts on the last level.
+It creates enumeration data for edges, elements, nodes
+and additional data like the local gradients and the area
+for each element and edge.
+
+\begin{longtable}[h]{p{5.5cm}p{6cm}}
+\multicolumn{2}{l}{needed data in the input structure p}\\\hline\\[-1ex]
+
+\verb+p.level(end).geom.+$\cdots$
+& geometry data for the mesh in the last level\\
+\\
+\verb+p.params.+ \verb+rhsIntegtrateExactDegree+
+& an integer which specifies the exactness of the approximation of the integrals which occur \\
+\\
+\end{longtable}
+
+\begin{longtable}[h]{p{5.5cm}p{6cm}}
+\multicolumn{2}{l}{output structure p}\\\hline\\[-1ex]
+
+\verb+p.level(end).enum.+$\cdots$ & enumeration data for the last mesh\\
+\\
+\verb+p.+$\cdots$ & everything else than the above data is identical to the data of the structure \verb+p+ 
+\end{longtable}
+
+\noindent Using a call like \verb+p = P1enumerate(p)+, the enumerated data is calculated and additionally stored in the given structure
+\verb+p+.
+
+
+%\clearpage
+\subsection{P1createLinSys}
+\code{p = P1createLinSys(p)}\\
+
+\noindent This function only acts on the last level.
+Creates the stiffness matrix and the load vector $b$ for the right hand side.
+
+\begin{longtable}[h]{p{5.5cm}p{6cm}}
+\multicolumn{2}{l}{needed data in the input structure p}\\\hline\\[-1ex]
+
+\verb+p.level(end).enum.+$\cdots$ & enumeration for the mesh in the last level for example  this data is created by the method \verb+P1enumerate+\\
+\\
+\verb+p.level(end).geom.+$\cdots$ & geometry data for the mesh in the last level for example this data is created by the method \verb+p.statics.refine+\\
+\\
+\verb+p.problem.+$\cdots$ & problem data which specifies coefficients in the PDE and the given boundary Values\\
+\\
+\verb+p.params.+ \verb+rhsIntegtrateExactDegree+ & an integer which specifies the exactness of the approximation of the integrals for the right hand side
+\end{longtable}
+
+\begin{longtable}[h]{p{5.5cm}p{6cm}}
+\multicolumn{2}{l}{output structure p}\\\hline\\[-1ex]
+
+\verb+p.level(end).A+ & stiffness matrix for the last level\\
+\\
+\verb+p.level(end).b+ & right hand side for the last level\\
+\\
+\verb+p.level(end).B+ & mass matrix, for future usage\\
+\\
+\verb+p.level(end).x+ & dummy for solution of linear system\\
+\\
+\verb+p.+$\cdots$ & every thing else then the above data is identical to the data of the structure \verb+p+
+\end{longtable}
+
+\noindent Using a call like \verb+p = P1createLinSys(p)+, all data calculated is additionally stored to the structure \verb+p+.
+
+
+\subsection{P1postProc}
+\code{p = P1postproc(p)}\\
+
+\noindent This function only acts on the last level.
+This function computes additional data out of the solution,
+of the linear system.
+
+\begin{longtable}[h]{p{5.5cm}p{6cm}}
+
+\multicolumn{2}{l}{needed Data in the input structure p}\\\hline\\[-1ex]
+
+\verb+p.level(end).x+ & solution from the linear system in last level\\
+\\
+\verb+p.problem.enum.+$\cdots$ & enumeration data of the last mesh
+\end{longtable}
+
+\begin{longtable}[h]{p{5.5cm}p{6cm}}
+
+\multicolumn{2}{l}{output structure p}\\\hline\\[-1ex]
+
+\verb+p.level(end).u+
+& double valued $m$ by 1 vector with $m$=number number of nodes represents the galerkin approximation\\
+\\
+\verb+p.level(end).u4e+
+& double valued $m$ by 3 matrix with $m$=number number of elements represents local values of $u_h$ for each element\\
+\\
+\verb+p.level(end).gradU4e+
+& double valued $m$ by 2 matrix which represents the gradient of $u_h$ on each element\\
+\\
+\verb+p.+$\cdots$ & every thing else then the above data is identical to the data of the structure \verb+p+
+\end{longtable}
+
+\noindent Using a call like \verb+p = P1postproc(p)+, all data calculated is additionally stored to the structure \verb+p+.
+
+
+
+\subsection{P1estimate}
+\code{p = P1estimate(p)}\\
+
+\noindent This function only acts on the last level.
+This function computes a residual based error estimator.
+The resulting data is usually used by the marking algorithm.
+
+\begin{longtable}[h]{p{5.5cm}p{6cm}}
+
+\multicolumn{2}{l}{needed data in the input structure p}\\\hline\\[-1ex]
+
+\verb+p.level(end).u4e.+
+&data of the solution which is computed by postprocessing with \verb+P1postproc+ \\
+\\
+\verb+p.problem.+$\cdots$
+&problem data which specifies the PDE\\
+\\
+\verb+p.level(end).geom.+$\cdots$
+&geometry data for the mesh in the last level\\
+\\
+\verb+p.level(end).enum.+$\cdots$
+&enumeration data for the mesh in the last level\\
+\\
+\end{longtable}
+
+\begin{longtable}[h]{p{5.5cm}p{6cm}}
+\multicolumn{2}{l}{output structure p}\\\hline\\[-1ex]
+
+\verb+p.level(end).etaT+$\cdots$ 
+& double valued $m$ by 1 vector with $m$=number of elements elementwise approximation of local energy error\\
+\\
+\verb+p.level(end).estimatedError+$\cdots$
+& one number which represents the approximation of the overall energy error in the whole domain\\
+\\
+\verb+p.+$\cdots$
+& every thing else then the above data is identical to the data of the structure \verb+p+
+\end{longtable}
+
+\noindent Using a call like \verb+p = P1estimate(p)+, all data calculated is additionally stored to the structure \verb+p+.
