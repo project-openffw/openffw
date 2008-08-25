@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of show</title>
+  <meta name="keywords" content="show">
+  <meta name="description" content="graphical output">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../menu.html ffw -->
+<!-- menu.html evaluation -->
+<h1>show
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function p = show(func,p,curLvl) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> graphical output
+ show is the main interface for graphical output in the ffw.
+
+ input:
+ func   - string that specifies the output
+ p      - structure of the FFW
+ curLvl - optional specifies which level to use, i.e. for the displacement
+          plot
+
+ examples:  
+ displacement plot: p = show('drawU',p);
+
+ mesh plot        : p = show('drawGrid',p);
+
+ convergence history for the estimated error:
+   p = show('drawError_estimatedError',p);
+
+ convergence history for the energy error
+   p = show('drawError_H1semiError',p);
+
+ convergence history for the L^2 error
+   p = show('drawError_L2error',p);</pre></div>
+
+
+<h2><a name="_input"></a>INPUT <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>mark = p.params.mark;
+problem = p.params.problem.name;
+pdeSolver = p.params.pdeSolver;
+maxNrDoF = p.params.maxNrDoF;
+nrLevels = p.level(end).level;
+
+showIteratively = <a href="../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>(<span class="string">'p.params.output'</span>,<span class="string">'showIteratively'</span>,p,false);
+saveFigures = <a href="../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>(<span class="string">'p.params.output'</span>,<span class="string">'saveFigures'</span>,p,false);
+format = <a href="../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>(<span class="string">'p.params.output'</span>,<span class="string">'format'</span>,p,<span class="string">'fig'</span>);
+pauseTime = <a href="../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>(<span class="string">'p.params.output'</span>,<span class="string">'pauseTime'</span>,p,0.5);</pre></div>
+
+
+
+
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+
+<li><a href="../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>	load a field from a structure</li>
+</ul>
+
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+
+<li><a href="../../ffw/gettingStarted.html" class="code" title="function p = gettingStarted">gettingStarted</a>	First start with the FFW</li>
+<li><a href="../../ffw/scripts/elasticity/CondComparison.html" class="code" title="function CondComparison(pdeSolver,problem,mark,maxNrDoF,nu1,nu2,nu3)">CondComparison</a>	Copyright 2007 Jan Reininghaus, David Guenther, Joscha Gedicke</li>
+<li><a href="../../ffw/scripts/elasticity/ErrorComparison.html" class="code" title="function ErrorComparison(problem,mark,maxNrDoF,nu,errType,">ErrorComparison</a>	Copyright 2007 Jan Reininghaus, David Guenther, Joscha Gedicke</li>
+<li><a href="../../ffw/scripts/elasticity/LockingComparison.html" class="code" title="function LockingComparison(pdeSolver,problem,mark,maxNrDoF,nu1,nu2,nu3,errType,">LockingComparison</a>	Copyright 2007 Jan Reininghaus, David Guenther, Joscha Gedicke</li>
+<li><a href="../../ffw/scripts/elliptic/advancedExample.html" class="code" title="function advancedExample">advancedExample</a>	This script illustrates the performance of adaptive algorithms for an</li>
+<li><a href="../../ffw/scripts/elliptic/regTestEllipticPDEs.html" class="code" title="function regTestEllipticPDEs">regTestEllipticPDEs</a>	test script for all implemented elliptic problems</li>
+<li><a href="../../ffw/scripts/elliptic/waterfallDemo.html" class="code" title="function p = waterfallDemo">waterfallDemo</a>	waterfall example</li>
+<li><a href="../../ffw/scripts/elliptic/waterfallDemo2.html" class="code" title="function p = waterfallDemo2">waterfallDemo2</a>	waterfall example</li>
+<li><a href="../../ffw/scripts/plotMAT.html" class="code" title="">plotMAT</a>	plotMAT</li>
+<li><a href="../../ffw/startElasticity.html" class="code" title="function p = startElasticity">startElasticity</a>	start script for all elasticity problems</li>
+<li><a href="../../ffw/startElliptic.html" class="code" title="function p = startElliptic">startElliptic</a>	start script for all elliptic problems</li>
+</ul>
+
+
+
+
+
+<hr><address>Generated on Thu 27-Sep-2007 10:19:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

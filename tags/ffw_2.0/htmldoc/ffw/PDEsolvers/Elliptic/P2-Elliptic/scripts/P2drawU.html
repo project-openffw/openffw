@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of P2drawU</title>
+  <meta name="keywords" content="P2drawU">
+  <meta name="description" content="draw displacement">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../../../../menu.html ffw -->
+<!-- ../../../menu.html PDEsolvers -->
+<!-- ../../menu.html Elliptic -->
+<!-- ../menu.html P2-Elliptic -->
+<!-- menu.html scripts -->
+<h1>P2drawU
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function p = P2drawU(p,lvl) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> draw displacement</pre></div>
+
+
+<h2><a name="_input"></a>INPUT <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre><span class="comment">% set graphic options from structure p</span>
+drawInfo = <a href="../../../../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>(<span class="string">'p.params.output'</span>,<span class="string">'drawInfo'</span>,p,true);
+
+<span class="comment">% load geometry</span>
+n4e = p.level(lvl).geom.n4e;
+c4n = p.level(lvl).geom.c4n;
+
+<span class="comment">% load discrete solution</span>
+u = p.level(lvl).u;
+
+<span class="comment">% load enumerated data</span>
+nrDoF = p.level(lvl).nrDoF;
+nrElems = p.level(lvl).nrElems;</pre></div>
+
+
+
+
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+
+<li><a href="../../../../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>	load a field from a structure</li>
+</ul>
+
+
+
+
+
+
+<hr><address>Generated on Thu 27-Sep-2007 10:19:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of P2createLinSys</title>
+  <meta name="keywords" content="P2createLinSys">
+  <meta name="description" content="creates the energy matrix A">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../../../menu.html ffw -->
+<!-- ../../menu.html PDEsolvers -->
+<!-- ../menu.html Elliptic -->
+<!-- menu.html P2-Elliptic -->
+<h1>P2createLinSys
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function p = P2createLinSys(p) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> creates the energy matrix A 
+ and the right-hand side b for a conforming P2-FE method. 
+ The differential operator is full elliptic with piecewise constant
+ coefficients</pre></div>
+
+
+<h2><a name="_input"></a>INPUT <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre><span class="comment">% load geometry</span>
+n4e = p.level(end).geom.n4e;
+c4n = p.level(end).geom.c4n;
+Nb = p.level(end).geom.Nb;
+Db = p.level(end).geom.Db;
+
+<span class="comment">% load problem definition</span>
+kappa = p.problem.kappa;
+lambda = p.problem.lambda;
+mu = p.problem.mu;
+u_D = p.problem.u_D;
+g = p.problem.g;
+
+<span class="comment">% load enumerated data</span>
+fixedNodes = p.level(end).enum.fixedNodes;
+P1grad4e = p.level(end).enum.P1grad4e;
+area4e = p.level(end).enum.area4e;
+nrNodes = p.level(end).nrNodes;
+nrElems = p.level(end).nrElems;
+nrEdges = p.level(end).nrEdges;
+NbEd = p.level(end).enum.NbEd;
+DbEd = p.level(end).enum.DbEd;
+dofU4e = p.level(end).enum.dofU4e;
+e4ed = p.level(end).enum.e4ed;
+midPoint4e = p.level(end).enum.midPoint4e;
+midPoint4ed = p.level(end).enum.midPoint4ed;
+
+<span class="comment">% additional data</span>
+C = p.statics.basisCoefficients;
+curLvl = length(p.level);
+degree = <a href="../../../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>(<span class="string">'p.params'</span>,<span class="string">'rhsIntegtrateExactDegree'</span>,p,2);</pre></div>
+
+
+<h2><a name="_output"></a>OUTPUT <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>p.level(end).A = real(A);
+p.level(end).B = real(B);
+p.level(end).b = real(b);
+p.level(end).x = real(u);</pre></div>
+
+
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+
+<li><a href="../../../../ffw/algorithms/integrate/funcHandleRHSNbVectorised.html" class="code" title="function val = funcHandleRHSNbVectorised(x,y,x_ref,y_ref,parts,curLvl,p)">funcHandleRHSNbVectorised</a>	function handle for g*phi_j</li>
+<li><a href="../../../../ffw/algorithms/integrate/funcHandleRHSVolumeVectorised.html" class="code" title="function val = funcHandleRHSVolumeVectorised(x,y,x_ref,y_ref,parts,curLvl,p)">funcHandleRHSVolumeVectorised</a>	function handle for RHS f*phi_j</li>
+<li><a href="../../../../ffw/algorithms/integrate/integrateVectorised.html" class="code" title="function val = integrateVectorised( parts, curLvl,  degree, integrand, p )">integrateVectorised</a>	Integrates function handle integrand over given domain 1D or 2D.</li>
+<li><a href="../../../../ffw/algorithms/misc/localDoFtoGlobalDoF.html" class="code" title="function [I,J] = localDoFtoGlobalDoF(dof1,dof2)">localDoFtoGlobalDoF</a>	maps the local to the global indices</li>
+<li><a href="../../../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>	load a field from a structure</li>
+</ul>
+
+
+
+
+
+
+<hr><address>Generated on Thu 27-Sep-2007 10:19:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>
