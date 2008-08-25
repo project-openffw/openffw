@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>FFW</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+<link href="ffw_design.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.style6 {font-size: 48px}
+.style7 {font-size: 9px}
+.style8 {font-size: 56px}
+.style9 {font-size: 14px}
+-->
+</style></head>
+
+<body>
+<table width="800" border="0" align="center" cellpadding="0" cellspacing="0" class="tableBorder">
+      <tr>
+        <td colspan="3">&nbsp;<span class="style8">FFW <span class="style9"> the Finite element FrameWork</span></span></td>
+      </tr>
+     <tr>
+        <td colspan="3" background="images/ffw_mainmenu.jpg"><table width="100%" border="0" align="center" cellpadding="2" cellspacing="1" class="tableBorderTopBottom"><tr>
+<td class=mainmenuButton><span class="mainmenuLink"><A href="index.htm" onmouseover="window.status='Home';return true;" onmouseout="window.status=' ';return true;" target="_self">Home</A></span></td>
+<td class="mainmenuButtonActive">Features</td>
+<td class=mainmenuButton><span class="mainmenuLink"><A href="screenshots.htm" onmouseover="window.status='Screenshots';return true;" onmouseout="window.status=' ';return true;" target="_self">Screenshots</A></span></td>
+<td class=mainmenuButton><span class="mainmenuLink"><A href="downloads.htm" onmouseover="window.status='Downloads';return true;" onmouseout="window.status=' ';return true;" target="_self">Downloads</A></span></td>
+<td class=mainmenuButton><span class="mainmenuLink"><A href="useCases.htm" onmouseover="window.status='Use Cases';return true;" onmouseout="window.status=' ';return true;" target="_self">Use Cases</A></span></td>
+<td class=mainmenuButton><span class="mainmenuLink"><A href="contact.htm" onmouseover="window.status='Contact';return true;" onmouseout="window.status=' ';return true;" target="_self">Contact</A></span></td>
+<td class=mainmenuButton><span class="mainmenuLink"><A href="links.htm" onmouseover="window.status='Links';return true;" onmouseout="window.status=' ';return true;" target="_self">Links</A></span></td>
+<td width="200" class=mainmenuButton></td>
+</tr></table></td>
+      </tr>
+      <tr height="400">
+        <td width="120" height="124" align="center" valign="top">
+            <table width="100%" border="0" cellpadding="10">
+              <tr>
+                <td><table width="120" border="0"></table></td>
+              </tr>
+            </table>
+            </td>
+			<td width="616" valign="top">
+				<table width="100%" border="0" cellpadding="10">
+            	  <tr><td valign="top">
+				  	<br><body>
+<table width="100%" border="0">
+  <tr vAlign=top> 
+    <td height="10"><span class=textCaption>Features<br>&nbsp;</span></td>
+  </tr>
+  <tr vAlign=top> 
+    <td class="text"><p>The FFW uses a global data structure containing all computed data, including complete mesh information like edge enumeration, normals, tangents, etc.. Furthermore the framework has full script ability  for automatic computation with different parameters. Thus it provides a general framework for output routines to analyse the finite element methods and its results.</p>
+      <p>There are already various test problems to illustrate performance of adaptivity and test correctness. Furthermore, own problems can be easily created using predefined templates. There is also a template where only a domain and an exact solution is to be specified, and all other data is calculated through MATLAB's symbolic differentiation toolbox.</p>
+      <p>The FFW currently features the following finite element methods: </p>
+      <ul>
+		  <li>P1-FEM, P2-FEM, P3-FEM a standard conforming discretization for elliptic PDE's,</li>
+		  <li>CR-FEM, a non-conforming discretization for elliptic PDE's,</li>
+		  <li>RT0-P0-MFEM, a mixed FEM for elliptic PDE's,</li>
+		  <li>P1P1, a standard conforming discretization for elasticity problems,</li>
+		  <li>P1CR, a non-conforming and locking free discretization for elasticity problems,</li>
+		  <li>AW, a mixed, higher order, locking free FEM for elasticity problems.</li>
+	  </ul>
+      </p>
+		
+		<p>Adaptivity algorithms provided:
+		<ul>
+		  <li>A newest vertex bisection like algorithm for edge oriented mesh refinement that produces shape regular, nested triangulations with no hanging nodes and allows for the H^1 stability of the L^2 projection,</li>
+		  <li>Graded meshes using the above algorithm,</li>
+		  <li>Reliable and efficient a posteriori error estimators for almost all of the above methods,</li>
+		  <li>Two marking strategies, maximum and bulk, controlling the mesh refinement based on a posteriori error estimators.</li>
+		</ul></p>
+		
+		<p>Further features:
+		<ul>
+		  <li>A simple interface for numerical integration to easily compute boundary integrals, error norms, etc.,</li>
+          <li>A simple reference multigrid implementation for P1-FEM.</li>
+    </ul></td>
+  </tr>
+</table>
+</body>
+</html>
+	
+				  </td></tr>
+				</table>
+				
+		</td>
+        <td width="72">&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="3" align="center">
+		  <span class="style7">&nbsp;<br>&nbsp;</span></td>
+      </tr>
+    </table>
+</body>
+</html>
