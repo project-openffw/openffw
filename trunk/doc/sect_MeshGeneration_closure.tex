@@ -1,0 +1,39 @@
+
+\subsection{Closure}
+In the process of generating adaptive meshes you have to
+be careful that the angles of the element are bounded 
+due to the maximum angle condition. To guarantee this you
+additionally have to refine all reference edges of elements
+that have marked edges, i.e. compute the smallest subset $\widehat{\M}_\ell$ of $\E_\ell$ which includes $\M_\ell$ such that
+there holds 
+\begin{equation*}
+ E\in \widehat{\M}_\ell, \;\; E\subseteq T \Longrightarrow   E(T)\in \widehat{\M}_\ell.
+\end{equation*} 
+This is done in the function closure.
+
+\medskip
+\noindent
+File: \path{.\algorithms\misc\closure.m}
+\begin{pcode}
+function p = closure(p) 
+input:   p - FFW
+output:  p - FFW
+\end{pcode}
+
+\noindent
+We briefly say that although the following code
+can have quadratic runtime it has linear runtime
+in average. From convergence theory we know that for
+a sequence of triangulations the number of the additionally refined 
+reference edges are linear in the number of levels.
+Therefor we know that it is in average constant at each
+level. Because of that the while loop will be called
+in average for a constant number of times. 
+\begin{pcode}
+I =  refineEdges(ed4e(:,2)) | refineEdges(ed4e(:,3));
+while nnz(refineEdges(refEd4e(I))) < nnz(I);
+   refineEdges(refEd4e(I)) = true;
+   I =  refineEdges(ed4e(:,2)) | refineEdges(ed4e(:,3));
+end
+\end{pcode}
+
