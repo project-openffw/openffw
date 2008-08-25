@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of drawMarkedBeforeClosureGrid</title>
+  <meta name="keywords" content="drawMarkedBeforeClosureGrid">
+  <meta name="description" content="draw the edges that are marked before closure">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../../menu.html ffw -->
+<!-- ../menu.html evaluation -->
+<!-- menu.html draw -->
+<h1>drawMarkedBeforeClosureGrid
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function p = drawMarkedBeforeClosureGrid(p,lvl) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> draw the edges that are marked before closure</pre></div>
+
+
+<h2><a name="_input"></a>INPUT <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>
+<span class="comment">% set graphic options from structure p</span>
+lineWidth = <a href="../../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>(<span class="string">'p.params.output'</span>,<span class="string">'lineWidth'</span>,p,0.1);
+myColor = <a href="../../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>(<span class="string">'p.params.output'</span>,<span class="string">'myColor'</span>,p,<span class="string">'m'</span>);
+drawInfo = <a href="../../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>(<span class="string">'p.params.output'</span>,<span class="string">'drawInfo'</span>,p,true);
+holdIt = <a href="../../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>(<span class="string">'p.params.output'</span>,<span class="string">'holdIt'</span>,p,true);
+
+
+<span class="comment">% load geometry</span>
+c4n = p.level(lvl).geom.c4n;
+
+<span class="comment">% load enumerated data</span>
+nrNodes = p.level(lvl).nrNodes;
+n4ed = p.level(lvl).enum.n4ed;
+markedEdgesBeforeClosure = p.level(lvl).markedEdgesBeforeClosure;</pre></div>
+
+
+
+
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+
+<li><a href="drawGrid.html" class="code" title="function p = drawGrid(p,lvl)">drawGrid</a>	draw the mesh</li>
+<li><a href="../../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>	load a field from a structure</li>
+</ul>
+
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+
+<li><a href="../../../ffw/scripts/teach/teachRefinement.html" class="code" title="function teachRefinement">teachRefinement</a>	visualisation of the mesh refinement</li>
+</ul>
+
+
+
+
+
+<hr><address>Generated on Thu 27-Sep-2007 10:19:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>
