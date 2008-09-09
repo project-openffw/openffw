@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of P1postProc</title>
+  <meta name="keywords" content="P1postProc">
+  <meta name="description" content="computes the post-processing datas">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../../../menu.html FFW -->
+<!-- ../../menu.html PDEsolvers -->
+<!-- ../menu.html Elliptic -->
+<!-- menu.html P1-Elliptic -->
+<h1>P1postProc
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function p = P1postProc(p) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> computes the post-processing datas
+ for a conforming P1-FE method.</pre></div>
+
+
+<h2><a name="_input"></a>INPUT <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>x = p.level(end).x;
+
+<span class="comment">% load enumerated data</span>
+grad4e = p.level(end).enum.grad4e;
+nrNodes = p.level(end).nrNodes;
+dofU4e = p.level(end).enum.dofU4e;</pre></div>
+
+
+<h2><a name="_output"></a>OUTPUT <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>p.level(end).u = u;
+p.level(end).u4e = u4e;
+p.level(end).gradU4e = gradU4e;</pre></div>
+
+
+
+
+
+
+
+<hr><address>Generated on Thu 22-Nov-2007 15:17:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

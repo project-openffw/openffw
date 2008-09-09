@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CRenumerate</title>
+  <meta name="keywords" content="CRenumerate">
+  <meta name="description" content="creates all necessarily data for a">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../../../menu.html FFW -->
+<!-- ../../menu.html PDEsolvers -->
+<!-- ../menu.html Elliptic -->
+<!-- menu.html CR-Elliptic -->
+<h1>CRenumerate
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function p = CRenumerate(p) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> creates all necessarily data for a 
+ nonconforming CR-FE method.</pre></div>
+
+
+<h2><a name="_input"></a>INPUT <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>Db = p.level(end).geom.Db;
+area4e = p.level(end).enum.area4e;
+DbEd = p.level(end).enum.DbEd;
+midPoint4ed = p.level(end).enum.midPoint4ed;
+ed4e = p.level(end).enum.ed4e;
+nrEdges = p.level(end).nrEdges;</pre></div>
+
+
+<h2><a name="_output"></a>OUTPUT <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>p.level(end).enum.dofU4e = dofU4e;
+p.level(end).enum.dofU4ed = dofU4ed;
+p.level(end).enum.gradNC4e = gradNC4e;
+p.level(end).nrDoF = nrDoF;
+p.level(end).enum.freeNodes = freeNodes;
+p.level(end).enum.fixedNodes = fixedNodes;</pre></div>
+
+
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+
+<li><a href="../../../../FFW/algorithms/enum/getGradNC4e.html" class="code" title="function gradNC4e = getGradNC4e(midpoint4ed,ed4e,area4e)">getGradNC4e</a>	gradNC4e</li>
+<li><a href="../../../../FFW/algorithms/misc/genericEnumerate.html" class="code" title="function p = genericEnumerate(p)">genericEnumerate</a>	generate the generic data structures</li>
+</ul>
+
+
+
+
+
+
+<hr><address>Generated on Thu 22-Nov-2007 15:17:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

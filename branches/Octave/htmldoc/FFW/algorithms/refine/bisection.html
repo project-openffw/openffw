@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of bisection</title>
+  <meta name="keywords" content="bisection">
+  <meta name="description" content="bisection">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../../menu.html FFW -->
+<!-- ../menu.html algorithms -->
+<!-- menu.html refine -->
+<h1>bisection
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function p = bisection(p) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> bisection</pre></div>
+
+
+<h2><a name="_input"></a>INPUT <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>
+n4e = p.level(end).geom.n4e;
+c4n = p.level(end).geom.c4n;
+Db = p.level(end).geom.Db;
+Nb = p.level(end).geom.Nb;
+
+DbEd = p.level(end).enum.DbEd;
+NbEd = p.level(end).enum.NbEd;
+ed4e = p.level(end).enum.ed4e;
+midPoint4ed = p.level(end).enum.midPoint4ed;
+
+nrNodes = p.level(end).nrNodes;
+nrElems = p.level(end).nrElems;
+nrEdges = p.level(end).nrEdges;
+
+<span class="comment">%refineElemsBisec5 = loadField('p.level(end)','refineElemsBisec5',p,false(nrElems,1));</span>
+markedEdges = p.level(end).markedEdges;</pre></div>
+
+
+<h2><a name="_output"></a>OUTPUT <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>
+p.level(nextLevel-1).enum.newNode4ed = newNode4ed;
+p.level(nextLevel).enum.parents4e = parents4e;
+p.level(nextLevel).geom.n4e = newn4e;
+p.level(nextLevel).geom.c4n = c4n;
+p.level(nextLevel).geom.Db = Db;
+p.level(nextLevel).geom.Nb = Nb;</pre></div>
+
+
+
+
+
+
+
+<hr><address>Generated on Thu 22-Nov-2007 15:17:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>
