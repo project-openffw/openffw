@@ -5,13 +5,14 @@
 \author[Byfut]{A. Byfut}
 \author[Gedicke]{J. Gedicke}
 \author[G\"unther]{D. G\"unther}
+\author[Mellmann]{H. Mellmann}
 \author[Reininghaus]{J. Reininghaus}
 \author[Wiedemann]{S. Wiedemann}
 
 \hypersetup{
 pdftitle = {FFW Documentation},
 pdfsubject = {Finite Elements},
-pdfauthor = {A. Byfut, J. Gedicke, D. G\"unther, J. Reininghaus, S. Wiedemann},
+pdfauthor = {A. Byfut, J. Gedicke, D. G\"unther, H. Mellmann, J. Reininghaus, S. Wiedemann},
 pdfkeywords = {FEM},
 pdfcreator = {pdflatex},
 pdfproducer = {}
@@ -20,9 +21,6 @@ pdfproducer = {}
 
 \begin{document}
 \maketitle
-
-\newpage
-\setcounter{tocdepth}{3}
 \tableofcontents
 \pagebreak
 
@@ -31,15 +29,13 @@ pdfproducer = {}
 \include{sect_FlowChart}
 \include{sect_ImplementedProblems}
 \include{sect_DataStructures}
-\include{sect_PDESolver}
 \include{sect_MeshGeneration}
 \include{sect_GraphicalOutput}
 \include{sect_Appendix}
 
 
 \nocite{*}
-% \bibliographystyle{amsalpha} %plainnat
-\bibliographystyle{abbrv} %plainnat
+\bibliographystyle{amsalpha} %plainnat
 \bibliography{FFW_Bibliography}
 
 \end{document}

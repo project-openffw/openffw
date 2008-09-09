@@ -8,26 +8,27 @@
 \begin{equation*}
 \xymatrix@-1eM{
     *+<2ex>[F]{ \phantom{I}\text{script}\phantom{I} }           \ar@{=>}[r]
-&   *+<2ex>[F]{ \phantom{I}\code{initFFW}\phantom{I} }          \ar@{=>}[r]\ar@{->}[d]
+&   *+<2ex>[F]{ \phantom{I}\code{initFFW}\phantom{I} }          \ar@{=>}[r]
+&   *+<2ex>[F]{ \phantom{I}\code{run}\phantom{I} }              \ar@{=>}[r]
 &   *+<2ex>[F]{ \phantom{I}\code{computeSolution}\phantom{I} }  \ar@{=>}[r] \ar@{->}[d]^{\text{loop}}
 &   *+<2ex>[F]{ \phantom{I}\text{output}\phantom{I} }
 \\
-& *+[F-:<3pt>]{ \code{problemType-init}} \ar@{->}[d]   &  *+[F-:<3pt>]{ \code{afem} }            \ar@{->}[d]
+&&&  *+[F-:<3pt>]{ \code{afem} }            \ar@{->}[d]
 \\
-&*+[F-:<3pt>]{ \code{pdeSolver-init}} &  *+[F-:<3pt>]{ \code{mark} }            \ar@{->}[d]
+&&&  *+[F-:<3pt>]{ \code{mark} }            \ar@{->}[d]
 \\
-&& *+[F-:<3pt>]{ \code{refine} }          \ar@{->}[d]
+&&& *+[F-:<3pt>]{ \code{refine} }          \ar@{->}[d]
 \\
-&& *+[F-:<3pt>]{ \code{enumerate} }       \ar@{.>}[r] \ar@{->}[d]
+&&& *+[F-:<3pt>]{ \code{enumerate} }       \ar@{.>}[r] \ar@{->}[d]
 &   *+[F-:<3pt>]{ \code{genericEnumerate} }
 \\
-&& *+[F-:<3pt>]{ \code{createLinSys} }    \ar@{->}[d]
+&&& *+[F-:<3pt>]{ \code{createLinSys} }    \ar@{->}[d]
 \\
-&& *+[F-:<3pt>]{ \code{solve} }           \ar@{->}[d]
+&&& *+[F-:<3pt>]{ \code{solve} }           \ar@{->}[d]
 \\
-&& *+[F-:<3pt>]{ \code{postProc} }        \ar@{->}[d]
+&&& *+[F-:<3pt>]{ \code{postProc} }        \ar@{->}[d]
 \\
-&& *+[F-:<3pt>]{ \code{estimate} }        \ar@{->}'l[u] '[uu] [uu]
+&&& *+[F-:<3pt>]{ \code{estimate} }        \ar@{->}'l[u] '[uu] [uu]
 }
 \end{equation*}
 \normalsize \caption{Flow chart of the \FFW.}\label{sect:FlowChart.fig.FFW-flowchart}
@@ -40,11 +41,9 @@ function name & description\\\hline\\[-1ex]
                 and \code{start\-Elasticity}\\
 \code{initFFW} & sets paths, loads default parameters,
                  sets supplied parameters and loads problem definition and geometry\\
-\code{problemType-init} & creates method specific
+\code{run} & calls computeSolution and creates method specific
              function handles, e.g. a function handle to evaluate
              the discrete solution\\
-\code{pdeSolver-init} & creates finite element space specific
-             function handles, e.g. a function handle to eval the basis functions\\
 \code{computeSolution} & calls \code{afem} as long as some abort criteria defined
                          in the configuration file, e.g., \code{maxNrDoF},
                          is not fulfilled and supplies method type specific

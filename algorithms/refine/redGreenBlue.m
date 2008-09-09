@@ -1,26 +1,6 @@
 function p = redGreenBlue(p)
-% red-green-blue refinement
 
-% Copyright 2007 Jan Reininghaus
-%
-% This file is part of FFW.
-%
-% FFW is free software; you can redistribute it and/or modify
-% it under the terms of the GNU General Public License as published by
-% the Free Software Foundation; either version 3 of the License, or
-% (at your option) any later version.
-%
-% FFW is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
-%
-% You should have received a copy of the GNU General Public License
-% along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
-%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 n4e = p.level(end).geom.n4e;
 c4n = p.level(end).geom.c4n;
 Db = p.level(end).geom.Db;
@@ -32,48 +12,56 @@ ed4e = p.level(end).enum.ed4e;
 midPoint4ed = p.level(end).enum.midPoint4ed;
 
 refineElemsBisec5 = p.level(end).refineElemsBisec5;
-markedEdges = p.level(end).markedEdges;
+refineEdges = p.level(end).refineEdges;
 nrNodes = p.level(end).nrNodes;
 nrElems = p.level(end).nrElems;
 nrEdges = p.level(end).nrEdges;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+nextLevel = length(p.level) + 1;
 
-
-%% Refinement %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-nextLevel = p.level(end).level + 1;
-
-if(nnz(markedEdges) == 0)
+if(nnz(refineEdges) == 0)
+% 	p.level(nextLevel).geom = p.level(nextLevel-1).geom;
+% 	p.level(nextLevel-1).enum.newNode4ed = [];
 	return;
 end
+
 
 % store the parent element number for each new element
 % upper bound for new nr. of elements (exact for bisec5 refinement)
 parents4e = zeros(6*nrElems,1);
 
-% Update C4N %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Update C4N									   %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Create new node numbers from markedEdges
+% Create new node numbers from refineEdges
 newNode4ed = zeros(1,nrEdges);
-newNode4ed( find(markedEdges) ) = (nrNodes+1):(nrNodes+nnz(markedEdges));
+newNode4ed( find(refineEdges) ) = (nrNodes+1):(nrNodes+nnz(refineEdges));
 
 % Create coordinates of the new nodes
 [dontUse,J,S] = find(newNode4ed);
 c4n(S,:) = midPoint4ed(J,:);
 
-% Update N4E %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Update N4E									   %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 newNode4e = newNode4ed(ed4e);
 unrefinedElems = find( all(newNode4e == 0 ,2) );
 refineElems = find( any(newNode4e,2) );
-nrMarkedEd4MarkedElems = sum(markedEdges( ed4e(refineElems,:) ),2);
+nrMarkedEd4MarkedElems = sum(refineEdges( ed4e(refineElems,:) ),2);
 
+
+%%%%%%%%%%%%%%
 % old element number for unrefined elements
 nrUnrefinedElems = length(unrefinedElems);
 parents4e(1:nrUnrefinedElems) = unrefinedElems;
+%%%%%%%%%%%%%%%
 
 newn4e = n4e(unrefinedElems,:);
-
 % Green refinement
+nrGreenElems = 0;
 I = find(nrMarkedEd4MarkedElems == 1);
 if ~isempty(I)
 	gElems = refineElems(I);
@@ -81,13 +69,16 @@ if ~isempty(I)
 	[dontUse,dontUse,newN] = find( newNode4e(gElems,:)' );
 	newGreenElems = [n4e(gElems,[2 3]) newN;...
                      n4e(gElems,[3 1]) newN];
+	newn4e = [newn4e;newGreenElems];
     nrGreenElems = size(newGreenElems,1);
     dummy = [gElems;gElems];
     parents4e( size(newn4e,1)+1 : size(newn4e,1)+nrGreenElems ) = dummy;
-    newn4e = [newn4e;newGreenElems];
 end
 
 % Blue refinement
+nrBlueLeftElems = 0;
+nrBlueRightElems = 0;
+
 I = find(nrMarkedEd4MarkedElems == 2);
 if ~isempty(I)
 	bElems = refineElems(I);
@@ -100,10 +91,10 @@ if ~isempty(I)
 		newBlueLeft = [ n4e(bElems(bl),1), newN(bl,1), newN(bl,2);...
                         n4e(bElems(bl),2), n4e(bElems(bl),3), newN(bl,1);...
                         newN(bl,1), n4e(bElems(bl),3),  newN(bl,2)];
+		newn4e = [newn4e; newBlueLeft]; 
         nrBlueLeftElems = size(newBlueLeft,1);
         dummy = [bElems(bl);bElems(bl);bElems(bl)];
         parents4e( size(newn4e,1)+1 : size(newn4e,1)+nrBlueLeftElems ) = dummy;
-        newn4e = [newn4e; newBlueLeft];
 	end
 	% BlueRight refinement
 	br = find(RefineEdge(2,:) == 2);
@@ -111,15 +102,16 @@ if ~isempty(I)
 		newBlueRight = [ newN(br,1), n4e(bElems(br),2), newN(br,2);...
                         n4e(bElems(br),3), newN(br,1), newN(br,2);...
                         n4e(bElems(br),3), n4e(bElems(br),1), newN(br,1)];
+		newn4e = [newn4e; newBlueRight];
         nrBlueRightElems = size(newBlueRight,1);
         dummy = [bElems(br);bElems(br);bElems(br)];
         parents4e( size(newn4e,1)+1 : size(newn4e,1)+nrBlueRightElems ) = dummy;
-        newn4e = [newn4e; newBlueRight];
 	end
 end
 
 % Red refinement (Do not refine elements refine for bisec5 refinement)
 nrMarkedEd4MarkedElems(refineElemsBisec5(refineElems)) = 0;
+nrRedElems = 0;
 I = find(nrMarkedEd4MarkedElems == 3);
 if ~isempty(I)
 	rElems = refineElems(I);
@@ -129,10 +121,10 @@ if ~isempty(I)
 		n4e(rElems,1) newN(:,1) newN(:,3);...
 		newN(:,1) n4e(rElems,2) newN(:,2);...
 		newN(:,3) newN(:,2) n4e(rElems,3)];
+	newn4e = [newn4e; newRedElems];
     nrRedElems = size(newRedElems,1);
     dummy = [rElems;rElems;rElems;rElems];
     parents4e( size(newn4e,1)+1 : size(newn4e,1)+nrRedElems ) = dummy;
-	newn4e = [newn4e; newRedElems];
 end
 
 % Bisec5 / Oscillation reduction
@@ -167,21 +159,20 @@ end
 % reduce the size of parents4e to the new number of elements
 parents4e = parents4e(1:size(newn4e,1));
                     
-% Update boundary %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Update boundary								   %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Db = updateBoundary(Db,DbEd,newNode4ed); 
 Nb = updateBoundary(Nb,NbEd,newNode4ed);
 
-%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 p.level(nextLevel-1).enum.newNode4ed = newNode4ed;
 p.level(nextLevel).enum.parents4e = parents4e;
 p.level(nextLevel).geom.n4e = newn4e;
 p.level(nextLevel).geom.c4n = c4n;
 p.level(nextLevel).geom.Db = Db;
 p.level(nextLevel).geom.Nb = Nb;
-
-
-%% local functions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function newBoundary = updateBoundary(oldB,ed4b,newNode4ed)
 if(isempty(oldB))

@@ -1,15 +1,6 @@
 \section{Implemented Problems}
 \label{sect:ImplementedProblems}
-%
-%\noindent In this section we give an overview on the implemented problems. At first, we present the strong and weak formulation for the full elliptic PDE and for a standard problem in elasticity. Afterwards, we define spaces for the conforming and non-conforming discretizations. Additionally, we take a look on the mixed formulation with the corresponding spaces.
-
-\noindent The \FFW is able to handle full elliptic problems and problems which arise from elasticity. For these classes of problems conforming, non-conforming and mixed finite element methods are available. In this Section we present the strong and weak formulation of these problems and the corresponding FE-spaces which are implemented. In Table \ref{sect:PDESolver:table:pdeSolver} all available methods are listed. A more detailed mathematical description of the presented problems can be found in \cite{Ar,ArWi,Bra,HaFaIo}.
-
-\medskip
-
-\noindent To get a first impression of the FE-methods, several problems and geometries are already defined in the \FFW\!. The geometry definitions are stored in \path{.\problems\geometries}, whereas the problem definitions for elliptic and elasticity problems are stored in \path{.\problems\elliptic} and \path{.\problems\elasticity}, respectively.
-
-\medskip
+In this section we give an overview about the implemented problems. At first we present the strong and weak formulation for the full elliptic PDE and for a problem in elasticity. There we define the spaces for the conforming and non-conforming discretizations. Additionally we take a look on the mixed formulation with the corresponding spaces. In the \FFW there are several problems and geometries already defined. In ./problems/geometries you will find the definition of the geometries, e.g. L-shape or Square, and in ./problems/elliptic (./problems/elasticity) we give some examples for a problem definition for an elliptic (elasticity) problem.
 
 \input{sect_ImplementedProblems_FEM4Elliptic}
 \input{sect_ImplementedProblems_FEM4Elasticity}

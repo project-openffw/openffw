@@ -9,51 +9,39 @@ we have to solve integrals in 2D numerically.
 In order to do this and for integration various types of integrals
 we developed the following interface.
 
-\subsubsection{Interface integrand}$ $\\
-File: \path{.\algorithms\integrate\integrand.m}
-\begin{pcode}
-function val = integrate(parts, curLvl,  degree, integrand, p)
-% input:  parts - nodes for elements or edges
-%         curLvl - current level
-%         degree - the integration will be exact for all polynomials 
-%                  up to total degree 'degree'
-%         p - FFW
-% output: val - values of the integrand per element or edge [nrParts n m] 
-\end{pcode}
+\subsubsection{Interface integrand}
+\textbf{file:} \path{.\algorithms\integrate\integrand.m}\\[1.5ex]
+\begin{tabular}{@{} l l}
+\multicolumn{2}{@{} l}{\textbf{function val = integrate(parts, curLvl,  degree, integrand, p)}} \\
+\textbf{Input:}  & parts - nodes for elements or edges\\
+                 & curLvl - current level\\
+                 & degree - the integration will be exact for all polynomials up to total degree 'degree'\\
+                 & p - ffw\\
+\textbf{Output:} & val - values of the integrand per element or edge $nrParts\times n\times m$ 
+\end{tabular}
 
+\medskip
 \noindent
 The integration interface can also handle functions $f:\mathbb{R}^k \mapsto\mathbb{R}^{m,n}$ in the sense that it integrates each component separately.\\
 The function handle integrand has to be of the following form.
 \begin{pcode}
-function val = integrand(pts,curPart,curLvl,p)
+function val = integrand(x,y,curPart,curLvl,p)
 \end{pcode}
-Where the output has to be of the form \code{[n m length(x)]}.\\
+Where the output has to be of the form $n\times m\times length(x)$.\\
 For the integration of the right hand side there already exist two function handles.\\[1.5ex]
-File: \path{.\algorithms\integrate\funcHandleRHSVolume.m}\\
-File: \path{.\algorithms\integrate\funcHandleRHSNb.m}\\[1.5ex]
-In both cases the function handle returns a matrix of the form\\ \code{[nrElements nrBasisFunctions]}
-and the parameter \code{degree} is stored in
-\begin{pcode}
-p.params.rhsIntegtrateExactDegree
-\end{pcode}
-The \code{degree} parameter for the predefined function handles to calculate the energy and $L^2$ errors
-can be modified in
-\begin{pcode}
-p.params.errorIntegtrateExactDegree
-\end{pcode}
-\bigskip
-
-\noindent
+\textbf{file:} \path{/algorithms/integrate/funcHandleRHSVolume.m}\\[1.5ex]
+\textbf{file:} \path{/algorithms/integrate/funcHandleRHSNb.m}\\[1.5ex]
+In both cases the function handle returns a matrix of the form $nrElements \times nrBasisFunctions$.\\
 The integration interface uses the following quadrature formulas.
 
-\subsubsection{Gauss-Legendre formula}$ $\\
-File: \path{.\algorithms\integrate\getGaussPoints.m}
-\begin{pcode}
-function [x,w] = getGaussPoints(n)
-% input:   n - number of points
-% output:  x - Gauss points [n 2]
-%          w - Gauss weights [n 1]
-\end{pcode}
+\subsubsection{Gauss-Legendre formula}
+\textbf{file:} \path{.\algorithms\integrate\getGaussPoints.m}\\[1.5ex]
+\begin{tabular}{@{} l l}
+\multicolumn{2}{@{} l}{\textbf{function [x,w] = getGaussPoints(n)}} \\
+\textbf{Input:}  & n - number of points\\
+\textbf{Output:} & x - Gauss points  $n\times 2$\\
+                 & w - Gauss weights  $n\times 1$\\
+\end{tabular}
 
 \medskip
 \noindent
@@ -123,14 +111,14 @@ x = .5 * x + .5;
 w = .5 * w';
 \end{pcode}
 
-\subsubsection{Conical-Product formula}$ $\\
-File: \path{.\algorithms\integrate\getConProdGaussPoints.m}
-\begin{pcode}
-function [x,w] = getConProdGaussPoints(n)
-% input:   n - Number of Gauss points in 1D
-% output:  x - Gauss points [n^2 2]
-%          w - weights [n^2 1]
-\end{pcode}
+\subsubsection{Conical-Product formula}
+\textbf{file:} \path{.\algorithms\integrate\getConProdGaussPoints.m}\\[1.5ex]
+\begin{tabular}{@{} l l}
+\multicolumn{2}{@{} l}{\textbf{function [x,w] = getConProdGaussPoints(n)}} \\
+\textbf{Input:}  & n - Number of Gauss points in 1D\\
+\textbf{Output:} & x - Gauss points  $n^2\times 2$\\
+                 & w - weights  $n^2\times 1$\\
+\end{tabular}
 
 \medskip
 \noindent

@@ -1,25 +1,9 @@
 function p = P1CRpostProc(p)
-% computes the post-processing datas 
-% for the Kouhia-Stenberg FE in linear elasticity. 
-
-% Copyright 2007 Jan Reininghaus, David Guenther
+%postproc.m computes the post-processing datas 
+%for the Kouhia-Stenberg FE in linear elasticity. 
 %
-% This file is part of FFW.
-%
-% FFW is free software; you can redistribute it and/or modify
-% it under the terms of the GNU General Public License as published by
-% the Free Software Foundation; either version 3 of the License, or
-% (at your option) any later version.
-%
-% FFW is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
-%
-% You should have received a copy of the GNU General Public License
-% along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-%% INPUT
+%authors: David Guenther, Jan Reininghaus
+%%%%%%%%%%%%%%%%INPUT%%%%%%%%%%%%%%%%%%%%%
 n4e = p.level(end).geom.n4e;
 
 lambda = p.PDE.lambda;
@@ -74,7 +58,7 @@ for curElem = 1:nrElems
     sigma(:,:,curElem) = curStress;
 end
 
-%%%%%%%%%%%%%%%% OUTPUT %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%OUTPUT%%%%%%%%%%%%%%%%%%%%%
 p.level(end).u = u;
 p.level(end).u4e = u4e;
 p.level(end).gradU = gradU;

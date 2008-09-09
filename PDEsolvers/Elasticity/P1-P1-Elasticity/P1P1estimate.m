@@ -1,25 +1,9 @@
 function p = P1P1estimate(p)
-% estimate the energy error for a P1-FE method 
-% in linear elasticity through computing the residual and 
-% the jump of the stress. 
-
-% Copyright 2007 Jan Reininghaus, David Guenther
+%estimate.m estimate the energy error for a P1-FE method 
+%in linear elasticity through computing the residual and 
+%the jump of the stress. 
 %
-% This file is part of FFW.
-%
-% FFW is free software; you can redistribute it and/or modify
-% it under the terms of the GNU General Public License as published by
-% the Free Software Foundation; either version 3 of the License, or
-% (at your option) any later version.
-%
-% FFW is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
-%
-% You should have received a copy of the GNU General Public License
-% along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+%authors: David Guenther, Jan Reininghaus
 
 %%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Db = p.level(end).geom.Db;
@@ -47,7 +31,7 @@ nrEdges = p.level(end).nrEdges;
 eta_T = zeros(nrElems,1);
 etaEdNormal = zeros(nrEdges,2);
 
-f4e = sum( f(midPoint4e,p).^2,2 );
+f4e = sum( f(midPoint4e(:,1),midPoint4e(:,2),p).^2,2 );
 
 for curElem = 1:nrElems
     curEdges = ed4e(curElem,:);
@@ -71,7 +55,7 @@ end
 
 % Neumann condition
 if ~isempty(Nb)
-    g4Nb = g(midPoint4ed(NbEd,:),normals4NbEd,p);
+    g4Nb = g(midPoint4ed(NbEd,1),midPoint4ed(NbEd,2),normals4NbEd,p);
     etaEdNormal(NbEd,:) = etaEdNormal(NbEd,:) - g4Nb.*[length4ed(NbEd),length4ed(NbEd)]/2;
 end
 

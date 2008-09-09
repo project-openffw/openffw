@@ -19,26 +19,18 @@
                    or \verb"_H1semiError" which are added to
                    \code{drawError}, i.e.,
                    \verb"p = show('drawError_L2error',p);".\\
-\code{drawErrorOnGrid} & Draw the local error indicators of the discrete
-                   solution, as saved in structure \code{p}. Here one
-                   has to specify which error is to be drawn by using
-                   the parameters \verb"_estimatedError",
-                   \verb"_L2error"
-                   or \verb"_H1semiError" which are added to
-                   \code{drawError}, i.e.,
-                   \verb"p = show('drawError_L2error',p);".\\
 \code{drawGrid} & Draw the grid of each level of the refinement,
                   saved in structure \code{p}.\\
 \end{longtable}
 
 \noindent Be aware that \code{drawU} and \code{drawGradU} depend on the PDE solver used, i.e., these functions can be found in the \code{script} folder of the \code{PDEsolver} used; whereas \code{drawGrid} and \code{drawError} are generic.\medskip\\
-For all of the above tokens, the \code{show} function can display the data iteratively from the first level to the last or just show the last level of the refinement by setting \code{p.params.output.showIteratively} to \code{true} or \code{false}, default is \code{false}. The parameter \code{p.params.output.pauseTime} defines the pause time between two plots, the value $-1$ forces a pressed key to continue. \medskip\\
+For all of the above tokens, the \code{show} function can display the data iteratively from the first level to the last or just show the last level of the refinement by setting \code{p.params.output.showIteratively} to \code{true} or \code{false}, default is \code{false}.\medskip\\
 To save the figures, set \code{p.params.output.saveFigures} to \code{true}. The resulting files can
-be found in a subfolder of \path{.\results\}, which describes the current problem. If you have chosen to show the data iteratively, a figure for each level is saved, except for the \code{drawError} token, where the error development from the first to the last level is saved in one figure.\\
+be found in a subfolder of \path{.\results\}, which describes the current problem. If you have choosen to show the data iteratively, a figure for each level is saved, except for the \code{drawError} token, where the error development from the first to the last level is saved in one figure.\\
 The default file type is \code{fig}. See the following table for more parameters or MATLAB's help for the command \code{print}.\\
 
 \begin{tabular}{p{0.2\textwidth}p{0.7\textwidth}}
-file type & description\\\hline\\[-1ex]
+filetype & description\\\hline\\[-1ex]
 \code{fig}      & Saves a MATLAB figure.\\
 \code{jpeg}     & Saves a JPEG file.\\
 \code{epsc}     & Saves an encapsulated postscript color file.\\
@@ -98,7 +90,7 @@ parameter & type & description\\\hline\\[-1ex]
                                \code{true}.\\
 \code{name}        & string  & Append the submitted name to the legend.
                                Default is \code{[]}.\\
-\code{fontSize}    & integer & Size of all fonts in the figure. Default is the set font size of the
+\code{fontSize}    & integer & Size of all fonts in the figure. Default is the set fontsize of the
                                figure.\\
 \code{setScales}   & boolean & Round the log-log plot to integer exponents.
                                Default is \code{false}.\\

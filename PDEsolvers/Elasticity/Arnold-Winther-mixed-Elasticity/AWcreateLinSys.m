@@ -1,40 +1,22 @@
 function p = AWcreateLinSys(p)
-% creates the energy matrix A 
-% and the right-hand side b for the Arnold-Winther mixed FE 
-% in linear elasticity. 
+%createLinSys.m creates the energy matrix A 
+%and the right-hand side b for the Arnold-Winther mixed FE 
+%in linear elasticity. 
+%
+%authors: David Guenther, Jan Reininghaus
 
-% Copyright 2007 Jan Reininghaus, David Guenther
-%
-% This file is part of FFW.
-%
-% FFW is free software; you can redistribute it and/or modify
-% it under the terms of the GNU General Public License as published by
-% the Free Software Foundation; either version 3 of the License, or
-% (at your option) any later version.
-%
-% FFW is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
-%
-% You should have received a copy of the GNU General Public License
-% along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
-%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% load problem definition
-g = p.problem.g;
-u_D = p.problem.u_D;
+%%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 lambda  =  p.PDE.lambda;
 mu  =  p.PDE.mu;
 
-% load geometry
+g = p.problem.g;
+u_D = p.problem.u_D;
+
 n4e  =  p.level(end).geom.n4e;
 c4n  =  p.level(end).geom.c4n;
 Db  =  p.level(end).geom.Db;
 Nb  =  p.level(end).geom.Nb;
 
-% load enumerated data
 nrNodes = p.level(end).nrNodes;
 nrElems = p.level(end).nrElems;
 nrEdges = p.level(end).nrEdges;
@@ -57,17 +39,15 @@ grad4e = p.level(end).enum.grad4e;
 basisCoefficents = p.level(end).basisCoefficents;
 massMatrix = p.level(end).enum.massMatrix;
 
-% load integration parameters
-degreeRhs = p.params.integrationDegrees.createLinSys.Rhs;
-
-% get current level number
 curLvl = length(p.level);
+degree = loadField('p.params','rhsIntegtrateExactDegree',p,1);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% additional data
 dof4e = [dofSigma4e,dofU4e];
 
-
-%% Assembling global energy matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Assembling global energy matrix				   %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %entries of the tensor Cinv
 lame1 = (lambda + 2*mu)/(4*mu*(lambda+mu));
@@ -151,10 +131,13 @@ end
 [I,J] = localDoFtoGlobalDoF(dof4e,dof4e);
 A = sparse(I(:),J(:),S(:));
 
-%% Assembling Righthandside %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Assembling Righthandside                   	      %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 b = zeros(size(A,1),1);
-f4e = integrate(n4e,curLvl,degreeRhs,@funcHandleRHSVolume,p);
+
+f4e = integrate(n4e,curLvl,degree,@funcHandleRHSVolume,p);
 
 for curElem  =  1:nrElems
      area = area4e(curElem);
@@ -165,8 +148,11 @@ for curElem  =  1:nrElems
 %     b(I4) = -fs;
 end
 
-%% Include Neumann conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Include boundary conditions						  %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%Dirichlet boundary
 for k  =  1:length(DbEd)
     curDbEd = DbEd(k);
     curEdgeLength = length4ed(curDbEd);
@@ -200,8 +186,7 @@ for k  =  1:length(DbEd)
     b(globalDoFs) = b(globalDoFs) + rhs;
 end
 
-%% Include Neumann conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%Neumann boundary
 if ~isempty(NbEd)
     nrNeumannDoFs = 4;
     b4Nb = zeros(nrNeumannDoFs*length(NbEd),1);
@@ -297,8 +282,8 @@ if ~isempty(NbEd)
             S(:,:,k) = S(:,:,k) * curEdgeLength^2;
             
             curCoords = c4n(curNode,:);
-            g1 = g(curCoords,n(1,:),p)';
-            g2 = g(curCoords,n(2,:),p)';
+            g1 = g(curCoords(1),curCoords(2),n(1,:),p)';
+            g2 = g(curCoords(1),curCoords(2),n(2,:),p)';
             
 %              G = [g1;g2];
             G = curEdgeLength^2*[g1;g2];
@@ -340,7 +325,7 @@ if ~isempty(NbEd)
          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
             
             curCoords = c4n(curNode,:);
-            G = curEdgeLength^2*g(curCoords,n(1,:),p)';
+            G = curEdgeLength^2*g(curCoords(1),curCoords(2),n(1,:),p)';
 %               G = g(curCoords(1),curCoords(2),n(1,:),p)';
             B(:,k) = G;
         end
@@ -355,7 +340,7 @@ end
 
 freeNodes = 1:size(A,1);
 
-%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 p.level(end).A  =  A;
 p.level(end).matrixD  =  matrixD;
 p.level(end).b  =  b;
@@ -369,7 +354,7 @@ E = edgeLength*tangent;
 x1 = x0(1) + E(1)*x;
 y1 = x0(2) + E(2)*x;
 
-DbVal = func([x1,y1],p);
+DbVal = func(x1,y1,p);
 
 val = [	DbVal(:,2)'.*x;
     DbVal(:,1)'.*x;
@@ -391,7 +376,7 @@ E = edgeLength*tangent;
 x1 = x0(1) + E(1)*x;
 y1 = x0(2) + E(2)*x;
 
-w = func([x1,y1],normal,p)';
+w = func(x1,y1,normal,p)';
 momentZero  = 1/edgeLength;
 momentOne   = (x - 0.5)/edgeLength;
 

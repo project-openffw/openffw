@@ -1,165 +1,14 @@
 \subsection{Refine}
-%
-Given a triangulation $\T_\ell$ on the level $\ell$, let $\E_\ell$ denote its set of interior edges and suppose that $E(T)$ ($E(T):T\in\T_\ell$) denotes the given reference edges. There is no need to label the reference edges $E(T)$ by some level $\ell$ because $E(T)$ will be the same edge of $T$ in all triangulations $\T_m$ which include $T$. However, once $T$ in $\T_\ell$ is refined, the reference edges will change too.
-After the closure algorithm each element has either $k = 0,1,2$ or 3 of 
-its edges marked for refinement and because of the closure 
-algorithm the reference edge belongs to it if $k\geq 1$. 
-Therefore, exactly one of the four refinement rules of Figure~\ref{f:3} is applied.
-This specifies sub triangles and their reference edges in the new triangulation $\mathcal{T}_{\ell+1}$.
-In general there are four different cases to refine an element. 
-Elements with no marked edges are not refined, elements with one marked edge
-are refined \emph{green}, elements with 
-two marked edges are refined \emph{blue} and elements with tree 
-marked edges are refined \emph{red}. Where \emph{blue} refinement
-is divided into the two cases \emph{blueleft} and \emph{blueright}.\bigskip
 
+\textbf{file:} \path{.\algorithms\refine\redGreenBlue.m}\\[1.5ex]
+\begin{tabular}{@{} l l}
+\multicolumn{2}{@{} l}{\textbf{function p = redGreenBlue(p)}} \\
+\textbf{Input:}  & p - ffw\\
+\textbf{Output:} & p - ffw\\
+\end{tabular}
 
-\begin{figure}[!ht]
-\begin{center}
-\setlength{\unitlength}{2cm}
-\begin{picture}(5,1.1)
-
-%red
-\put(0,0){\line(1,0){2}}
-\put(0,0){\line(1,1){1}}
-\put(2,0){\line(-1,1){1}}
-\put(0.5,0.5){\line(1,0){1}}
-\put(1,0){\line(-1,1){0.5}}
-\put(1,0){\line(1,1){0.5}}
-\put(0.5,0.5){\circle*{0.05}}
-\put(1,0){\circle*{0.05}}
-\put(1.5,0.5){\circle*{0.05}}
-\put(0,0.75){\emph{red}}
-\put(-0.1,-0.05){1}
-\put(0.96,1.02){3}
-\put(2.02,-0.05){2}
-\put(0.8,-0.2){$new_1$}
-\put(0,0.5){$new_3$}
-\put(1.6,0.5){$new_2$}
-\put(0.7,0.55){\line(1,0){0.6}}
-\put(0.7,0.45){\line(1,0){0.6}}
-\put(0.2,0.05){\line(1,0){0.6}}
-\put(1.2,0.05){\line(1,0){0.6}}
-
-
-%green
-\put(3,0){\line(1,0){2}}
-\put(3,0){\line(1,1){1}}
-\put(5,0){\line(-1,1){1}}
-\put(4,0){\line(0,1){1}}
-\put(4,0){\circle*{0.05}}
-\put(3,0.75){\emph{green}}
-\put(2.9,-0.05){1}
-\put(3.96,1.02){3}
-\put(5.02,-0.05){2}
-\put(3.8,-0.2){$new_1$}
-\put(3.2,0.1){\line(1,1){0.6}}
-\put(4.8,0.1){\line(-1,1){0.6}}
-\end{picture}
-\vspace{1cm}
-
-\begin{picture}(5,1)
-
-%blue left
-\put(0,0){\line(1,0){2}}
-\put(0,0){\line(1,1){1}}
-\put(2,0){\line(-1,1){1}}
-\put(1,0){\line(0,1){1}}
-\put(1,0){\line(-1,1){0.5}}
-\put(0.5,0.5){\circle*{0.05}}
-\put(1,0){\circle*{0.05}}
-\put(0,0.75){\emph{blue left}}
-\put(-0.1,-0.05){1}
-\put(0.96,1.02){3}
-\put(2.02,-0.05){2}
-\put(0.8,-0.2){$new_1$}
-\put(0,0.5){$new_2$}
-\put(1.8,0.1){\line(-1,1){0.6}}
-\put(0.2,0.05){\line(1,0){0.6}}
-\put(0.9,0.25){\line(0,1){0.5}}
-
-%blue right
-\put(3,0){\line(1,0){2}}
-\put(3,0){\line(1,1){1}}
-\put(5,0){\line(-1,1){1}}
-\put(4,0){\line(0,1){1}}
-\put(4,0){\line(1,1){0.5}}
-\put(4.5,0.5){\circle*{0.05}}
-\put(4,0){\circle*{0.05}}
-\put(2.8,0.75){\emph{blue right}}
-\put(2.90,-0.05){1}
-\put(3.96,1.02){3}
-\put(5.02,-0.05){2}
-\put(3.8,-0.2){$new_1$}
-\put(4.6,0.5){$new_2$}
-\put(3.2,0.1){\line(1,1){0.6}}
-\put(4.2,0.05){\line(1,0){0.6}}
-\put(4.1,0.25){\line(0,1){0.5}}
-
-\end{picture}
-\end{center}
-
-\caption{\label{f:3} \emph{Red}, \emph{green} and \emph{blue} refinement.
-         The new reference edge is marked through a second line in parallel opposite the new vertices 
-         $new_1$, $new_2$ or $new_3$.}
-\end{figure}
-
-
+\medskip
 \noindent
-All elements that are marked in refineElemsBisec5 are refined \emph{bisec5} instead of
-\emph{red}, see Figure~\ref{f:4}.\bigskip
-
-\begin{figure}[!ht]
-\setlength{\unitlength}{2cm}
-\begin{center}
-\begin{picture}(2,1.1)
-%bisec5
-\put(0,0){\line(1,0){2}}
-\put(0,0){\line(1,1){1}}
-\put(2,0){\line(-1,1){1}}
-\put(0.5,0.5){\line(1,0){1}}
-\put(1,0){\line(-1,1){0.5}}
-\put(1,0){\line(1,1){0.5}}
-\put(1,0){\line(0,1){1}}
-\put(0.5,0.5){\circle*{0.05}}
-\put(1,0){\circle*{0.05}}
-\put(1.5,0.5){\circle*{0.05}}
-\put(1,0.5){\circle*{0.05}}
-\put(-1,0.75){\emph{bisec5}}
-\put(-0.10,-0.05){1}
-\put(0.96,1.02){3}
-\put(2.02,-0.05){2}
-\put(0.8,-0.2){$new_1$}
-\put(0,0.5){$new_3$}
-\put(1.6,0.5){$new_2$}
-\put(1,0.55){$new_4$}
-%\put(0.25,-0.1){\vector(0,1){0.1}}
-%\put(0.75,-0.1){\vector(0,1){0.1}}
-%\put(0.73,0.2){\vector(-2,1){0.1}}
-%\put(0.27,0.2){\vector(2,1){0.1}}
-%\put(0.74,0.8){\vector(-2,-1){0.1}}
-%\put(0.26,0.8){\vector(2,-1){0.1}}
-\put(0.65,0.55){\line(1,1){0.2}}
-\put(1.35,0.55){\line(-1,1){0.2}}
-\put(0.2,0.05){\line(1,0){0.6}}
-\put(1.2,0.05){\line(1,0){0.6}}
-\put(0.9,0.175){\line(-1,1){0.2}}
-\put(1.1,0.175){\line(1,1){0.2}}
-\end{picture}
-\vspace{1ex}
-\end{center}
-\caption{\label{f:4} \emph{bisec5} refinement. The new reference edge is marked through a second line in parallel opposite the new vertices $new_1$, $new_2$, $new_3$ and $new_4$.}
-\end{figure}
-
-\noindent
-The red-green-blue refinement is implemented in\\
-File: \path{.\algorithms\refine\redGreenBlue.m}
-\begin{pcode}
-function p = redGreenBlue(p) 
-% input:   p - FFW
-% output:  p - FFW
-\end{pcode}
-%
 At first we create the new c4n. Therefore we take the old c4n 
 and add the new coordinates at the end of the list. The new 
 coordinates are the midpoints of the marked edges.
@@ -186,18 +35,171 @@ refineElems = find( any(newNode4e,2) );
 nrMarkedEd4MarkedElems = sum(refineEdges( ed4e(refineElems,:) ),2);
 newn4e = n4e(unrefinedElems,:);
 \end{pcode}
+%
+In general there are three different cases to refine an element. 
+Elements with one marked edge are refined \emph{green}, elements with 
+two marked edges are refined \emph{blue} and elements with tree 
+marked edges are refined \emph{red}. To refine all the elements
+that are to be refined \emph{green} can be refined simultaneously.
+It is important to know that the first edge of an element is 
+always the reference edge and that all elements have math. positive 
+orientation, i.e., counter clockwise. Because of that fact we know that 
+for an element that will be \emph{green} refined the one marked edge is 
+the reference edge and therefore the first edge of an element. 
+From that fact we see that there is only one way to refine an element \emph{green}. 
+Instead we have two different cases with \emph{blue} refinement. 
+Therefore we distinguish between \emph{blueleft} and \emph{blueright}
+refinement. Again there is only one way to perform \emph{red} refinement
+(cf. figure~\ref{f:3}).
+
+\begin{figure}[p]
+\begin{center}
+\setlength{\unitlength}{4cm}
+\begin{picture}(2.5,1.1)
+
+%red
+\put(0,0){\line(1,0){1}}
+\put(0,0){\line(1,2){0.5}}
+\put(1,0){\line(-1,2){0.5}}
+\put(0.25,0.5){\line(1,0){0.5}}
+\put(0.5,0){\line(-1,2){0.25}}
+\put(0.5,0){\line(1,2){0.25}}
+\put(0.25,0.5){\circle*{0.05}}
+\put(0.5,0){\circle*{0.05}}
+\put(0.75,0.5){\circle*{0.05}}
+\put(0,0.75){\emph{red}}
+\put(-0.04,-0.05){1}
+\put(0.48,1.01){3}
+\put(1.01,-0.05){2}
+\put(0.4,-0.1){$new_1$}
+\put(0,0.5){$new_3$}
+\put(0.8,0.5){$new_2$}
+%\put(0.5,0.6){\vector(0,-1){0.1}}
+%\put(0.25,-0.1){\vector(0,1){0.1}}
+%\put(0.75,-0.1){\vector(0,1){0.1}}
+\put(0.35,0.55){\line(1,0){0.3}}
+\put(0.35,0.45){\line(1,0){0.3}}
+\put(0.1,0.05){\line(1,0){0.3}}
+\put(0.6,0.05){\line(1,0){0.3}}
+
+%green
+\put(1.5,0){\line(1,0){1}}
+\put(1.5,0){\line(1,2){0.5}}
+\put(2.5,0){\line(-1,2){0.5}}
+\put(2,0){\line(0,1){1}}
+\put(2,0){\circle*{0.05}}
+\put(1.5,0.75){\emph{green}}
+\put(1.46,-0.05){1}
+\put(1.98,1.01){3}
+\put(2.51,-0.05){2}
+\put(1.9,-0.1){$new_1$}
+%\put(2.35,0.55){\vector(-2,-1){0.1}}
+%\put(1.66,0.55){\vector(2,-1){0.1}}
+\put(1.6,0.1){\line(1,2){0.3}}
+\put(2.4,0.1){\line(-1,2){0.3}}
+\end{picture}
+\vspace{1cm}
+
+\begin{picture}(2.5,1)
+
+%blue left
+\put(0,0){\line(1,0){1}}
+\put(0,0){\line(1,2){0.5}}
+\put(1,0){\line(-1,2){0.5}}
+\put(0.5,0){\line(0,1){1}}
+\put(0.5,0){\line(-1,2){0.25}}
+\put(0.25,0.5){\circle*{0.05}}
+\put(0.5,0){\circle*{0.05}}
+\put(0,0.75){\emph{blue left}}
+\put(-0.04,-0.05){1}
+\put(0.48,1.01){3}
+\put(1.01,-0.05){2}
+\put(0.4,-0.1){$new_1$}
+\put(0,0.5){$new_2$}
+%\put(0.6,0.5){\vector(-1,0){0.1}}
+%\put(0.25,-0.1){\vector(0,1){0.1}}
+%\put(0.85,0.55){\vector(-2,-1){0.1}}
+\put(0.9,0.1){\line(-1,2){0.3}}
+\put(0.1,0.05){\line(1,0){0.3}}
+\put(0.45,0.25){\line(0,1){0.5}}
+
+%blue right
+\put(1.5,0){\line(1,0){1}}
+\put(1.5,0){\line(1,2){0.5}}
+\put(2.5,0){\line(-1,2){0.5}}
+\put(2,0){\line(0,1){1}}
+\put(2,0){\line(1,2){0.25}}
+\put(2.25,0.5){\circle*{0.05}}
+\put(2,0){\circle*{0.05}}
+\put(1.4,0.75){\emph{blue right}}
+\put(1.46,-0.05){1}
+\put(1.98,1.01){3}
+\put(2.51,-0.05){2}
+\put(1.9,-0.1){$new_1$}
+\put(2.3,0.5){$new_2$}
+%\put(1.9,0.5){\vector(1,0){0.1}}
+%\put(2.25,-0.1){\vector(0,1){0.1}}
+%\put(1.66,0.55){\vector(2,-1){0.1}}
+\put(1.6,0.1){\line(1,2){0.3}}
+\put(2.1,0.05){\line(1,0){0.3}}
+\put(2.05,0.25){\line(0,1){0.5}}
+
+\end{picture}
+\end{center}
+
+\caption{\label{f:3} \emph{Red}, \emph{green} and \emph{blue} refinement.
+         The new reference edge is marked with a small edge.}
+\end{figure}
 
 
 \noindent
-All elements that are to be \emph{red} or \emph{green} refined can be refined simultaneously.
-In the case of \emph{green} refinement, it is important to know that the first edge of an element is 
-always the reference edge, therefore the marked edge, and that all elements have math. positive 
-orientation, i.e. counter clockwise. Therefore there is only one
-way to refine an element \emph{green}. 
-Instead we have two different cases with \emph{blue} refinement. 
-Therefore we distinguish between \emph{blueleft} and \emph{blueright}
-refinement. Again there is only one way to perform \emph{red} refinement.
-For example the MATLAB code for \emph{green} refinement is
+All elements that are marked in refineElemsBisec5 are refined instead of
+\emph{red} with \emph{bisec5} (cf. figure~\ref{f:4}).
+
+\begin{figure}[p]
+\setlength{\unitlength}{4cm}
+\begin{center}
+\begin{picture}(1,1.1)
+%bisec5
+\put(0,0){\line(1,0){1}}
+\put(0,0){\line(1,2){0.5}}
+\put(1,0){\line(-1,2){0.5}}
+\put(0.25,0.5){\line(1,0){0.5}}
+\put(0.5,0){\line(-1,2){0.25}}
+\put(0.5,0){\line(1,2){0.25}}
+\put(0.5,0){\line(0,1){1}}
+\put(0.25,0.5){\circle*{0.05}}
+\put(0.5,0){\circle*{0.05}}
+\put(0.75,0.5){\circle*{0.05}}
+\put(0.5,0.5){\circle*{0.05}}
+\put(-0.5,0.75){\emph{bisec5}}
+\put(-0.04,-0.05){1}
+\put(0.48,1.01){3}
+\put(1.01,-0.05){2}
+\put(0.4,-0.1){$new_1$}
+\put(0,0.5){$new_3$}
+\put(0.8,0.5){$new_2$}
+\put(0.5,0.55){$new_4$}
+%\put(0.25,-0.1){\vector(0,1){0.1}}
+%\put(0.75,-0.1){\vector(0,1){0.1}}
+%\put(0.73,0.2){\vector(-2,1){0.1}}
+%\put(0.27,0.2){\vector(2,1){0.1}}
+%\put(0.74,0.8){\vector(-2,-1){0.1}}
+%\put(0.26,0.8){\vector(2,-1){0.1}}
+\put(0.325,0.55){\line(1,2){0.1}}
+\put(0.675,0.55){\line(-1,2){0.1}}
+\put(0.1,0.05){\line(1,0){0.3}}
+\put(0.6,0.05){\line(1,0){0.3}}
+\put(0.45,0.175){\line(-1,2){0.1}}
+\put(0.55,0.175){\line(1,2){0.1}}
+\end{picture}
+\vspace{1ex}
+\end{center}
+\caption{\label{f:4} \emph{bisec5} refinement.}
+\end{figure}
+
+\noindent
+For example the matlab code for \emph{green} refinement is
 printed below. The new elements are 
 $T_1=\conv(2,3,new_1)$ and $T_1=\conv(3,1,new_1)$.
 The new reference edge are the edges between the nodes

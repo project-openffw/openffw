@@ -1,28 +1,25 @@
 
 \subsection{Closure}
-In the process of generating adaptive meshes you have to
+In the process of generating adaptive meshed you have to
 be careful that the angles of the element are bounded 
 due to the maximum angle condition. To guarantee this you
 additionally have to refine all reference edges of elements
-that have marked edges, i.e. compute the smallest subset $\widehat{\M}_\ell$ of $\E_\ell$ which includes $\M_\ell$ such that
-there holds 
-\begin{equation*}
- E\in \widehat{\M}_\ell, \;\; E\subseteq T \Longrightarrow   E(T)\in \widehat{\M}_\ell.
-\end{equation*} 
+that have marked edges.
 This is done in the function closure.
 
 \medskip
 \noindent
-File: \path{.\algorithms\misc\closure.m}
-\begin{pcode}
-function p = closure(p) 
-input:   p - FFW
-output:  p - FFW
-\end{pcode}
+\textbf{file:} \path{.\algorithms\misc\closure.m}\\[1.5ex]
+\begin{tabular}{@{} l l}
+\multicolumn{2}{@{} l}{\textbf{function p = closure(p)}} \\
+\textbf{Input:}  & p - ffw\\
+\textbf{Output:} & p - ffw\\
+\end{tabular}
 
+\medskip
 \noindent
 We briefly say that although the following code
-can have quadratic runtime it has linear runtime
+can have quadratic runtime it has lineare runtime
 in average. From convergence theory we know that for
 a sequence of triangulations the number of the additionally refined 
 reference edges are linear in the number of levels.

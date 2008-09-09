@@ -1,50 +1,29 @@
 \subsection{Getting Started with the FFW}
 \label{sect:QuickStart:gettingStarted}
 
-\noindent This subsection will describe how to execute an existing script for a problem and how to manipulate it.\medskip
+\noindent This Subsection will tell you how to execute an existing script for a problem and how to manipulate it.\medskip
 
-\noindent In the following we are interested in the solution $u$ of the elliptic PDE
+\noindent In the following we will consider the problem to calculate the solution of an elliptic PDE, i.e.
 \begin{align*}
 - \ddiv (\kappa \,\grad u) + \lambda \,\grad u + \mu \, u &= f &&\text{in } \Omega,\\
 u &= u_D &&\text{on } \Gamma,\\
 \frac{\partial u}{\partial n} &= g &&\text{on } \partial\Omega \setminus \Gamma.
 \end{align*}
-As model problem we consider the above problem with $\kappa = I$, $\lambda = 0$, $\mu = 0$, $f \equiv 1$, $u_D \equiv 0$ and $g \equiv 0$, on a L-shaped domain $\Omega$ with Dirichlet boundary only (Neumann boundary $\partial\Omega \setminus \Gamma = \emptyset$).\medskip
+To keep it simple, we set $\kappa = I$, $\lambda = 0$, $\mu = 0$, $f \equiv 1$, $u_D \equiv 0$ and $g \equiv 0$, on a L-shaped domain $\Omega$ with Dirichlet boundary only (Neumann boundary $\partial\Omega \setminus \Gamma = \emptyset$).\medskip
 
-\noindent The script \code{gettingStarted.m} in the root folder shows the basic usage of the \FFW\!. It's code is printed in Figure~\ref{sect:Quickstart.fig.code:gettingStarted}.
+\noindent First, take a look at the script in Figure~\ref{sect:Quickstart.fig.code:gettingStarted}, which is located in the root folder of the \FFW\!.
 
 \begin{figure}[ht!]
-%\inputcoden{../gettingStarted.m}
-\begin{pcoden}
-function p = gettingStarted
-
-problem = 'Elliptic_Lshape';
-pdeSolver = 'P1';
-maxNrDoF = 100;
-mark = 'bulk';
-
-p = initFFW(pdeSolver,problem,mark,maxNrDoF,'elliptic');
-p = computeSolution(p);
-
-figure(1);
-set(gcf,'Name','Displacement');
-p = show('drawU',p);
-view(-30,20)
-
-figure(2);
-set(gcf,'Name','Estimated Error');
-p = show('drawError_estimatedError',p);
-\end{pcoden}
-
+\inputcoden{../gettingStarted.m}
 \caption{Content of \code{gettingStarted.m}}\label{sect:Quickstart.fig.code:gettingStarted}
 \end{figure}
 
 \medskip
-\noindent To start the script, set MATLAB's current directory to the root of the \FFW and execute it.\medskip
+\noindent To start a script, set MATLAB's current directory to the root of the \FFW and execute it. Any script you want to use with the \FFW has to be located in the root folder of the \FFW\!.\medskip
 
 \noindent 
 \begin{enumerate}[{\hspace{15mm}}]
-\item[Line 3:] The name of a file that describes the problem definition. This file is located at \path{.\problems\elliptic\}. For more details on the geometry refer to Section~\ref{sect:DataStructures}. For more details on the problem definition see also Subsection~\ref{sect:QuickStart:ProblemDefinition}.
+\item[Line 3:] The name of a file that describes the problem is defined. This file is located at \path{.\problems\elliptic\}. The content of this file is shown in Figure~\ref{sect:Quickstart.fig.code:problem}. For more details on the geometry refer to Section~\ref{sect:DataStructures}. For more details on the problem definition see also Subsection~\ref{sect:QuickStart:ProblemDefinition}.
 \item[Line 4:] The type of finite element method is chosen. This can possibly also be \code{'CR'}.
 \item[Line 5:] This is the indicator when to stop the refinement, i.e., the calculations. For more details refer to Section~\ref{sect:MeshGeneration}.
 \item[Line 6:] The mark algorithm is chosen. The argument can also be \code{'maximum'} or \code{'uniform'}. For more details refer to Section~\ref{sect:MeshGeneration}.
@@ -65,4 +44,13 @@ p = show('drawError_estimatedError',p);
 \caption{Plots obtained from the \code{gettingStarted.m} script for \code{pdeSolver = 'P1'} on top and \code{pdeSolver = 'CR'} below.}\label{sect:Quickstart.fig.plots.gettingStarted}
 \end{figure}
 
+\bigskip
+\noindent To make it more convenient to work with the \FFW, there are `startscripts' with almost all available PDE solvers, already implemented problems and different draw routines, for elliptic and elasticity problems respectively. Those scripts can be found in the root folder (\code{startElasticity.m} and \code{startElliptic.m}).\bigskip
+
+\noindent For a more complex example, see the script in Figure~\ref{sect:Quickstart.fig.code:advancedExample} or the script file \path{advancedExample.m} in the root directory of the \FFW\!. This scripts implements the so called `waterfall' example on a square domain.
+
+\begin{figure}[ht!]
+\inputcode{../advancedExample.m}
+\caption{Content of \code{advancedExample.m}}\label{sect:Quickstart.fig.code:advancedExample}
+\end{figure}
 \clearpage
