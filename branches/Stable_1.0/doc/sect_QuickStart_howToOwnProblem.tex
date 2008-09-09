@@ -1,0 +1,81 @@
+\subsection{How to Implement a Problem}
+\label{sect:QuickStart:howToOwnProblem}
+
+In this subsection we describe how one can easily use the implemented methods in the \FFW to solve problems with ones own data. To explain how to change the data we look at the example of a elliptic PDE of the form
+
+\begin{align*}
+- \ddiv (\kappa \,\grad u) + \lambda \,\grad u + \mu \, u &= f &&\text{in } \Omega,\\
+u &= u_D &&\text{on } \Gamma,\\
+\frac{\partial u}{\partial n} &= g &&\text{on } \partial\Omega \setminus \Gamma,
+\end{align*}
+
+In general there are two ways to implement a problem. If one wants to test a method of the \FFW with an exact analytic solution and an elliptic operator like the one above, one can use the template \path{Elliptic_Exact_Template.m} in \path{.\problems\elliptic}. One has to copy the file and rename the copy. In the copy of the template one can change the symbolic expressions for $u$, $\kappa$, $\lambda$ and $\mu$ then the right hand side $f$ is calculated automatically such that $u$ is the solution of the PDE. The relevant part of the template \path{.\Elliptic_Exact_Template.m} looks as follows:
+
+\begin{pcode}
+% Specification of exact solution and differential Operator
+u = sin(x^3)*cos(y^pi)+x^8-y^9+x^6*y^10;
+lambda = [0, 0];
+mu = 0;
+kappa = [1 0; 0 1];
+\end{pcode}
+
+If one wants to solve a given problem, one uses the template \path{Elliptic_Template.m} in \path{.\problems\elliptic}. In the renamed copy one has to change the function definitions of the data. The relevant part of the template \path{Elliptic_Template.m} looks as follows:
+
+\begin{pcode}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Volume force
+function z = f(x,y,p)
+z = ones(length(x),1);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Dirichlet boundary values
+function z = u_D(x,y,p)
+z = zeros(length(x),1);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Neumann boundary values
+function z = g(x,y,n,p)
+z = zeros(length(x),1);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% elliptic PDE coefficent kappa ( div(kappa*grad_u) )
+function z = kappa(x,y,p)
+nrPoints = length(x);
+z = zeros(2,2,nrPoints);
+for curPoint = 1:nrPoints
+    z(:,:,curPoint) = [1 0;
+                      0 1];
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% elliptic PDE coefficent lambda ( lambda*grad_u )
+function z = lambda(x,y,p)
+nrPoints = length(x);
+z = zeros(nrPoints,2);
+for curPoint = 1:nrPoints
+    z(curPoint,:) = [0 , 0];
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% elliptic PDE coefficent mu ( mu*u )
+function z = mu(x,y,p)
+z = zeros(length(x),1);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{pcode}
+
+If one wants to change the geometry of $\Omega$, one can use one of the implemented geometries in \path{.\problems\geometries} by changing the geometry in the PDE definition in the copy of the template file to the name of the folder containing the data.
+% PDE definition
+p.problem.geom = 'Lshape';
+
+To use a new geometry one has to create a new folder in \path{.\problems\geometries} which contains the data files \path{<geometry name>_n4e.dat}, \path{<geometry name>_c4n.dat}, \path{<geometry name>_Db.dat} and \path{<geometry name>_Nb.dat}. Here \path{<geometry name>} is the name of the created folder. To see how the geometry data must be structured see Section~\ref{sect:DataStructures} and the already existing folders.
+
+In \path{start_elliptic.m} the new Problem is chosen by
+\begin{pcode}
+problem = '<name of file>'
+\end{pcode}
+where \path{<name of file>} is the name of the copy from the template.

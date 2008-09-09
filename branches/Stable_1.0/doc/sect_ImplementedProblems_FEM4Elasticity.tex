@@ -1,0 +1,65 @@
+\subsection{FEM for Elasticity}
+
+We consider the following elliptic system of PDE's modelling linear elasticity.
+
+\begin{align}
+\label{strong form}
+-\ddiv\, \C\,\varepsilon(u)&=f \text{  in }\Omega,\\
+u&=u_D\text{ on }\Gamma_D, \\
+(\C\,\varepsilon(u))\cdot \nu&=g \text{ on }\Gamma_N,
+\end{align}
+with $u_D\in H^1(\Omega;\R^2)$, $f\in L^2(\Omega;\R^2)$, $g\in
+L^2(\Gamma_N;\R^2)$. Here and throughout,
+$\varepsilon(v)=\frac{1}{2}(\grad v+(\grad v)^T)$ denotes the
+linearized Green strain tensor, $\C$ is the reduced symmetric fourth order
+bounded and positive definite elasticity tensor defined by the
+Lam\'e parameters $\lambda$ and $\mu$. In Voigt notation the tensor $\C$ and its inverse is given through
+\begin{equation*}
+\C:=\begin{pmatrix}
+2\mu+\lambda & \lambda       & 0\\
+\lambda      & 2\mu+\lambda  & 0\\
+0            & 0             & \mu
+\end{pmatrix} \quad\text{and}\quad
+\Cinv:=\begin{pmatrix}
+\frac{\lambda+2 \mu}{4\mu(\lambda+\mu)} & \frac{-\lambda}{4\mu(\lambda+\mu)}            & 0\\
+\frac{-\lambda}{4\mu(\lambda+\mu)}          & \frac{\lambda+2 \mu}{4\mu(\lambda+\mu)} & 0\\
+0 & 0 & \frac{1}{\mu}
+\end{pmatrix}.
+\end{equation*}
+The weak form of \eqref{strong form} reads:
+Seek $u\in V$
+\begin{equation}\label{elasticity weak form}
+\int_{\Omega} \varepsilon(u):\C\varepsilon(v) \, dx = \int_{\Omega}
+f \cdot v \, dx + \int_{\Gamma_N} g\cdot v \, ds_x \quad\text{for
+all } v \in V.
+\end{equation}
+We have implemented a conforming discretization of \eqref{elasticity
+weak form} with $V$ being the space of globally continuous and
+piecewise affine functions and a nonconforming method with $V$
+consisting of globally piecewise affine functions, where the first
+component is globally continuous, while the second component is only
+continuous at the midpoints of the edges $\mathcal{E}$ of the
+triangulation $\mathcal{T}$.
+\medskip
+
+The mixed form of \eqref{strong form} reads:
+\begin{align}\label{elasticity mixed strong form}
+-\ddiv\, \sigma&=f&  &\text{ and }& \sigma&=\C\,\varepsilon(u)&\text{  in }\Omega,\\
+u&=u_D\text{ on }\Gamma_D& &\text{ and }& \sigma \nu&=g \text{ on
+}\Gamma_N.
+\end{align}
+with the corresponding weak form
+\begin{align*}
+\int_{\Omega} \sigma:\C^{-1}\tau \, dx + \int_{\Omega} u\cdot\ddiv\,
+\tau \,dx
+&= \int_{\Gamma_D} u_D\cdot (\tau \,\nu) \, ds_x &&\text{for all } \tau \in \Sigma,\\
+\int_{\Omega} v\cdot\ddiv\, \sigma\,dx &= - \int_{\Omega} f \cdot v
+\, dx &&\text{for all } v \in V.
+\end{align*}
+We have implemented the mixed Arnold-Winther element where $\Sigma$
+consists of globally continuous, piecewise cubic polynomial
+symmetric $2\times 2$ matrices whose divergence belongs to the
+(discontinuous) space of locally piecewise affine vector fields
+$V$.\medskip The problem definition is similar to the scalar
+elliptic case, only the return values of $u_D$ and $f$ are now
+vector valued.

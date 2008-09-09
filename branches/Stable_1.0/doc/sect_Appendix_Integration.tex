@@ -1,0 +1,172 @@
+\subsection{Gauss Quadratur}
+To integrate the right hand side of the partial differential equation
+\begin{equation*}
+\textrm{rhs} = \int_{\Omega} f \varphi\; dx + \int_{\Gamma_N} g \varphi\; dx
+\end{equation*}
+we need to use quadrature formulas. On the one hand we have to
+calculate integrals in 1D for the neumann boundary and on the other hand
+we have to solve integrals in 2D numerically.
+In order to do this and for integration various types of integrals
+we developed the following interface.
+
+\subsubsection{Interface integrand}
+\textbf{file:} \path{.\algorithms\integrate\integrand.m}\\[1.5ex]
+\begin{tabular}{@{} l l}
+\multicolumn{2}{@{} l}{\textbf{function val = integrate(parts, curLvl,  degree, integrand, p)}} \\
+\textbf{Input:}  & parts - nodes for elements or edges\\
+                 & curLvl - current level\\
+                 & degree - the integration will be exact for all polynomials up to total degree 'degree'\\
+                 & p - ffw\\
+\textbf{Output:} & val - values of the integrand per element or edge $nrParts\times n\times m$ 
+\end{tabular}
+
+\medskip
+\noindent
+The integration interface can also handle functions $f:\mathbb{R}^k \mapsto\mathbb{R}^{m,n}$ in the sense that it integrates each component separately.\\
+The function handle integrand has to be of the following form.
+\begin{pcode}
+function val = integrand(x,y,curPart,curLvl,p)
+\end{pcode}
+Where the output has to be of the form $n\times m\times length(x)$.\\
+For the integration of the right hand side there already exist two function handles.\\[1.5ex]
+\textbf{file:} \path{/algorithms/integrate/funcHandleRHSVolume.m}\\[1.5ex]
+\textbf{file:} \path{/algorithms/integrate/funcHandleRHSNb.m}\\[1.5ex]
+In both cases the function handle returns a matrix of the form $nrElements \times nrBasisFunctions$.\\
+The integration interface uses the following quadrature formulas.
+
+\subsubsection{Gauss-Legendre formula}
+\textbf{file:} \path{.\algorithms\integrate\getGaussPoints.m}\\[1.5ex]
+\begin{tabular}{@{} l l}
+\multicolumn{2}{@{} l}{\textbf{function [x,w] = getGaussPoints(n)}} \\
+\textbf{Input:}  & n - number of points\\
+\textbf{Output:} & x - Gauss points  $n\times 2$\\
+                 & w - Gauss weights  $n\times 1$\\
+\end{tabular}
+
+\medskip
+\noindent
+We want to integrate numerically  a given function over the reference edge $\textrm{conv}\{0,1\}$
+\begin{equation*}
+ I(f) = \int_0^1\omega(x)f(x)\;dx
+\end{equation*}
+The integration formula has the form
+\begin{equation*}
+    \widetilde{I}(f) := \sum_{i=1}^n\omega_i f(x_i)\; ,
+\end{equation*}
+where $\omega_i$ are the weights and $x_i$ are the Gauss points.\\
+The Gauss points are the roots of orthogonal polynomials. The weights are chosen such that the
+formula is optimal for all polynomials up to total degree $p=2n-1$.\\
+When we choose $\omega(x)=1$ and the interval $[-1,1]$ we get the Gauss-Legendre formula, where
+the Gauss points are the roots of the n-th Legendre polynomial.\\
+The following two theorems show how to calculate the Gauss points $x_i$ and weights $\omega_i$ efficiently for arbitrary $n\in\mathbb{N}$.
+%
+\begin{theorem}
+The roots $x_i,\; i=1,\ldots,n$ of the n-th orthogonal polynomial $p_n$ are the
+eigenvalues of the tridiagonal matrix
+\begin{equation*}
+J_n := \left[
+\begin{array}{ccccc}
+    \delta_1  & \gamma_2 &   &   & \\
+    \gamma_2  & \delta_2 & . &   & \\
+              & .        & . & . & \\
+              &          & . & . &\gamma_n \\
+              &          &   & \gamma_n & \delta_n \\
+\end{array}
+\right]\; .
+\end{equation*}
+Where the coefficients are recursively defined by $\delta_i,\gamma_i$
+\begin{equation*}
+\begin{split}
+  \delta_{i+1} &:= (x p_i, p_i) / (p_i, p_i) \quad\textrm{ for}\; i\geq 0\\
+  \gamma_{i+1}^2 &:= \left\{
+\begin{array}{ll}
+    1 & \textrm{for} \; i=0 \\
+    (p_i,p_i)/(p_{i-1},p_{i-1}) & \textrm{for}\; i\geq 1\\
+\end{array}\right.\; .
+\end{split}
+\end{equation*}
+\end{theorem}
+\noindent
+For the Gauss-Legendre formula the coefficients are
+\begin{equation*}
+\delta_{i+1} = 0\; \textrm{ for}\; i\geq 0 \; \textrm{and} \; \gamma_{i+1} = \frac{i}{\sqrt{4i^2-1}}\;\textrm{ for}\; i\geq 1\; .
+\end{equation*}
+Therefore we can calculate the Gauss points $x_i$ with the following matlab lines.
+\begin{pcode}
+gamma = [1 : n-1] ./ sqrt(4*[1 : n-1].^2 - ones(1,n-1) );
+[V,D] = eig( diag(gamma,1) + diag(gamma,-1) );
+x = diag(D);
+\end{pcode}
+%
+\begin{theorem}
+It holds $ w_k = (v_1^{(k)})^2,\; k = 1,\ldots,n$, if $v^{(k)}=(v_1^{(k)},\ldots,v_n^{(k)})$ are the eigenvectors to the eigenvalue $x_k$ of $J_k$ with the norm factor $\lvert v^{(k)}\rvert = \int_{a}^b\omega(x)\; dx$.
+\end{theorem}
+For the Gauss-Legendre-formula there holds $\int_{a}^b\omega(x)\; dx = \int_{-1}^11\; dx=2$. E.g. we must multiply the weights with factor 2.
+\begin{pcode}
+w = 2*V(1,:).^2;
+\end{pcode}
+After that we have to transform the interval $[-1,1]$ to the reference edge $[0,1]$. Pay attention to the fact that there holds $\int_{0}^11\; dx=1$ and therefore we must multiply the weights with factor 1/2.
+\begin{pcode}
+x = .5 * x + .5;
+w = .5 * w';
+\end{pcode}
+
+\subsubsection{Conical-Product formula}
+\textbf{file:} \path{.\algorithms\integrate\getConProdGaussPoints.m}\\[1.5ex]
+\begin{tabular}{@{} l l}
+\multicolumn{2}{@{} l}{\textbf{function [x,w] = getConProdGaussPoints(n)}} \\
+\textbf{Input:}  & n - Number of Gauss points in 1D\\
+\textbf{Output:} & x - Gauss points  $n^2\times 2$\\
+                 & w - weights  $n^2\times 1$\\
+\end{tabular}
+
+\medskip
+\noindent
+The Conical-Product formula is a quadrature formula especially for triangles. Here we use this formula for the reference triangle with the nodes $(0,0),(0,1)$ and $(1,1)$. The Conical-Product formula is a combination of 1D Gauss points.\\
+The composite formula for the quadrangle is simply the cartesian product of the 1D Gauss-Legendre formula.
+Therefor it is our aim to transform the quadrangle to an triangle by transforming the coordinates.
+\begin{equation*}
+\begin{split}
+    x_1 &= y_1\\
+    x_2 &= y_2(1-y_1) = y_2(1-x_1)\; .
+\end{split}
+\end{equation*}
+From $0\leq x_1\leq 1$ and $0\leq x_1\leq 1-x_2$ we conclude $0\leq y_i\leq 1,\; i=1,2$. By this transformation we transformed the quadrangle to the triangle.\\
+The Conical-Product formula is therefor a combination from the 1D Gauss formulas for the integrals
+\begin{equation*}
+\begin{split}
+    \int_0^1 f(r)\; dr \approx \sum_{i=1}^n a_i f(r_i) \; , \\
+    \int_0^1 (1-s)f(s)\; ds \approx \sum_{j=1}^n b_j f(s_j) \; .\\
+\end{split}
+\end{equation*}
+The first integral can be calculated as above with the Gauss-Legendre formula. For the second integral we need a different Gauss formula. For the weight function $\omega(x) = (1-x)$ the Gauss-Jacobi formula is the right choice. The roots of the corresponding Jacobi polynomials can be calculated analogously to the roots of the Gauss-Legendre polynomials. The coefficients for the Jacobi polynomials are
+\begin{equation*}
+\delta_i = \frac{-1}{4i^2-1}\quad\textrm{and}\quad \gamma_{i+1} = \sqrt{\frac{i(i+1)}{2(i+1)-1}}\; .
+\end{equation*}
+%
+\begin{pcode}
+delta = -1./(4*(1 : n).^2-ones(1,n));
+gamma = sqrt((2 : n).*(1 : n-1)) ./ (2*(2 : n)-ones(1,n-1));
+[V,D] = eig( diag(delta)+diag(gamma,1)+diag(gamma,-1) );
+s = diag(D);
+b = 2*V(1,:).^2;
+\end{pcode}
+As above we have to transform the Gauss points to the interval $[0,1]$. Therefor we must also
+multiply the weights of the Gauss-Jacobi formula with factor 1/4.
+\begin{pcode}
+r = .5 * r + .5;
+a = .5 * a';
+s = .5 * s + .5;
+b = .25 * b';
+\end{pcode}
+The Conical-Product formula therefor has the $n^2$ Gauss points and weights
+\begin{equation*}
+    ( s_j , r_i(1-s_j) ) \quad a_i b_j \quad i=1,\ldots,n\quad j=1,\ldots,n\;.
+\end{equation*}
+\begin{pcode}
+s = repmat(s',n,1); s = s(:);
+r = repmat(r,n,1);
+x = [ s , r.*(ones(n^2,1)-s) ];
+w = a*b';
+w = w(:);
+\end{pcode}

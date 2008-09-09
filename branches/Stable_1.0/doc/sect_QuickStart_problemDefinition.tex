@@ -1,0 +1,50 @@
+\subsection{Problem Definition}
+\label{sect:QuickStart:ProblemDefinition}
+
+This Subsection will try to explain the problem definition files. To make this more practical we will consider our elliptic example from Subsection~\ref{sect:QuickStart:gettingStarted}.\medskip\\
+The actual problem definition looks as follows in Figure~\ref{sect:QuickStart.fig.problemDefinition}
+\begin{figure}[ht!]
+
+\begin{pcode}
+function p = <name>(p)
+
+p.problem.geom = <shape>;
+p.problem.f = @<f>;
+p.problem.g = @<g>;
+p.problem.u_D = @<u_D>;
+p.problem.kappa = @<kappa>;
+p.problem.lambda = @<lambda>;
+p.problem.mu = @<mu>;
+\end{pcode}
+\caption{}\label{sect:QuickStart.fig.problemDefinition}
+\end{figure}
+
+\noindent In the following table we will explain this code. \code{<f>}, \code{<g>}, \code{<u\_D>}, \code{<kappa>}, \code{<lambda>}, \code{<mu>} are functions that represent the corresponding functions of the problem. In general these have the following form:
+\verb"function z = <name>(x,y,p)", where (\code{x},\code{y}) are the coordinates for all nodes (here supposed to be $N$), and \code{p} is the structure.\medskip
+
+\begin{tabular}{p{0.2\textwidth}p{0.7\textwidth}}
+\textit{} & Description\\\hline\\[-1ex]
+\code{<name>}   & Any function name valid in MATLAB (should describes the problem definition).\\
+\code{<shape>}  & This is the name of the folder that contains the data for a geometry.
+                  Those folders have to be located at \path{.\problems\geometries\}.
+                  For more information about what defines a geometry see Section~\ref{sect:DataStructures}\\
+\code{<f>}      & Returns a vector with function values of $f$ of length $N$ calculated at $(x,y)$.\\
+\code{<g>}      & Returns a vector of length $n$, where $n$ is the number of points
+                  $(x,y)$ passed.\\
+\code{<u\_D>}   & Returns a vector of length $n$, where $n$ is the number of points $(x,y)$ passed.\\
+\code{<kappa>}  & Returns a $(2\times 2\times N)$ matrix, where the entry $(:,:,i)$ is the value of
+                  $\kappa$ at node $i$, i.e., $\kappa(x_i,y_i) = z(:,:,i)$.\\
+\code{<lambda>} & Returns a $(2\times N)$ matrix, where the entry $(:,i)$ is the value of
+                  $\lambda$ at node $i$, i.e., $\lambda(x_i,y_i) = z(:,i)$.\\
+\code{<mu>}     & Returns a vector of length $N$ that contains the function values of $\mu$ for every
+                  node $(x_i,y_i)$.\\
+\end{tabular}
+
+\bigskip
+\noindent Figure~\ref{sect:Quickstart.fig.code:problem} displays the full problem definition for an elliptic problem as in Section~\ref{sect:QuickStart:gettingStarted}.
+
+\begin{figure}[hb!]
+\inputcode{../problems/elliptic/Elliptic_Lshape.m}
+\caption{Content of \code{Elliptic\_Lshape.m}}\label{sect:Quickstart.fig.code:problem}
+\end{figure}
+\clearpage

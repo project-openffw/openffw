@@ -1,0 +1,458 @@
+\section{Data Structures}
+\label{sect:DataStructures}
+%In algorithms/enum sind die Funktionen, die alle im
+%\FFW ben\"otigten Gitterinformationen und die
+%lokalen Gradienten f\"ur $P_1$ und $CR$
+%Basisfunktionen auf jedem Element berechnen.
+%
+%Die Informationen werden in Matrizen eingetragen, so dass die Zeile
+%und/oder Spalten den Nummern der Knoten, Elemnte, Kanten usw.
+%entsprechen, f\"ur die man die entsprechende Information erhalten
+%m\"ochte. Ist f\"ur die Knoten, Elemente, Kanten usw. keine
+%Information vorhanden wird eine Null eingetragen. Zum Beispiel, wenn
+%eine Kante eine Randkante ist und es somit nicht zwei Elemente gibt,
+%die sie teilen. Die Namen sind so zu verstehen, dass die n f\"ur \textbf{N}odes, e f\"ur 
+%\textbf{e}lements und ed f\"ur \textbf{ed}ges steht. So dass also e4ed also hei\"st 
+%\"'elements for edges\"'. Bei Daten, die den Dirichlet bzw. den Neumannrand betreffen, 
+%wird kurz Db bzw. Nb geschrieben. Im folgenden werden diese Namen, sowie die Abk\"urzungen 
+%nrNodes f\"ur die Anzahl der Knoten, nrElems f\"ur die Anzahl der Elemente usw. benutzt.
+%
+%Die gesamten Gitterinforamtionen Informationen werden aus den angegebenen Triangulierungsdaten n4e,
+%c4n, Db, Nb generiert. Dabei werden allerdings nicht alle Informationen aus diesen Angaben direkt
+%erzeugt. So wird z.B. e4n aus n4e, ed4n aus e4n und Ed4e dann aus ed4e und n4e erzeugt.
+
+In \path{./algorithms/enum} are the functions which calculate all grid information 
+needed in the \FFW, e.g. area of elements, length of edges, outer unit normals 
+of the boundary, and the local gradients for $P_1$ and $P_1^{NC}$ basis functions.
+
+This information is stored in matrices. In these matrices a row or column number 
+corresponds to the number of an element, node, edge etc. If there is no information 
+on an element, node, edge etc. the corresponding entry is zero. For example a boundary 
+edge will have only one none zero entry in e4ed, since there is only one element 
+which contains it.
+
+
+In the names of the data matrices \textbf{e} stands for \textbf{e}lements, \textbf{n} for \textbf{n}odes
+\textbf{ed} for \textbf{ed}ges, \textbf{Db} for \textbf{D}irichlet\textbf{b}oundary, \textbf{Nb} 
+\textbf{N}eumann\textbf{b}oundary and \textbf{4} means '\textbf{for}'. E.g., the matrix e4ed contains elements
+for an edge. In the following these names are used as well as the abriviations nrElems, 
+nrNodes etc., standing for number of elements, number of Nodes etc.
+
+In a triangulation in the \FFW the geometric primitives (elements, nodes and edges) are 
+numbered uniquely. Dirichlet and Neummann edges are also numbered in this way. The numbering of 
+elements, nodes, Dirichlet and Neumann edges is defined by n4e, c4n, Db and Nb, respectively, 
+whereas the edge numbers are created in path{./enum/getEd4n}. All the other information (e.g. Normals, Tangents) 
+is not numbered and is used as attributes of the information above.
+
+For the geometric primitive one has not only a global number, but most times also a local one. 
+For example the global number of a node is defined by the row number in c4n, and for each 
+element its nodes are locally numbered from one to three by there order in the 
+corresponding row in n4e.
+
+To calculate all the grid information the only initial data needed is n4e, c4n, Db, Nb.
+Please note that not all information is calculated using directly the initial data. For
+example e4n needs only the information in n4e but ed4n is created using the information 
+in e4n.
+
+%Die anzugebenden Triangulierungsdaten sind:
+%
+%\begin{longtable}{p{0.1\textwidth}p{0.35\textwidth}p{0.45\textwidth}}
+%c4n & $nrNodes \times 2$ & Jede Zeile definiert einen Knoten mit den
+%eingetragenen Werten als Koordinaten. Die erste Spalte enth�t dabei
+%die x-Koordinaten und die zweite die y-Koordinaten. Die Knotennummer
+%ist die Nummer der Zeile.\\
+%n4e&$nrElems \times 3$&Jede Zeile definiert ein Element mit den
+%eingetragenen Knoten als Eckpunkte. Die drei Eckpunkte sind gegen
+%den Uhrzeigersinn anzugeben. Die Elementnummer ist die Nummer der
+%Zeile.\\
+%Db&$nrDirichletEdges \times 2$&Jede Zeile definiert die Kante zwischen den
+%eingetragenen Knotennummern als Dirichletkante. Die Knotennummern in
+%einer Zeile sind in der gleichen Reihenfolge wie in dem zugeh\"origen Dreieck in n4e anzugeben.\\
+%Nb&$nrNeumannEdges \times 2$&Jede Zeile definiert die Kante zwischen den
+%eingetragenen Knotennummern als Neumannkante. Die Knotennummern in
+%einer Zeile sind in der gleichen Reihenfolge wie in dem zugeh\"origen Dreieck in n4e anzugeben.
+%\end{longtable}
+
+
+The initial data consists of:
+
+\begin{longtable}{p{0.1\textwidth}p{0.35\textwidth}p{0.45\textwidth}}
+Name&Dimension&Description\\ \hline
+c4n & $nrNodes \times 2$ & Each row defines a node at the coordinates given by the values. 
+Where the first column contains the x-coordinate and the second the y-coordinate. The number 
+of the defined node is the number of the row.\\
+n4e&$nrElems \times 3$&Each row defines an element with the nodes corresponding to the entries 
+as vertices. The vertices have to be entered counter clockwise. The number 
+of the defined element is the number of the row.\\
+Db&$nrDirichletEdges \times 2$&Each row defines the edge between the two nodes corresponding 
+to the entries as a Dirichlet edge. In each row the nodes have to be in the same order as in 
+the corresponding element.\\
+Nb&$nrNeumannEdges \times 2$&Each row defines the edge between the two nodes corresponding 
+to the entries as a Neumann edge. In each row the nodes have to be in the same order as in 
+the corresponding element.
+\end{longtable}
+
+%Die folgende Grafik zeigt mit welchen Matrizen man von einer Information zu einer anderen bergehen kann.
+%Um z.B. alle Kanten fr ein Element zu erhalten, muss man die entsprechende Zeile in ed4e aufrufen.
+%
+
+
+
+The following figure shows how one can get from one geometric primitive to another one. To get for example 
+all edges for one element just look at the corresponding row in ed4e.
+
+\begin{figure}[ht!]
+\begin{center}
+\setlength{\unitlength}{3.5cm}
+\begin{picture}(1.5,1)
+\put(0,0){\line(1,0){1.2}}
+\put(0,0){\line(2,3){0.6}}
+\put(1.2,0){\line(-2,3){0.6}}
+\put(-0.3,-0.1){\textbf{N}odes}
+\put(1.25,-0.1){\textbf{Ed}ges}
+\put(0.4,0.95){\textbf{E}lements}
+\put(0.105,0.2){\vector(2,3){0.4}}
+\put(0.1,0.5){e4n}
+\put(0.5,0.7){\vector(-2,-3){0.4}}
+\put(0.32,0.35){n4e}
+\put(0.735,0.74){\vector(2,-3){0.4}}
+\put(1,0.4){ed4e}
+\put(1.05,0.18){\vector(-2,3){0.4}}
+\put(0.6,0.46){e4ed}
+\put(0.16,0.03){\vector(1,0){0.9}}
+\put(0.6,0.05){ed4n}
+\put(1,-0.03){\vector(-1,0){0.9}}
+\put(0.4,-0.11){n4ed}
+
+\end{picture}
+\end{center}
+\caption{A diagram illustrating mesh dimension traversal.}\label{sect:DataStructures.fig.DataRelations}
+\end{figure}
+
+
+
+%An Gitterinformationen werden erzeugt (jeweils von der Funktion
+%GetINFORMATION):
+%
+%\begin{longtable}{p{0.2\textwidth}p{0.25\textwidth}p{0.45\textwidth}}
+%Name&Dimension&Beschreibung\\ \hline
+%e4n&$nrNodes \times nrNodes$&Jeder Eintrag (j,k) enth\"alt die Elementnummer 
+%des Elementes, das die Knoten j und k gegen den Uhrzeigersinn als Eckpunkte hat\\
+%ed4n&$nrNodes \times nrNodes$&Jeder Eintrag (j.k) enth\"alt die Kantennummer 
+%der Kante, die die Knoten j und k beinhaltet\\
+%ed4e&$nrElems \times 3$&Jede Zeile enth\"alt die Kantennummern des entsprechenden 
+%Elemnts gegen den Uhrzeigersinn entsprechend der Reihenfolge der Knoten in n4e\\
+%n4ed&$nrEdges \times 2$&Jede Zeile enth\"alt die Knotennummern der Knoten, die 
+%die entsprechende Kante beinhaltet\\
+%e4ed&$nrEdges \times 2$&Jede Zeile enth\"alt die Elementnummern der Elemente, 
+%die die entsprechende Kante teilen bzw. enthalten in absteigender Reihenfolge\\
+%DbEdges&$nrDbEdges \times 1$&Jede Zeile enth\"alt die Kantennummer einer Dirchletkante in der Reihenfolge von Db\\
+%NbEdges&$nrNbEdges \times 1$&Jede Zeile enth\"alt die Kantennummer einer Neumannkante in der Reihenfolge von Nb\\
+%area4e&$nrElems \times 1$&Jede Zeile enth\"alt die Fl\"ache f\"ur das entsprechende Element\\
+%midpoint4e&$nrElems \times 2$&Jede Zeile enth\"alt die Koordinaten des Mittelpunktes des entsprechenden Elements\\
+%midpoint4ed&$nrEdges \times 2$&Jede Zeile enth\"alt die Koordinaten des Mittelpunktes der entsprechende Kante\\
+%tangents4e&$3 \times 2 x nrElems$&Jede $3\times2$ Matrix enth\"alt die Koordinaten der drei Einheitstangenten des entsprechenden Elements\\
+%normals4e&$3 \times 2 nrElems$&Jede $3\times2$ Matrix enth\"alt die Koordinaten der drei \"au�ren Einhietsnormalen des entsprechenden Elements\\
+%normals4DbEd&$nrDbEdges \times 2$&Jede Zeile enth\"alt die Koordinaten der \"au�ren Einheitsnormalen an der entsprechenden Dirichletkante\\
+%normals4NbEd&$nrNbEdges \times 2$&Jede Zeile enth\"alt die Koordinaten der \"au�ren Einheitsnormalen an der entsprechenden Neumannkante\\
+%length4ed&$nrEdges \times 1$&Jede Zeile enth\"alt die L\"ange der entsprechenden Kante\\\
+%area4n&$nrNodes \times 1$&Jede Zeile enth\"alt die Fl\"ache des Knotenpatches des entsprechenden Knotens\\
+%angles4e&$nrElems \times 3$&Jede Zeile enth\"alt die drei Innenwinkel (in radiant) des Elementes in der Reihenfolge der zugeh\"origen Knoten in n4e\\
+%angle4n&$nrNodes \times 1$&Jede Zeile enth\"alt die Summe der an den entsprechenden Knoten anliegenden Innenwinkel\\
+%grad4e&$3 \times 2 \times nrElems$& Jede Zeile der $3\times2$-Matrizen enth\"alt den lokalen Gradienten einer $P_1$-Basisfunktion.\\
+%gradNC4e&$3 \times 2 \times nrElems$& Jede Zeile der $3\times2$-Matrizen enth\"alt den lokalen Gradienten einer $CR$-\-Basisfunktion.\\
+%\end{longtable}
+
+The created grid information is (they are always created by the function get\textit{Name}):
+
+\begin{longtable}{p{0.2\textwidth}p{0.25\textwidth}p{0.45\textwidth}}
+Name&Dimension&Description\\ \hline
+e4n&$nrNodes \times nrNodes$&Each entry (j,k) contains the number of the element which has the nodes j and k 
+counter clockwise as vertices.\\
+ed4n&$nrNodes \times nrNodes$&Each entry (j,k) contains the number of the edge between the nodes j and k.\\
+ed4e&$nrElems \times 3$&Each row contains the edge numbers of the corresponding element.\\
+n4ed&$nrEdges \times 2$&Each row contains the node numbers of the corresponding edge.\\
+e4ed&$nrEdges \times 2$&Each row contains the element numbers of the elements sharing the corresponding edge 
+in descending order.\\
+DbEdges&$nrDbEdges \times 1$&Each row contains the number of a Dirichlet edge corresponding to the row in Db.\\
+NbEdges&$nrNbEdges \times 1$&Each row contains the number of a Neumann edge corresponding to the row in Nb.\\
+area4e&$nrElems \times 1$&Each row contains the area of the corresponding element.\\
+midpoint4e&$nrElems \times 2$&Each row contains the coordinates of the midpoint of the corresponding element.\\
+midpoint4ed&$nrEdges \times 2$&Each row contains the coordinates of the midpoint of the corresponding edge.\\
+tangents4e&$3 \times 2 \times nrElems$&Each $3\times2$ matrix contains the coordinates of the three unit tangents of 
+the corresponding element.\\
+normals4e&$3 \times 2 \times nrElems$&Each $3\times2$ matrix contains the coordinates of the three outer unit normals of 
+the corresponding element.\\
+normals4DbEd&$nrDbEdges \times 2$&Each row contains the coordinates of the outer unit normals of 
+the corresponding Dirichlet edge.\\
+normals4NbEd&$nrNbEdges \times 2$&Each row contains the coordinates of the outer unit normals of 
+the corresponding Neumann edge.\\
+length4ed&$nrEdges \times 1$&Each row contains the length of the corresponding edge.\\\
+area4n&$nrNodes \times 1$&Each row contains the area of the node patch of the corresponding node.\\
+angles4e&$nrElems \times 3$&Each row contains the inner angles at each node of the corresponding element 
+in the order given in the rows of n4e.\\
+angle4n&$nrNodes \times 1$&Each row contains the sum of all inner angles at the corresponding node.\\
+grad4e&$3 \times 2 \times nrElems$&Each $3\times2$ matrix contains the three local gradients of the three $P1$ 
+basis functions not completely zero on the corresponding element.\\
+gradNC4e&$3 \times 2 \times nrElems$&Each $3\times2$ matrix contains the three local gradients of the three $CR$ 
+basis functions not completely zero on the corresponding element.\\
+\end{longtable}
+
+%Anhand der folgenden grafik sollen kurz ein paar Beispiele die Datenstrukturen erl\"autern. Die r\"omischen Ziffern in
+%einer Raute sind hier die Nummern des jeweiligen Elements, die arabischen Zahlen in Kreisen die Nummern der Knoten und die kursiven arabischen Zahlen in den K\"astchen die Nummern der Kanten.
+
+The following figure shows a triangulation of two triangles generated by the \FFW. The numbering is used to illustrate the
+structure of the data created in \path{./algorithms/enum} by means of some examples. The latin numbers in rhombuses are the element numbers, the numbers in circles are the node numbers and the cursive numbers in rectangles are the edge numbers.
+
+\begin{figure}[h!]
+\vspace{3ex}
+\begin{center}
+\setlength{\unitlength}{4cm}
+\begin{picture}(2.2,0.9)
+\put(0,0){\line(1,0){1.4}}
+\put(0,0){\line(3,4){0.7}}
+\put(1.4,0){\line(3,4){0.7}}
+\put(0.7,0.93){\line(1,0){ 1.4}}
+\put(0.7,0.93){\line(3,-4){0.7}}
+\put(0.65,0.3){I}
+\put(0.58,0.325){\line(2,3){.08}}
+\put(0.58,0.325){\line(2,-3){.08}}
+\put(0.74,0.325){\line(-2,-3){.08}}
+\put(0.74,0.325){\line(-2,3){.08}}
+\put(1.35,0.57){II}
+\put(1.30,0.595){\line(2,3){.08}}
+\put(1.30,0.595){\line(2,-3){.08}}
+\put(1.46,0.595){\line(-2,-3){.08}}
+\put(1.46,0.595){\line(-2,3){.08}}
+\put(-0.05,-0.1){1}
+\put(-0.026,-0.075){\circle{0.1}}
+\put(1.4,-0.1){2}
+\put(1.424,-0.075){\circle{0.1}}
+\put(0.65,0.96){4}
+\put(0.676,0.985){\circle{0.1}}
+\put(2.1,0.96){3}
+\put(2.125,0.985){\circle{0.1}}
+\put(0.7,-0.08){\it 1}
+\put(0.66,-0.09){\line(1,0){0.13}}
+\put(0.66,-0.09){\line(0,1){0.09}}
+\put(0.79,-0.09){\line(0,1){0.09}}
+\put(1.74,0.39){\it 2} 
+\put(1.78,0.32){\line(3,4){0.09}}
+\put(1.78,0.32){\line(-4,3){0.09}}
+\put(1.87,0.44){\line(-4,3){0.09}}
+\put(0.24,0.41){\it 3}
+\put(0.17,0.41){\line(3,4){0.09}}
+\put(0.17,0.41){\line(4,-3){0.09}}
+\put(0.26,0.53){\line(4,-3){0.09}}
+\put(1.075,0.47){\it 4}
+\put(1.10,0.58){\line(3,-4){0.09}}
+\put(1.10,0.58){\line(-4,-3){0.09}}
+\put(1.19,0.46){\line(-4,-3){0.09}}
+\put(1.4,0.94){\it 5}
+\put(1.37,1.02){\line(1,0){0.13}}
+\put(1.37,1.02){\line(0,-1){0.09}}
+\put(1.50,1.02){\line(0,-1){0.09}}
+\end{picture}
+\caption{Enumeration of nodes, edges and elements.}
+\label{sect:DataStructures.fig.ExampleEnumeration}
+\end{center}
+\end{figure}
+
+Examples:
+
+This n4e creates a triangulation as shown in the Figure~\ref{sect:DataStructures.fig.ExampleEnumeration}:
+\begin{verbatim}
+>> n4e
+n4e =
+     1     2     4
+     2     3     4
+\end{verbatim}
+Note that the order of the nodes is important in e4n but it is not in ed4n. 
+\begin{verbatim}
+>> e4n(2,4)
+ans =
+     1
+>> e4n(4,2)
+ans =
+     2
+>> ed4n(2,4)
+ans =
+     4
+>> ed4n(4,2)
+ans =
+     4
+\end{verbatim}
+One can also get the information for more than one item at a time:
+\begin{verbatim}
+>> n4ed([3 4],2)
+ans =
+     4
+     4
+\end{verbatim}
+If there is only one element containing the edge, i.e. the edge is a boundary edge, the second entry is zero:
+\begin{verbatim}
+>> e4ed([1 4],:)
+ans =
+     1     0
+     2     1
+\end{verbatim}
+The edges are ordered counter clockwise for each element. The first one in each element is the one 
+between the first end the second node (\textbf{not} opposite to the first node): 
+\begin{verbatim}
+>> ed4e(1,:)
+ans =
+     1     4     3
+\end{verbatim}
+\bigskip
+
+{\bf \large Overview of the functions:}\bigskip
+
+
+{\bf \large getE4n.m}\medskip
+
+The function getE4n returns a $nrNodes \times nrNodes$ sparse matrix. NOTE:
+The sparsity constant is bounded due to the used mesh generation. The
+input is n4e. In this matrix each entry $(j,k)$ is the number of the
+element, whose boundary contains the nodes $j$ and $k$ in
+counter clockwise order as vertices or zero if the there is no such
+element. Since the nodes in n4e are oriented counter clockwise e4n
+gives you the number of the row in which the sequence $j\;k$ is found. Note that 
+in this context $k\;i\;j$ also contains the sequence $j\;k$. To find the patch of a node $k$, i.e all
+elements containing node $k$, just get the non zero entries of the $k$-th row or column.\\ \medskip
+
+{\bf \large getEd4n.m}\medskip
+
+The function getEd4n returns a symmetric $nrNodes \times nrNodes$
+sparse matrix. NOTE: The sparse constant is bounded due to the used mesh generation.
+ The input is e4n generated by the function getE4n. The
+output matrix ed4n contains the numbers of the edges between two
+nodes or zero if the two nodes are not on one edge. In the sense
+that for node $j$ and node $k$ the entry $(j,k)$, and $(k,j)$ respectively,
+is the corresponding edge number. The numbering of the edges is
+arbitrarily generated in this function. The input is n4e.\\ \medskip
+
+{\bf \large getN4ed.m}\medskip
+
+The function getN4ed returns a $nrEdges \times 2$ matrix. the input is
+ed4n generated by the function getEd4n. The output matrix contains
+in each row the number of the two nodes that are the endpoints of
+the edge corresponding to the row number.\\ \medskip
+
+{\bf \large getEd4e.m}\medskip
+
+The function getEd4e returns a $nrElems \times 3$ matrix. The input is n4e
+and ed4n produced by the function getEd4n. This matrix contains in
+each row $j$ the number of the three edges of element $j$. The edge
+numbers are the ones generated  in the function GetEd4n. The edges
+are ordered counter clockwise beginning with the edge between the
+first and the second node in n4e.\\ \medskip
+
+{\bf \large getE4ed.m}\medskip
+
+The function getE4ed returns a $nrEdges \times 2$ matrix. The input  is e4n
+and n4ed produced by the functions getE4n and getN4ed, respectively.
+The matrix contains in each row $j$ the element numbers of the elements
+which share the edge. If the edge is a boundary edge the second
+entry is zero.\\
+\medskip
+
+{\bf \large getArea4e.m}\medskip
+
+The function getArea4e returns a $nrElems \times 1$ matrix. The input is
+n4e and c4n. The matrix contains in each row $j$ the area of the
+element corresponding to the element number $j$. \medskip
+
+{\bf \large getArea4n.m}\medskip
+
+The function getArea4n returns a $nrNodes \times 1$ matrix. The input is
+e4n and area4e produced by the functions getE4n and getArea4e,
+respectively. The matrix contains in each row $j$ the area of the
+patch of node $j$.\\ \medskip
+
+{\bf \large getLength4ed.m}\medskip
+
+The function getLength4ed returns a $nrEdges \times 1$ matrix. The input is
+c4n and n4ed produced by the function getN4ed. The matrix contains in each row $j$
+the length of the $j$-th edge, according to the edge numbers created in getEd4n.\medskip
+
+{\bf \large getDbEdges.m}\medskip
+
+The function getDbEdges returns a $nrDbEdges \times 1$ matrix. The input is 
+Db and ed4n produced by the function getEd4n. The Matrix contains the edge numbers
+of the edges belonging to the Dirichlet boundary.\medskip
+
+{\bf \large getNbEdges.m}\medskip
+
+The function getNbEdges returns a $nrNbEdges \times 1$ matrix. The input is 
+Nb and ed4n produced by the function getEd4n. The Matrix contains the edge numbers
+of the edges belonging to the Neumann boundary.\medskip
+
+{\bf \large getNormals4DbEd.m}\medskip
+
+The function getNormals4DbEd returns a $nrDbEdges \times 2$ matrix. The input 
+is c4n and Db. The matrix contains in each row $j$ the two coordinates of the 
+outer unit normal at the $j$-th Dirichlet edge, corresponding to the order in DbEdges.\medskip
+
+{\bf \large getNormals4NbEd.m}\medskip
+
+The function getNormals4NbEd returns a $nrNbEdges \times 2$ matrix. The input 
+is c4n and Nb. The matrix contains in each row $j$ the two coordinates of the 
+outer unit normal at the $j$-th Neumann edge, corresponding to the order in NbEdges.\medskip
+
+{\bf \large getNormals4e.m}\medskip
+
+The function getNormnals4e returns a $3 \times 2 \times nrElems$ matrix. the input is 
+c4n, n4e and length4ed and ed4e produced by the functions getLength4ed and getEd4e. The three dimensional
+matrix contains in the $j$-th $3 \times 2$ matrix the coordinates of the unit outer normals for 
+the three edges of element $j$. The order of the three rows corresponds two the order in ed4e.\medskip
+
+{\bf \large getTangents4e.m}\medskip
+
+The function getNormnals4e returns a $3 \times 2 \times nrElems$ matrix. the input is 
+c4n, n4e and length4ed and ed4e produced by the functions getLength4ed and getEd4e. The 
+three dimensional matrix contains in the $j$-th $3 \times 2$ matrix the coordinates of the unit tangents in 
+counter clockwise direction for the three edges of element $j$, i.e. the direction of the edges. 
+The order of the three rows corresponds two the order in ed4e.\medskip
+
+{\bf \large getMidpoint4e.m}\medskip
+
+The function getMidpoint4e returns a $nrElems \times 2$ matrix. The input is c4n and n4e. The matrix 
+contains in each row $j$ the coordinates of the midpoint of element $j$.\medskip
+
+{\bf \large getMidpoint4ed.m}\medskip
+
+The function getMidpoint4ed returns a $nrEdges \times 2$ matrix. The input is c4n and n4ed. The matrix 
+contains in each row $j$ the coordinates of the midpoint of the $j$-th edge.\medskip
+
+{\bf \large getAngles4e.m}\medskip
+
+The function getAngles4e returns a $3 \times nrElems$ matrix. The input is tangents4e produced by 
+the function getTangente4e. The matrix contains in each column $j$ the three interior angles of element 
+$j$. The order of the angles correspond to the order of the nodes in n4e, i.e. the angles at the first 
+node of each element are in the first row, the one at the second in the second etc.\medskip
+
+{\bf \large getAngle4n.m}\medskip
+
+The function getAngle4n returns a $nrNodes \times 1$ matrix. The input is angles4e, n4e, nrElems and nrNodes 
+where angles4e is generated by getAngles4e. The matrix contains in each row $j$ the angle at the node $j$, where 
+the angle is 2 $\pi$ for inner nodes and the angle inside the domain and between the two boundary edges 
+containing the node for nodes at the boundary.\medskip
+
+{\bf \large getGrad4e.m}\medskip
+
+The function getGrad4e returns a $3 \times 2 \times nrElems$ matrix. the input is c4n n4e and area4e 
+produced by the function getArea4e. The three dimensional matrix contains in the $j$-th $3 \times 2$ matrix 
+the coordinates of the local gradients of the three $P1$ basis function which are not constantly zero on 
+the $j$-th element. The first row in each $3 \times 2$ matrix contains the local gradient of the nodal basis 
+function for the first node of the element according to the order in n4e, the second row the one of the 
+nodal basis function for the second node etc.\medskip
+
+{\bf \large getGradNC4e.m}\medskip
+
+The function getGrad4e returns a $3 \times 2 \times nrElems$ matrix. the input is c4n n4e and area4e 
+produced by the function getArea4e. The three dimensional matrix contains in the $j$-th $3 \times 2$ matrix 
+the coordinates of the local gradients of the three $P_1^{NC}$ basis function which are not constantly zero on 
+the $j$-th element. The first row in each $3 \times 2$ matrix contains the local gradient of the basis 
+function corresponding to the first edge in ed4e, the second row the one of the second edge
+ etc.\medskip
+

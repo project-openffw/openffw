@@ -1,0 +1,36 @@
+
+\subsection{Closure}
+In the process of generating adaptive meshed you have to
+be careful that the angles of the element are bounded 
+due to the maximum angle condition. To guarantee this you
+additionally have to refine all reference edges of elements
+that have marked edges.
+This is done in the function closure.
+
+\medskip
+\noindent
+\textbf{file:} \path{.\algorithms\misc\closure.m}\\[1.5ex]
+\begin{tabular}{@{} l l}
+\multicolumn{2}{@{} l}{\textbf{function p = closure(p)}} \\
+\textbf{Input:}  & p - ffw\\
+\textbf{Output:} & p - ffw\\
+\end{tabular}
+
+\medskip
+\noindent
+We briefly say that although the following code
+can have quadratic runtime it has lineare runtime
+in average. From convergence theory we know that for
+a sequence of triangulations the number of the additionally refined 
+reference edges are linear in the number of levels.
+Therefor we know that it is in average constant at each
+level. Because of that the while loop will be called
+in average for a constant number of times. 
+\begin{pcode}
+I =  refineEdges(ed4e(:,2)) | refineEdges(ed4e(:,3));
+while nnz(refineEdges(refEd4e(I))) < nnz(I);
+   refineEdges(refEd4e(I)) = true;
+   I =  refineEdges(ed4e(:,2)) | refineEdges(ed4e(:,3));
+end
+\end{pcode}
+

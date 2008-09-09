@@ -1,0 +1,45 @@
+\section{Introduction}
+
+\noindent This document describes how to use and extend the \textbf{F}inite
+element \textbf{F}rame \textbf{W}ork, from here on referred to as
+\FFW. The goal of this software package is to provide our target
+audience, students and researchers in the field of finite element
+research, a tool which presents various methods in a reference
+implementation and to provide a platform for future research and development. The
+following design goals guided the development decisions:
+\begin{itemize}
+    \item{Clean and readable implementation precedes performance}
+    \item{Good extensibility}
+    \item{Easy to debug}
+    \item{Providing mechanisms for interpreting and visualizing the numerical results}
+\end{itemize}
+Following these design goals we have chosen the MATLAB programming
+language, as it is relatively wide known in our target audience and
+provides a coherent setting in which one can focus on the problem at
+hand. For simplicity we only consider methods with triangular
+elements in $2D$. The \FFW currently features:
+\begin{itemize}
+    \item{Methods}
+        \begin{itemize}
+            \item{$P_1$-$FEM$, a standard conforming discretization for elliptic PDE's}
+            \item{$CR$-$FEM$, a non-conforming discretization for elliptic PDE's}
+            \item{$RT_0$-$P_0$-MFEM, a mixed FEM for elliptic PDE's}
+            \item{$P_1\times P_1$, a standard conforming discretization for elasticity problems}
+            \item{$P_1\times CR$, a non-conforming and locking free discretization for elasticity problems}
+            \item{$AW$, a mixed, higher order, locking free FEM for elasticity problems}
+        \end{itemize}
+    \item{Adaptivity}
+        \begin{itemize}
+            \item{A newest vertex bisection like algorithm for edge oriented mesh refinement that produces shape regular, nested triangulations with no hanging nodes}
+            \item{Graded meshes using the above algorithm}
+            \item{Reliable and efficient a posteriori error estimators for almost all of the above methods}
+            \item{Two marking strategies, maximum and bulk, controlling the mesh refinement based on a posteriori error estimators}
+        \end{itemize}
+    \item{A global data structure containing all computed data, including complete mesh information like edge enumeration, normals, tangents, etc.}
+    \item{A simple reference multigrid implementation for $P_1$-FEM}
+    \item{Simple integration routines for efficient calculation of boundary integrals, error norms, etc.}
+    \item{Automatic problem creation to reliably test new methods using symbolic differentiation}
+    \item{A general framework for output routines to analyse the methods and results}
+    \item{Various test problems to illustrate performance of adaptivity and test correctness}
+    \item{Full scriptability for automatic computation with different parameters}
+\end{itemize}

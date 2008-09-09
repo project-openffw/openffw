@@ -1,0 +1,153 @@
+\subsection{Mark}
+In order to refine the mesh adaptively we first have to say where.
+In difference to other implementations we generally mark only edges 
+instead of elements. If we want to refine an element we therefor
+have to mark all its edges.
+An edge is refined depending on the error estimator.
+There are three different contributions to the total estimated error.
+There is the error on an edge (etaEd), on an element (etaT) and the 
+error on elements that should be refined \emph{bisec5} instead of
+\emph{red} (etaOsc). To decide which edges are marked there are four different
+strategies.
+%
+%
+\subsubsection{uniform}
+\textbf{file:} \path{.\algorithms\mark\uniform.m}\\[1.5ex]
+All elements are refined uniformly \emph{red}. Therefore 
+all Edges are marked and no elements are marked for \emph{bisec5}.
+\begin{pcode}
+refineEdges = true(nrEdges,1);
+refineElemsBisec5 = false(nrElems,1);
+\end{pcode}
+%
+\subsubsection{maximum}
+\textbf{file:} \path{.\algorithms\mark\maximum.m}\\[1.5ex]
+The maximum algorithm only mark those edges or elements where
+the error is large. In order to decide when the error on an 
+edge is to large we use the following rule. The edge or element
+$\eta_{i}$ will be marked if 
+\begin{equation*}
+\eta_{i} >  \theta \cdot \max_{j}\eta_{j}\; .
+\end{equation*}
+The index $j$ goes over all edges or elements and $\theta$ is 
+constant (default: $\theta = 0.5$).
+To mark an element means here as above to mark all its edges. 
+The matlab code is printed in the next line.
+\begin{pcode}
+refineEdges = (etaEd > thetaEd * max(etaEd));
+\end{pcode}
+\code{True} means that the edge is marked and \code{false} it
+is not.
+The next step in the code realizes that all edges of marked
+elements are marked because at the end we only want to have marked edges. 
+\begin{pcode}
+I = (etaT > thetaT * max(etaT))';
+refineElems(I) = true;
+refineEdges4e = ed4e(refineElems,:);
+refineEdges(refineEdges4e(:)) = true;
+\end{pcode}
+Elements that should be refined \emph{bisec5}, i.e. have large error
+(etaOsc) are treated analogously. The reason why you use \emph{bisec5}
+instead of \emph{red} refinement is that with \emph{bisec5} you get
+a new node in the interior of the element.\\
+The maximum algorithm can be very inefficient. Suppose we have the
+same error on each edge except of very few edges and on those edges the error
+is very large. Then the maximum algorithm might only refine these few edges 
+(cf. figure~\ref{sect:MeshGeneration.Mark.maximum.fig}).
+
+\begin{figure}
+\setlength{\unitlength}{6cm}
+\begin{picture}(1, 1)
+\qbezier(0.1, 0.2)(0.15,0.5)(0.2,0.2)
+\qbezier(0.2, 0.2)(0.25,0.25)(0.3,0.2)
+\qbezier(0.3, 0.2)(0.35,0.4)(0.4,0.2)
+\qbezier(0.4,0.2)(0.45,0.5)(0.5, 0.3)
+\qbezier(0.5,0.3)(0.525,0.6)(0.55, 1)
+\qbezier(0.55, 1)(0.575,0.6)(0.6, 0.2)
+\qbezier(0.6,0.2)(0.65,0.5)(0.7, 0.2)
+\qbezier(0.7, 0.2)(0.75,0.4)(0.8,0.2)
+\qbezier(0.8, 0.2)(0.85,0.25)(0.9,0.2)
+\put(0.05,0.5){\line(1,0){0.9}}
+\put(1,0.5){\tiny 0.5 max}
+\put(0,0){\vector(0,1){1}}
+\put(0,0){\vector(1,0){1}}
+\put(1.05,0){\tiny edge or element}
+\put(0.05,0.9){\tiny estimated error}
+\end{picture}
+\caption{The maximum algorithm might mark only a few edges.}
+\label{sect:MeshGeneration.Mark.maximum.fig}
+\end{figure}
+
+
+\subsubsection{bulk}
+\textbf{file:} \path{.\algorithms\mark\bulk.m}\\[1.5ex]
+The bulk algorithm marks edges that satisfy the following condition.
+\begin{equation*}
+ \sum_{\substack{i\in I\\I\subseteq \{1,\ldots,N\}}}\eta_k^2 \geq  \theta \cdot \sum_{j=1}^{N} \eta_j^2\;.
+\end{equation*}
+Where $N$ denotes the number of edges or elements.
+It is important to see that the set of edges that
+are selected by this condition is not unique.
+Here we use an greedy approach. We iteratively take
+those edges with the largest error. Using this approach 
+guarantees that we have the smallest possible set of
+marked edges that satisfy the bulk condition.
+In the following the corresponding matlab lines are printed.
+\begin{pcode}
+[sortedEtaEd,I] = sort(etaEd,'descend');
+sumEtaEd = cumsum(sortedEtaEd.^2);
+k = find(sumEtaEd >= thetaEd * norm(etaEd,2)^2,1,'first');
+[sortedEtaT,I] = sort(etaT,'descend');
+sumEtaT = cumsum(sortedEtaT.^2);
+k = find(sumEtaT >= thetaT * norm(etaT,2)^2,1,'first');
+refineElems(I(1:k)) = true;
+refineEdges4e = ed4e((refineElems | refineElemsBisec5),:);
+refineEdges(refineEdges4e(:)) = true;
+\end{pcode}
+The problem that only a few edges or element are marked 
+like with the maximum algorithm cannot happen here
+(cf. Figure~\ref{sect:MeshGeneration.Mark.bulk.fig}).
+
+\begin{figure}
+\setlength{\unitlength}{6cm}
+\begin{picture}(1, 1)
+\qbezier(0.1, 0.2)(0.15,0.5)(0.2,0.2)
+\qbezier(0.2, 0.2)(0.25,0.25)(0.3,0.2)
+\qbezier(0.3, 0.2)(0.35,0.4)(0.4,0.2)
+\qbezier(0.4,0.2)(0.45,0.5)(0.5, 0.3)
+\qbezier(0.5,0.3)(0.525,0.6)(0.55, 1)
+\qbezier(0.55, 1)(0.575,0.6)(0.6, 0.2)
+\qbezier(0.6,0.2)(0.65,0.5)(0.7, 0.2)
+\qbezier(0.7, 0.2)(0.75,0.4)(0.8,0.2)
+\qbezier(0.8, 0.2)(0.85,0.25)(0.9,0.2)
+\put(0.05,0.25){\line(1,0){0.9}}
+\put(1,0.25){\tiny bulk}
+\put(0,0){\vector(0,1){1}}
+\put(0,0){\vector(1,0){1}}
+\put(1.05,0){\tiny edge or element}
+\put(0.05,0.9){\tiny estimated error}
+\end{picture}
+\caption{With the bulk algorithm it cannot happen that only
+         a few edges are marked.}
+\label{sect:MeshGeneration.Mark.bulk.fig}
+\end{figure}
+
+\subsubsection{graded}
+\textbf{file:} \path{.\algorithms\mark\graded.m}\\[1.5ex]
+Refinement with graded grids is a a priori mesh refinement toward singular corner points.
+In the past the so called $\beta$-graded grids were very popular. The a priori analysis consists of the following theorem.
+%
+\begin{theorem}
+Let $\mathcal{T}$ be a regular triangulation of $\Omega=T_{ref}$ such that for given $N\in\mathbb{N}$ and $\beta>0$
+\begin{enumerate}
+\item $\mathcal{T}$ contains the element $T_0=conv\{(0,0),(N^{-\beta},0),(0,N^{-\beta})\}$.
+\item For each $T\in \mathcal{T}\backslash\{T_0\}$ and all $x\in T$ one has $diam(T)\leq c\frac{1}{N}|x|^{\beta-1}$
+\end{enumerate}
+Then, if $\alpha + \beta > 2$, it follows that
+\begin{equation*}
+|| \nabla(u_{\alpha} - I_{\mathcal{T}}u_{\alpha})||_{L^2(\Omega)}\leq c N^{-min\{1,\alpha\beta\}}\; .
+\end{equation*}
+where $u_{\alpha}$ is the corner singularity function and $\alpha$ depends on the opening angle in the corner singularity.
+\end{theorem}
+\noindent
+It is known that $\beta$-graded grids satisfy this conditions. But here we follow another approach. We simply refine our mesh with \emph{red}, \emph{green} and \emph{blue} refinement until these conditions are satisfied. This leads to simpler algorithms since $\beta$-graded grids are difficult to implement. Another advantage is that the angles of the triangulation only depend on the initial triangulation.

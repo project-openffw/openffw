@@ -1,0 +1,58 @@
+\subsection{Predefined Problem Definitions}
+\label{sect:ImplementedProblems_ProblemDefinition}
+
+There are various problem definitons either for elliptic PDEs or for elasticity already available. Here we give an overview about the predefined problems. Some of the definitions contain as suffix \path{_exact}. Here a function $u_{\text{exact}}$ is given. Then the data-functions $f$, $u_D$ and $g$ are computed such that they belong to $u_{\text{exact}}$. With these examples we are able to compute the exact errors, e.g. energy error, between the projection $u_h$ of $u_{\text{exact}}$ and $u_{\text{exact}}$. For providing your own problem create an .m-file named \path{Elliptic_<problemName>} (\path{Elasticity_<problemName>}) in \path{./problems/elliptic} (\path{./problems/elasticity}) which contains all necessary informations like the load $f$, Dirichlet- and Neumann-data, coefficients, etc.. For details concerning the structure of the problem definition see Section \ref{sect:QuickStart}. 
+
+\bigskip
+
+\textbf{Elliptic PDEs:}
+
+\bigskip
+
+\begin{tabular}{p{0.45\textwidth}p{0.45\textwidth}}
+Problemname 					& 	Description \\
+\hline
+Elliptic\_Lshape 			& Model example $-\Delta u = 1$, $u_D=0$ and $g=0$ on an L-shaped domain. \\
+Elliptic\_Lshape\_exact & The exact solution $u(r,\phi)=r^{2/3}\sin(2/3\phi)$ in polar coordinates on an L-shaped domain with Neumann boundary is given. The corresponding right hand side $f$ is zero and induced boundary data. The coefficients of the elliptic PDE correspond to the Laplacian operator.\\
+Elliptic\_Square\_exact & Given a squared domain we have defined the function $u(x,y) = \sin(x^3)\cos(y^\pi)+x^8-y^9+x^6 y^{10}$ with the PDE-coefficients $\kappa$ being the identity, $\lambda = \left( \begin{smallmatrix} 5\sin(x+y)\\ 6\cos(x+y) \end{smallmatrix}\right)$ and $\mu=7$. The symbolic toolbox of MATLAB computes all necessary informations $f$, $u_D$, $\ldots$.\\
+Elliptic\_HexagonalSlit\_exact	& On a slitted hexagon the function $u(r,\phi)=r^{1/4}\sin(1/4\phi)$ in polar coordinates  with the load $f\equiv0$, the Dirichlet function $u_D=u|_{\Gamma_D}$, and coefficients belonging to the Laplacian are given.\\
+Elliptic\_Waterfall\_exact 		& The waterfall function $u(x,y) = xy(1-x)(1-y)$ \small $\arctan\left(k(\sqrt{(x-5/4)^2 + (y+1/4)^2}-1)\right)$ \normalsize is given. The parameter $k$ controls the slope of $u$. For $k\rightarrow\infty$ the slope of the function tends to infinity. The domain is a square with homogeneous Dirichlet boundary. We look at the problem $-\Delta u = f$. The load $f$ is computed by $u$.\\
+Elliptic\_Template			& A predefined template for generating problem definitions. For given data $f,u_D$ and $g$ one can compute the corresponding discrete solution $u_h$.\\
+Elliptic\_Exact\_Template & A predefined template for generating problem definitions. For a given function $u_{\text{exact}}(x,y)$ in cartesian coordinates and coefficients $\kappa,\lambda,\mu$ one can compute the projection $u_h$ of $u_{\text{exact}}$.
+\end{tabular}
+
+\textbf{Elasticity:}
+
+\bigskip
+
+\begin{tabular}{p{0.45\textwidth}p{0.45\textwidth}}
+Problemname 					& 	Description \\
+\hline
+Elasticity\_Cooks		& A tapered panel is clamped on one end and subjected to a surface load in
+vertical direction on the opposite end with $f = 0$ and $g(x, y) = (0, 1000)$ if
+$(x, y) \in  \Gamma_N$ with $x = 48$ and $g = 0$ on the remaining part of $\Gamma_N$, the Young modulo $E =
+2900$, and the Possion ratio $\nu = 0.3$.\\
+Elasticity\_Square\_exact  & The unit square with the given function $u(x,y)=10^{-5}\left(\begin{smallmatrix} \cos((x+1)(y+1)^2) \\
+\sin((x+1))\cos(y+1) \end{smallmatrix}\right)$. Young modulo and the Possion ratio are set to $E=10^5$ and $\nu = 0.3$.\\
+Elasticity\_Square\_Neumann\_exact  & Besides the geometry we have the same problem definition as in Elasticity\_Square. The domain changes from Square to SquareNeumann.\\
+Elasticity\_Lshape\_exact		& Using polar coordinates $(r, \theta)$, $-\pi < \theta \leq \pi$ $u$ with radial component $u_r,u_\theta$ reads $
+u_{r}(r,\theta) = \frac{r^{\alpha}}{2\mu}
+    (-(\alpha+1)\cos((\alpha+1)\theta)+
+           \nonumber     (C_{2}-
+    (\alpha+1))C_{1}\cos((\alpha-1)\theta))$, and \quad
+$u_{\theta}(r,\theta) = \frac{r^{\alpha}}{2\mu}
+    ((\alpha+1)\sin((\alpha+1)\theta)+
+          \nonumber     (C_{2}+\alpha-1)C_{1}\sin((\alpha-1)\theta)).
+$
+The parameters are
+$C_{1}=-\cos((\alpha+1)\omega)/\cos((\alpha-1)\omega)$,
+$C_{2} = 2(\lambda+2\mu)/(\lambda+\mu)$ where
+$\alpha = 0.54448...$ is the positive solution of  $\alpha \sin 2\omega +
+\sin 2\omega\alpha = 0$
+for $ \omega= 3 \pi /4$; the Young modulus is $E=10^5$, Poisson ratio $\nu = 0.3$, and the volume force $f\equiv 0$.\\
+Elasticity\_Template			& A predefined template for generating problem definitions. For given data $f,u_D$ and $g$ and coefficients $\kappa,\lambda,\mu$ one can compute the corresponding discrete solution $u_h$.\\
+Elasticity\_Exact\_Template	& A predefined template for generating problem definitions. For a given function $u_{\text{exact}}(x,y)$ in cartesian coordinates one can compute the projection $u_h$ of $u_{\text{exact}}$.
+
+\end{tabular}
+
+ 

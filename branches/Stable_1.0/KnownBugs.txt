@@ -1,0 +1,2 @@
+- P1P0 does not work
+- ploar coordinates for Lshape elasticity example
