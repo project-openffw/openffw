@@ -20,10 +20,9 @@ function p = P2enumerate(p)
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-%% Generic Enumeration %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 p = genericEnumerate(p);
 
-%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% INPUT
 n4e = p.level(end).geom.n4e;
 c4n = p.level(end).geom.c4n;
 Db = p.level(end).geom.Db;
@@ -32,24 +31,32 @@ nrNodes = p.level(end).nrNodes;
 nrEdges = p.level(end).nrEdges;
 DbEd = p.level(end).enum.DbEd;
 ed4e = p.level(end).enum.ed4e;
+e4ed = p.level(end).enum.e4ed;
+area4n   = p.level(end).enum.area4n;
 
-%% Enumeration %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% gradients of P1-Hat functions
+%% gradients of P1-Hat functions
 P1grad4e = getGrad4e(c4n,n4e,area4e);
 
-% Nodes on Dirichlet boundary
+%% Nodes on Dirichlet boundary
 fixedNodes = [unique(Db);nrNodes+DbEd];
 freeNodes = setdiff(1:(nrNodes+nrEdges), fixedNodes);
 
-% Nr. of Degrees of Freedom
+%% Nr. of Degrees of Freedom
 nrDoF = length(freeNodes);
 
-% Degrees of Freedom for elements
+%% Degrees of Freedom for elements
 dofU4e = [n4e,nrNodes+ed4e];
 
-%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% patch
+area = area4e(e4ed(:,1));
+ind = find(e4ed(:,2)~=0);
+area(ind) = area(ind)+area4e(e4ed(ind,2));
+patch4dof = [area4n;area];
+
+%% OUTPUT
 p.level(end).enum.dofU4e = dofU4e;
 p.level(end).enum.P1grad4e = P1grad4e;
 p.level(end).nrDoF = nrDoF;
 p.level(end).enum.freeNodes = freeNodes;
 p.level(end).enum.fixedNodes = fixedNodes;
+p.level(end).enum.patch4dof = patch4dof;

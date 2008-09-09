@@ -21,24 +21,22 @@ function p = startElliptic
 
 
 %% Problem Type
-
 problem = 'Elliptic_Square';
 % problem = 'Elliptic_Lshape';
 % problem = 'Elliptic_Square_exact';
 % problem = 'Elliptic_Lshape_exact';
 % problem = 'Elliptic_Waterfall_exact';
-% problem = 'Elliptic_SquareFullElliptic_exact';
-% problem = 'Elliptic_HexagonalSlit_exact';
+
 
 %% PDE Solver
 pdeSolver = 'P1';         %'P1-Elliptic';
 % pdeSolver = 'P2';         %'P2-Elliptic';
 % pdeSolver = 'P3';         %'P3-Elliptic';
 % pdeSolver = 'CR';         %'CR-Elliptic';
-% pdeSolver = 'RT0P0';      %'RT0-P0-mixed-Elliptic';
+% pdeSolver = 'P1P0';       %'P0-P1-mixed-Elliptic' -- only uniform !!!;
 
 %% Maximum Number Degrees of Freedom
-maxNrDoF = 100;
+maxNrDoF = 50;
 
 %% Mark Criterion
 mark = 'bulk';
@@ -46,39 +44,38 @@ mark = 'bulk';
 % mark = 'uniform';
 % mark = 'graded';
 
-
 %% Compute Discrete Solution
 p = initFFW(pdeSolver,problem,mark,maxNrDoF,'elliptic');
 p = computeSolution(p);
 
 %% Show Discrete Solution
-figure(1)
+figure
 p.params.output.holdIt = false; 
-p.params.output.showIteratively = true;
-
-set(gcf,'Name','Displacement');
-p = show('drawU',p);
-% view(-30,20)
+   % % Due to problems when plotting 3D graphics of large DoF
+   % prntlvl=1;
+   % for i=1:size(p.level,2)
+   % 	   if p.level(i).nrElems<200
+   % 		   prntlvl=i;
+   % 	   else
+   % 		   break;
+   % 	   end
+   % end
+   % p = show('drawU',p,prntlvl);
+   % Otherwise, to plot the solution of the last level
+   p = show('drawU',p);
 
 %% Show Grid
-% figure(2)
-% p.params.output.holdIt = false; 
-% 
-% set(gcf,'Name','Grid');
-% p = show('drawGrid',p);
+figure
+p.params.output.holdIt = false; 
+p = show('drawGrid',p);
 
-% figure(5);
-% p = show('drawErrorOnGrid_H1semiError',p);
 
 %% Show Convergence History
-figure(3)
-set(gcf,'Name','Convergence History');
+figure
 p.params.output.drawConvergenceRate = false;
-p.params.output.showIteratively = false;
-% p.params.integrationDegrees.exactError = 9;
+p.params.errorIntegtrateExactDegree = 9;
 p.params.output.holdIt = true;
-% p.params.output.minDoF = 1;
-% p.params.output.myColor = 'k';
+p.params.output.minDoF = 1;
 
 p.params.output.name = [mark,', ',pdeSolver,', ','estimator'];
 p = show('drawError_estimatedError',p);

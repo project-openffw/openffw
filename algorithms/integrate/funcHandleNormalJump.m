@@ -1,4 +1,4 @@
-function val = funcHandleNormalJump(pts,curEd,curLvl,p)
+function val = funcHandleNormalJump(x,y,curEd,curLvl,p)
 % function handle to calculate the jump in normal direction
 
 % Copyright 2007 Joscha Gedicke
@@ -32,21 +32,20 @@ midPoint4e = p.level(curLvl).enum.midPoint4e;
 curElem   = e4ed(curEd,:);
 curNormal = normals4ed(curEd,:);
 
-%% Jump of Flux In Normal Direction %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-nrPts = size(pts,1);
+%% Jump of Fux In Normal Direction %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 curMidPoint = midPoint4e(curElem(1),:);
 curKappa = kappa(curMidPoint(1),curMidPoint(2),p);
-curGradU_h = permute(gradU_h(pts,curElem(1),curLvl,p),[3 2 1]);
+curGradU_h = permute(gradU_h(x,y,curElem(1),curLvl,p),[3 2 1]);
 part_1 = (curGradU_h*curKappa')*curNormal';
 if( curElem(2) > 0 )
     curMidPoint = midPoint4e(curElem(2),:);
-    curKappa = kappa(curMidPoint,p);
-    curGradU_h = permute(gradU_h(pts,curElem(2),curLvl,p),[3 2 1]);
+    curKappa = kappa(curMidPoint(1),curMidPoint(2),p);
+    curGradU_h = permute(gradU_h(x,y,curElem(2),curLvl,p),[3 2 1]);
     part_2 = (curGradU_h*curKappa')*curNormal';
 elseif( isempty(Nb) || isempty(find(NbEd==curEd, 1)) )
     part_2 = part_1;
 else
-    part_2 = g(pts,(curNormal'*ones(1,nrPts))',p);
+    part_2 = g(x,y,(curNormal'*ones(1,length(x)))',p);
 end
 
 %% Return %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

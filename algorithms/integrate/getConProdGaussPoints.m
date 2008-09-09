@@ -28,18 +28,26 @@ function [x,w] = getConProdGaussPoints(n)
 
 
 %% Find n Gauss_Legendre Points for Intervall [-1,1]
-gamma = (1 : n-1) ./ sqrt(4*(1 : n-1).^2 - ones(1,n-1) );
-[V,D] = eig( diag(gamma,1) + diag(gamma,-1) );
-r = diag(D);
-a = 2*V(1,:).^2;% norm-factor -> int(1,-1,1)=2
-
+if n==1
+  r=0;
+  a=2;
+else
+  gamma = (1 : n-1) ./ sqrt(4*(1 : n-1).^2 - ones(1,n-1) );
+  [V,D] = eig( diag(gamma,1) + diag(gamma,-1) );
+  r = diag(D);
+  a = 2*V(1,:).^2;% norm-factor -> int(1,-1,1)=2
+end
 %% Find n Gauss_Jacobi Points for Intervall [-1,1]
-delta = -1./(4*(1 : n).^2-ones(1,n));
-gamma = sqrt((2 : n).*(1 : n-1)) ./ (2*(2 : n)-ones(1,n-1));
-[V,D] = eig( diag(delta)+diag(gamma,1)+diag(gamma,-1) );
-s = diag(D);
-b = 2*V(1,:).^2; % norm-factor -> int((1-x),-1,1)=2
-
+if n==1
+  s=0;
+  b=2;
+else
+  delta = -1./(4*(1 : n).^2-ones(1,n));
+  gamma = sqrt((2 : n).*(1 : n-1)) ./ (2*(2 : n)-ones(1,n-1));
+  [V,D] = eig( diag(delta)+diag(gamma,1)+diag(gamma,-1) );
+  s = diag(D);
+  b = 2*V(1,:).^2; % norm-factor -> int((1-x),-1,1)=2
+end
 %% linear map to Intervall [0,1]
 % w(x) = 1 changes norm-factor from 2 to 1
 r = .5 * r + .5;

@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CRcreateLinSys</title>
+  <meta name="keywords" content="CRcreateLinSys">
+  <meta name="description" content="creates the energy matrix A">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../../../menu.html FFW -->
+<!-- ../../menu.html PDEsolvers -->
+<!-- ../menu.html Elliptic -->
+<!-- menu.html CR-Elliptic -->
+<h1>CRcreateLinSys
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function p = CRcreateLinSys(p) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> creates the energy matrix A 
+ and the right-hand side b for a nonconforming CR-FE method. 
+ The differential operator is full elliptic with piecewise constant
+ coefficients (one point gauss integration).</pre></div>
+
+
+<h2><a name="_input"></a>INPUT <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre><span class="comment">% load geometry</span>
+Nb = p.level(end).geom.Nb;
+n4e = p.level(end).geom.n4e;
+
+<span class="comment">% load problem definition</span>
+kappa = p.problem.kappa;
+mu = p.problem.mu;
+lambda = p.problem.lambda;
+u_D = p.problem.u_D;
+g = p.problem.g;
+
+<span class="comment">% load enumerated data</span>
+midPoint4ed = p.level(end).enum.midPoint4ed;
+midPoint4e = p.level(end).enum.midPoint4e;
+DbEd = p.level(end).enum.DbEd;
+NbEd = p.level(end).enum.NbEd;
+length4ed = p.level(end).enum.length4ed;
+gradNC4e = p.level(end).enum.gradNC4e;
+ed4e = p.level(end).enum.ed4e;
+area4e = p.level(end).enum.area4e;
+normals4NbEd = p.level(end).enum.normals4NbEd;
+dofU4e = p.level(end).enum.dofU4e;
+e4ed = p.level(end).enum.e4ed;
+
+nrElems = p.level(end).nrElems;
+nrEdges = p.level(end).nrEdges;
+
+curLvl = length(p.level);
+degree = <a href="../../../../FFW/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>(<span class="string">'p.params'</span>,<span class="string">'rhsIntegtrateExactDegree'</span>,p,1);</pre></div>
+
+
+<h2><a name="_output"></a>OUTPUT <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>p.level(end).A = A;
+p.level(end).B = B;
+p.level(end).b = b;
+p.level(end).x = x;</pre></div>
+
+
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+
+<li><a href="../../../../FFW/algorithms/integrate/funcHandleRHSNb.html" class="code" title="function val = funcHandleRHSNb(x,y,curEd,curLvl,p)">funcHandleRHSNb</a>	function handle for g*phi_j</li>
+<li><a href="../../../../FFW/algorithms/integrate/funcHandleRHSVolume.html" class="code" title="function val = funcHandleRHSVolume(x,y,curElem,curLvl,p)">funcHandleRHSVolume</a>	function handle for RHS f*phi_j</li>
+<li><a href="../../../../FFW/algorithms/integrate/integrate.html" class="code" title="function val = integrate( parts, curLvl,  degree, integrand, p )">integrate</a>	Integrates function handle integrand over given domain 1D or 2D.</li>
+<li><a href="../../../../FFW/algorithms/misc/localDoFtoGlobalDoF.html" class="code" title="function [I,J] = localDoFtoGlobalDoF(dof1,dof2)">localDoFtoGlobalDoF</a>	maps the local to the global indices</li>
+<li><a href="../../../../FFW/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>	load a field from a structure</li>
+</ul>
+
+
+
+
+
+
+<hr><address>Generated on Thu 22-Nov-2007 15:17:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

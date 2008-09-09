@@ -1,4 +1,4 @@
-function val = funcHandleRHSVolumeVectorised(pts,pts_ref,parts,curLvl,p)
+function val = funcHandleRHSVolumeVectorised(x,y,x_ref,y_ref,parts,curLvl,p)
 % function handle for RHS f*phi_j
 % use: val = funcHandleRHSVolume(x,y,x_ref,y_ref,parts,curlvl,p)
 
@@ -25,15 +25,14 @@ f = p.problem.f;
 basisU = p.statics.basisVectorised;
 dofU4e = p.level(curLvl).enum.dofU4e;
 nrBasisFuncU = size(dofU4e,2);
-nrPts = size(pts,1);
 
 %% f*phi_j %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-evalF = f(pts,p);
+evalF = f(x,y,p);
 dimf = size(evalF,2);
-evalBasisU = basisU(pts,pts_ref,parts,curLvl,p);
-evalBasisU = reshape(evalBasisU, [nrPts dimf nrBasisFuncU]);
+evalBasisU = basisU(x,y,x_ref,y_ref,parts,curLvl,p);
+evalBasisU = reshape(evalBasisU, [length(x) dimf nrBasisFuncU]);
 evalF = evalF(:)*ones(1,nrBasisFuncU);
-evalF = reshape(evalF,[nrPts dimf nrBasisFuncU ]);
+evalF = reshape(evalF,[length(x) dimf nrBasisFuncU ]);
 integrand = evalF .* evalBasisU;
 integrand = sum(integrand,2);
 

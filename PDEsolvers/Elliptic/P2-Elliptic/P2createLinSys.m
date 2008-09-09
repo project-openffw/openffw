@@ -34,6 +34,7 @@ kappa = p.problem.kappa;
 lambda = p.problem.lambda;
 mu = p.problem.mu;
 u_D = p.problem.u_D;
+g = p.problem.g;
 
 % load enumerated data
 fixedNodes = p.level(end).enum.fixedNodes;
@@ -51,20 +52,15 @@ midPoint4ed = p.level(end).enum.midPoint4ed;
 
 % additional data
 C = p.statics.basisCoefficients;
-
-% load integration parameters
-% degreeStima = p.params.integrationDegrees.createLinSys.Stima;
-% degreeDama = p.params.integrationDegrees.createLinSys.Dama;
-% degreeMama = p.params.integrationDegrees.createLinSys.Mama;
-degreeRhs = p.params.integrationDegrees.createLinSys.Rhs;
-degreeNeumann = p.params.integrationDegrees.createLinSys.Neumann;
-
-% get current level number
 curLvl = length(p.level);
+degree = loadField('p.params','rhsIntegtrateExactDegree',p,2);
 
-%% Assembling global energy matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% Assembling global energy matrix	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 S = zeros(6,6,nrElems);
+Mama = zeros(6,6,nrElems);
 
 genericMama = 1/360*[  6 -1 -1  0 -4  0 
                       -1  6 -1  0  0 -4
@@ -73,9 +69,9 @@ genericMama = 1/360*[  6 -1 -1  0 -4  0
                       -4  0  0 16 32 16
                        0 -4  0 16 16 32 ];
 
-kappa4e = kappa(midPoint4e,p);
-lambda4e = lambda(midPoint4e,p);
-mu4e = mu(midPoint4e,p);
+kappa4e = kappa(midPoint4e(:,1),midPoint4e(:,2),p);
+lambda4e = lambda(midPoint4e(:,1),midPoint4e(:,2),p);
+mu4e = mu(midPoint4e(:,1),midPoint4e(:,2),p);
 
 for curElem = 1:nrElems	
     
@@ -105,15 +101,16 @@ for curElem = 1:nrElems
 	localMama  = curMu*2*area*genericMama;
 
     S(:,:,curElem) = localStima + localMama + localDama;
+    Mama(:,:,curElem) = 2*area*genericMama;
 end
 
-% localStima = integrateVectorised(n4e,curLvl,degreeStima,@funcHandleStimaVectorised,p);
-% localDama = integrateVectorised(n4e,curLvl,degreeDama,@funcHandleDamaVectorised,p);
-% localMama = integrateVectorised(n4e,curLvl,degreeMama,@funcHandleMamaVectorised,p);
+% localStima = integrateVectorised(n4e,curLvl,2,@funcHandleStimaVectorised,p);
+% localDama = integrateVectorised(n4e,curLvl,3,@funcHandleDamaVectorised,p);
+% localMama = integrateVectorised(n4e,curLvl,4,@funcHandleMamaVectorised,p);
 % 
-% localStima = integrate(n4e,curLvl,degreeStima,@funcHandleStima,p);
-% localDama = integrate(n4e,curLvl,degreeDama,@funcHandleDama,p);
-% localMama = integrate(n4e,curLvl,degreeMama,@funcHandleMama,p);
+% localStima = integrate(n4e,curLvl,2,@funcHandleStima,p);
+% localDama = integrate(n4e,curLvl,3,@funcHandleDama,p);
+% localMama = integrate(n4e,curLvl,4,@funcHandleMama,p);
 % 
 % S2 = permute(localStima+localDama+localMama,[2 3 1]);
 
@@ -121,27 +118,38 @@ end
 A = sparse(I(:),J(:),S(:));
 
 
-%% Assembling Righthandside %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% f4e = integrate(n4e,curLvl,degreeRhs,@funcHandleRHSVolume,p);
-f4e = integrateVectorised(n4e,curLvl,degreeRhs,@funcHandleRHSVolumeVectorised,p);
-b = accumarray(dofU4e(:),f4e(:));
+
+B = sparse(I(:),J(:),Mama(:));
 
 
-%% Include Neumann conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Assembling Righthandside    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% f4e = integrate(n4e,curLvl,degree,@funcHandleRHSVolume,p);
+f4e = integrateVectorised(n4e,curLvl,degree,@funcHandleRHSVolumeVectorised,p);
+% b = accumarray(dofU4e(:),f4e(:));
+b = full(sparse(dofU4e(:),ones(size(dofU4e,1)*size(dofU4e,2),1),f4e(:),nrNodes+nrEdges,1));
+
+
+%% Include boundary conditions		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 if ~isempty(Nb)  
-%      g4NbEd = integrate(Nb,curLvl,degreeNeumann,@funcHandleRHSNb,p);
-     g4NbEd = integrateVectorised(Nb,curLvl,degreeNeumann,@funcHandleRHSNbVectorised,p);
+%      g4NbEd = integrate(Nb,curLvl,degree,@funcHandleRHSNb,p);
+     g4NbEd = integrateVectorised(Nb,curLvl,degree,@funcHandleRHSNbVectorised,p);
      n4NbElem = dofU4e(e4ed(NbEd),:);
-     neumann = accumarray(n4NbElem(:),g4NbEd(:),[nrNodes+nrEdges,1]);     
+%      neumann = accumarray(n4NbElem(:),g4NbEd(:),[nrNodes+nrEdges,1]); 
+     neumann = sparse(n4NbElem(:),ones(size(n4NbElem,1)*size(n4NbElem,2),1), ...
+                           g4NbEd(:),nrNodes+nrEdges,1);  
      b = b + neumann;
 end
-
-%% Include Dirichlet conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
 u = zeros(nrNodes+nrEdges,1);
-u(fixedNodes) = u_D([c4n(unique(Db),:);midPoint4ed(DbEd,:)],p);
+u(fixedNodes) = u_D([c4n(unique(Db),1);midPoint4ed(DbEd,1)],...
+                    [c4n(unique(Db),2);midPoint4ed(DbEd,2)],p);
 b = b - A*u;
 
 %% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-p.level(end).A = A;
-p.level(end).b = b;
-p.level(end).x = u;
+p.level(end).A = real(A);
+p.level(end).B = real(B);
+p.level(end).b = real(b);
+p.level(end).x = real(u);
+

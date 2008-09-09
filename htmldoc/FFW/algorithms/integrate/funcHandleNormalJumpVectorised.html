@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of funcHandleNormalJumpVectorised</title>
+  <meta name="keywords" content="funcHandleNormalJumpVectorised">
+  <meta name="description" content="function handle to calculate the jump in normal direction">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../../menu.html FFW -->
+<!-- ../menu.html algorithms -->
+<!-- menu.html integrate -->
+<h1>funcHandleNormalJumpVectorised
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function val = funcHandleNormalJumpVectorised(x,y,x_ref,y_ref,parts,curLvl,p) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> function handle to calculate the jump in normal direction</pre></div>
+
+
+<h2><a name="_input"></a>INPUT <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>e4ed       = p.level(curLvl).enum.e4ed;
+normals4ed = p.level(curLvl).enum.normals4ed(parts,:);
+g          = p.problem.g;
+NbEd       = p.level(curLvl).enum.NbEd;
+DbEd       = p.level(curLvl).enum.DbEd;
+gradU_h    = p.statics.gradU_hVectorised;
+kappa      = p.problem.kappa;
+midPoint4e = p.level(curLvl).enum.midPoint4e;
+
+curElem   = e4ed(parts,:);</pre></div>
+
+
+
+
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+
+
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+
+<li><a href="../../../FFW/PDEsolvers/Elliptic/P1-Elliptic/P1estimate.html" class="code" title="function p = P1estimate(p)">P1estimate</a>	calculates lokal error indicators</li>
+<li><a href="../../../FFW/PDEsolvers/Elliptic/P2-Elliptic/P2estimate.html" class="code" title="function p = P2estimate(p)">P2estimate</a>	calculates lokal error indicators</li>
+<li><a href="../../../FFW/PDEsolvers/Elliptic/P3-Elliptic/P3estimate.html" class="code" title="function p = P3estimate(p)">P3estimate</a>	calculates lokal error indicators</li>
+</ul>
+
+
+
+
+
+<hr><address>Generated on Thu 22-Nov-2007 15:17:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

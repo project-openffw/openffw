@@ -1,4 +1,4 @@
-function val = funcHandleStima(pts,curElem,curLvl,p)
+function val = funcHandleStima(x,y,curElem,curLvl,p)
 % Function handle to calculate the local stiffness matrix.
 
 % Copyright 2007 Joscha Gedicke
@@ -18,20 +18,20 @@ function val = funcHandleStima(pts,curElem,curLvl,p)
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Input %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 kappa = p.problem.kappa;
 gradBasis  = p.statics.gradBasis;
 
-%% Calculate local stiffness matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
 
-curKappa = kappa(pts,p);
-curGrad = gradBasis(pts,curElem,curLvl,p);
+curKappa = kappa(x,y,p);
+curGrad = gradBasis(x,y,curElem,curLvl,p);
 
 nrBasisFuncU = size(curGrad,1);
 
-nrPts = size(pts,1);
-val = zeros(nrBasisFuncU,nrBasisFuncU,nrPts);
+val = zeros(nrBasisFuncU,nrBasisFuncU,length(x));
 
-for curPt = 1:nrPts    
-    val(:,:,curPt) = curGrad(:,:,curPt)*curKappa(:,:,curPt)'*curGrad(:,:,curPt)'; 
+for i = 1 : length(x)    
+    val(:,:,i) = curGrad(:,:,i)*curKappa(:,:,i)'*curGrad(:,:,i)'; 
 end
+

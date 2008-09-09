@@ -22,7 +22,7 @@ function p = CRcreateLinSys(p)
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % load geometry
 Nb = p.level(end).geom.Nb;
 n4e = p.level(end).geom.n4e;
@@ -32,37 +32,36 @@ kappa = p.problem.kappa;
 mu = p.problem.mu;
 lambda = p.problem.lambda;
 u_D = p.problem.u_D;
+g = p.problem.g;
 
 % load enumerated data
 midPoint4ed = p.level(end).enum.midPoint4ed;
 midPoint4e = p.level(end).enum.midPoint4e;
 DbEd = p.level(end).enum.DbEd;
 NbEd = p.level(end).enum.NbEd;
+length4ed = p.level(end).enum.length4ed;
 gradNC4e = p.level(end).enum.gradNC4e;
 ed4e = p.level(end).enum.ed4e;
 area4e = p.level(end).enum.area4e;
+normals4NbEd = p.level(end).enum.normals4NbEd;
 dofU4e = p.level(end).enum.dofU4e;
 e4ed = p.level(end).enum.e4ed;
 
 nrElems = p.level(end).nrElems;
 nrEdges = p.level(end).nrEdges;
 
-% load integration parameters
-degreeStima = p.params.integrationDegrees.createLinSys.Stima;
-degreeDama = p.params.integrationDegrees.createLinSys.Dama;
-degreeMama = p.params.integrationDegrees.createLinSys.Mama;
-degreeRhs = p.params.integrationDegrees.createLinSys.Rhs;
-degreeNeumann = p.params.integrationDegrees.createLinSys.Neumann;
-
-% get current level number
 curLvl = length(p.level);
+degree = loadField('p.params','rhsIntegtrateExactDegree',p,1);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Assembling global energy matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Assembling global energy matrix				   %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 S = zeros(3,3,nrElems);
 
-kappa4e = kappa(midPoint4e,p);
-lambda4e = lambda(midPoint4e,p);
-mu4e = mu(midPoint4e,p);
+kappa4e = kappa(midPoint4e(:,1),midPoint4e(:,2),p);
+lambda4e = lambda(midPoint4e(:,1),midPoint4e(:,2),p);
+mu4e = mu(midPoint4e(:,1),midPoint4e(:,2),p);
 
 genericMama = 1/3 * [1 0 0;
                      0 1 0; 
@@ -90,26 +89,35 @@ A = sparse(I(:),J(:),S(:));
 B = repmat(eye(3)/3,[1,1,nrElems]).*area;
 B = sparse(I(:),J(:),B(:));
 
-%% Assembling Righthandside	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Assembling Righthandside					   %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-f4e = integrate(n4e,curLvl,degreeRhs,@funcHandleRHSVolume,p);
-b = accumarray(ed4e(:),f4e(:));
+f4e = integrate(n4e,curLvl,degree,@funcHandleRHSVolume,p);
+% b = accumarray(ed4e(:),f4e(:));
+b = full(sparse(ed4e(:),ones(size(ed4e,1)*size(ed4e,2),1),f4e(:),nrEdges,1));
 
-%% Include Neumann conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if ~isempty(Nb)
-    g4NbEd = integrate(Nb,curLvl,degreeNeumann,@funcHandleRHSNb,p);
-    ed4NbElem = ed4e(e4ed(NbEd),:);
-    neumann = accumarray(ed4NbElem(:),g4NbEd(:),[nrEdges,1]);
-    b = b + neumann;
-end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Include boundary conditions						  %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ if ~isempty(Nb)  
+%      g4NbEd = length4ed(NbEd).*...
+%              g(midPoint4ed(NbEd,1),midPoint4ed(NbEd,2),normals4NbEd,p);
+     g4NbEd = integrate(Nb,curLvl,degree,@funcHandleRHSNb,p);
+     ed4NbElem = ed4e(e4ed(NbEd),:);
+%      neumann = accumarray(ed4NbElem(:),g4NbEd(:),[nrEdges,1]);
+     neumann = sparse(ed4NbElem(:),ones(size(ed4NbElem,1)*size(ed4NbElem,2),1), ...
+                           g4NbEd(:),nrEdges,1);     
+     b = b + neumann;
+ end
 
-%% Include Dirichlet conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 x = zeros(nrEdges,1);
-x(DbEd) = u_D(midPoint4ed(DbEd,:),p);
+x(DbEd) = u_D(midPoint4ed(DbEd,1),midPoint4ed(DbEd,2),p);
 b = b - A*x;
 
-%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 p.level(end).A = A;
 p.level(end).B = B;
 p.level(end).b = b;
 p.level(end).x = x;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

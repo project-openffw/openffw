@@ -1,7 +1,7 @@
 function p = P1drawU(p,lvl)
 % draw displacement
 
-% Copyright 2007 Jan Reininghaus, David Guenther
+% Copyright 2007 Jan Reininghaus, David Guenther, Andreas Byfut
 %
 % This file is part of FFW.
 %
@@ -23,13 +23,14 @@ if(nargin < 2 || isempty(lvl))
 	lvl = p.level(end).level;
 end
 
-%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % set graphic options from structure p
 drawInfo = loadField('p.params.output','drawInfo',p,true);
 
 % load geometry
 n4e = p.level(lvl).geom.n4e;
 c4n = p.level(lvl).geom.c4n;
+% n4ed = p.level(lvl).enum.n4ed;
 
 % load discrete solution
 u = p.level(lvl).u;
@@ -38,14 +39,16 @@ u = p.level(lvl).u;
 nrDoF = p.level(lvl).nrDoF;
 nrElems = p.level(lvl).nrElems;
 
-%% drawU %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 u = reshape(u(n4e'),[3 nrElems]);
 coordX = reshape(c4n(n4e',1),3,nrElems);
 coordY = reshape(c4n(n4e',2),3,nrElems);
-patch(coordX,coordY,u,u);
+patch(coordX,coordY,u);
+% triplot3(n4ed,c4n(:,1),c4n(:,2),u);
 
 if(drawInfo)
 	xlabel(sprintf('Nr of degrees of freedom: %g',nrDoF));
-	title('Discrete P1 Solution');
+	title(strcat('Discrete P1 Solution on Level ',num2str(lvl)));
 	grid on;
 end

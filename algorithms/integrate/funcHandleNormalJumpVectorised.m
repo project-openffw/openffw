@@ -1,4 +1,4 @@
-function val = funcHandleNormalJumpVectorised(pts,pts_ref,parts,curLvl,p)
+function val = funcHandleNormalJumpVectorised(x,y,x_ref,y_ref,parts,curLvl,p)
 % function handle to calculate the jump in normal direction
 
 % Copyright 2007 Joscha Gedicke
@@ -32,10 +32,10 @@ midPoint4e = p.level(curLvl).enum.midPoint4e;
 curElem   = e4ed(parts,:);
 
 %% Jump of Fux In Normal Direction %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-nrPts = size(pts,1);
+
 curMidPoint = midPoint4e(curElem(:,1),:);
-curKappa = permute(kappa(curMidPoint,p),[3 2 1]);
-curGradU_h = permute(gradU_h(pts,pts_ref,curElem(:,1),curLvl,p),[3 2 1]);
+curKappa = permute(kappa(curMidPoint(:,1),curMidPoint(:,2),p),[3 2 1]);
+curGradU_h = permute(gradU_h(x,y,x_ref,y_ref,curElem(:,1),curLvl,p),[3 2 1]);
 
 part_1 = (curKappa(:,1,1).*curGradU_h(:,1) + curKappa(:,1,2).*curGradU_h(:,2)).*normals4ed(:,1)+ ...
          (curKappa(:,2,1).*curGradU_h(:,1) + curKappa(:,2,2).*curGradU_h(:,2)).*normals4ed(:,2) ;
@@ -43,8 +43,8 @@ part_1 = (curKappa(:,1,1).*curGradU_h(:,1) + curKappa(:,1,2).*curGradU_h(:,2)).*
 inner = find(curElem(:,2)>0);
 
 curMidPoint = midPoint4e(curElem(inner,2),:);
-curKappa = permute(kappa(curMidPoint,p),[3 2 1]);
-curGradU_h = permute(gradU_h(pts(inner,:),pts_ref,curElem(inner,2),curLvl,p),[3 2 1]);
+curKappa = permute(kappa(curMidPoint(:,1),curMidPoint(:,2),p),[3 2 1]);
+curGradU_h = permute(gradU_h(x(inner),y(inner),x_ref,y_ref,curElem(inner,2),curLvl,p),[3 2 1]);
 
 part_2 = zeros(size(part_1));
 part_2(inner) = (curKappa(:,1,1).*curGradU_h(:,1) + curKappa(:,1,2).*curGradU_h(:,2)).*normals4ed(inner,1)+ ...
@@ -53,7 +53,7 @@ part_2(inner) = (curKappa(:,1,1).*curGradU_h(:,1) + curKappa(:,1,2).*curGradU_h(
      
 [c, ia, nb] = intersect(NbEd, parts);
 if ~isempty(nb)
-    part_2(nb) = g(pts(nb,:),normals4ed(nb,:),p);
+    part_2(nb) = g(x(nb),y(nb),normals4ed(nb,:),p);
 end
 [c, ia, db] = intersect(DbEd, parts);
 if ~isempty(db)

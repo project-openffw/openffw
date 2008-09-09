@@ -1,4 +1,4 @@
-function val = funcHandleRHSNbVectorised(pts,pts_ref,parts,curLvl,p)
+function val = funcHandleRHSNbVectorised(x,y,x_ref,y_ref,parts,curLvl,p)
 % function handle for g*phi_j
 % use: val = funcHandleRHSNb(x,y,x_ref,y_ref,parts,curLvl,p)
 
@@ -30,13 +30,12 @@ curNormals4ed = p.level(curLvl).enum.normals4ed(parts,:);
 
 
 %% g*phi_j%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-nrPts = size(pts,1);
-evalG = g(pts,curNormals4ed,p);
+evalG = g(x,y,curNormals4ed,p);
 dimg = size(evalG,2);
-evalBasis = basis(pts,pts_ref,e4ed(parts),curLvl,p);
-evalBasis = reshape(evalBasis, [nrPts dimg nrBasisFunc]);
+evalBasis = basis(x,y,x_ref,y_ref,e4ed(parts),curLvl,p);
+evalBasis = reshape(evalBasis, [length(x) dimg nrBasisFunc]);
 evalG = evalG(:)*ones(1,nrBasisFunc);
-evalG = reshape(evalG,[nrPts dimg nrBasisFunc ]);
+evalG = reshape(evalG,[length(x) dimg nrBasisFunc ]);
 integrand = evalG .* evalBasis;
 integrand = sum(integrand,2);
 

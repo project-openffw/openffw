@@ -1,4 +1,4 @@
-function p = initFFW(pdeSolver,problem,mark,maxNrDoF,problemType,solver,refine,estimate,trafo)
+function p = initFFW(pdeSolver,problem,mark,maxNrDoF,problemType,solver,refine,estimate)
 % Initialisation of the FFW.
 % Creates the structure p with all parameters and functions handles.
 % All parameters are saved in
@@ -15,9 +15,8 @@ function p = initFFW(pdeSolver,problem,mark,maxNrDoF,problemType,solver,refine,e
 %               of freedom)
 % problemType - Type of the problem ('elliptic' or 'elasticity')
 % solver      - optional [{'direct'},'multigrid']
-% refine      - optional [{'redGreenBlue'}] for further developement
-% estimate    - optional [{'estimate'}] for further developement
-% trafo       - optional [{'biaffin','isoparametric'}] for further developement
+% refine      - optional [{'redGreenBlue'}] for further devellopment
+% estimate    - optional [{'estimate'}] for further devellopment
 
 % Copyright 2007 Jan Reininghaus, David Guenther, 
 %                Andreas Byfut, Joscha Gedicke
@@ -37,27 +36,17 @@ function p = initFFW(pdeSolver,problem,mark,maxNrDoF,problemType,solver,refine,e
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if nargin < 6
+
+if(nargin < 6)
     solver = 'direct';
     refine = 'redGreenBlue';
     estimate = 'estimate';
-    trafo = 'affin';
-elseif nargin < 7
-    refine = 'redGreenBlue';
-    estimate = 'estimate';
-    trafo = 'affin';
-elseif nargin < 8
-    estimate = 'estimate';
-    trafo = 'affin';
-elseif nargin < 9
-    trafo = 'affin';
 end
-    
 
 %% add paths 
-warning off;
-restoredefaultpath;
-warning on;
+
+eval('restoredefaultpath;','');
+
 curPath = pwd;
 subDir = [findstr('algorithms',curPath),findstr('evaluation',curPath),...
           findstr('helpers',curPath),findstr('PDEsolvers',curPath),...
@@ -71,7 +60,7 @@ addpath(genpath(curPath))
 disp(pdeSolver)
 
 %% initialize p with defaultParameters and values given
-p = [];   
+%p = [];   
 p.params.mark = mark;
 p.params.problem.name = problem;
 p.params.pdeSolver = pdeSolver;
@@ -89,6 +78,7 @@ p.statics.solve = str2func(p.params.solver);
 p.statics.closure = str2func('closure');
 
 %% load generic enumerate functions
+
 p.statics.enum = [];
 p.statics.enum.getE4n = str2func('getE4n');
 p.statics.enum.getEd4n = str2func('getEd4n');
@@ -110,19 +100,16 @@ p.statics.enum.getNormals4NbEd = str2func('getNormals4NbEd');
 p.statics.enum.getNormals4DbEd = str2func('getNormals4DbEd');
 p.statics.enum.getNormals4ed = str2func('getNormals4ed');
 
-%% specify transformation formula to be used
-eval(['p = transformation_',trafo,'(p);']);
-
 %% load PDEsolver specific functions
 estimate = p.params.estimate;
-if(~exist([pdeSolver,estimate,'.m'],'file'))
-    p.statics.estimate = @STUBestimate;
-    if(~strcmp(mark,'uniform') && ~strcmp(mark,'graded'))
-        warning('Adaptive refinement needs a valid error estimater');
-    end
-else
+%if(~exist([pdeSolver,estimate,'.m'],'file'))
+%    p.statics.estimate = @STUBestimate;
+%    if(~strcmp(mark,'uniform') && ~strcmp(mark,'graded'))
+%        error('Adaptive refinement needs a valid error estimater');
+%    end
+%else
     p.statics.estimate = str2func([pdeSolver,estimate]);
-end
+%end
 p.statics.createLinSys = str2func([pdeSolver,'createLinSys']);
 p.statics.enumerate = str2func([pdeSolver,'enumerate']);
 p.statics.postProc = str2func([pdeSolver,'postProc']);
@@ -156,11 +143,10 @@ p = initPDEtypeFunc(p);
 % Element-Type Specific Initialization 
 p = p.statics.init(p);
 
-%% default integration parameters
-p.params.integrationDegrees.exactError = 9;
-% Further FEM-based integration parameters are set in the FEM specific
-% initialization.
 
+%Colors
+p.params.colorIndex = 0;
+p.params.colors = {'r';'g';'b';'m';'c';'k'};
 
 
 

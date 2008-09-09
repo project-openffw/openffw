@@ -28,9 +28,7 @@ if ( length(dimMatrixA) > 2 && dimMatrixA(3) ~= dimMatrixB(3) )
     error('The third dimension must be equal for both matrices.')
 end
 
-if ( length(dimMatrixA) < 3 && length(dimMatrixA) < 3 )
-    val = A * B;
-elseif ( dimMatrixA(1) == 1 && dimMatrixA(2) == 1 )
+if ( dimMatrixA(1) == 1 && dimMatrixA(2) == 1 )
     A1 = A(:)';
     A = zeros(dimMatrixB(1)*dimMatrixB(2),length(A1));
     for k = 1:dimMatrixB(1)*dimMatrixB(2)
@@ -43,7 +41,7 @@ elseif ( dimMatrixA(1) == 1 && dimMatrixA(2) == 1 )
 elseif ( dimMatrixB(1) == 1 && dimMatrixB(2) == 1 )
     B1 = B(:)';
     B = zeros(dimMatrixA(1)*dimMatrixA(2),length(B1));
-    for k = 1:dimMatrixA(1)*dimMatrixA(2)
+    for k = 1:dimMatrixB(1)*dimMatrixB(2)
       B(k,:) = B1;
     end
     % B = repmat(B,dimMatrixA(1)*dimMatrixA(2),1);

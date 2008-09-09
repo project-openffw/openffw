@@ -87,7 +87,7 @@ p = estimate(p);
 fprintf('\n');
 
 nrDoF = p.level(end).nrDoF;
-fprintf('Level = %d \t Error = %.2g \t DoF = %d\n',curLevel,p.level(end).estimatedError,nrDoF);
+fprintf(stderr,'Level = %d \t Error = %.2g \t DoF = %d\n',curLevel,p.level(end).estimatedError,nrDoF);
 while(nrDoF < maxNrDoF && curLevel < maxLevel) || (curLevel < minLevel)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     p = afem(p);
@@ -95,7 +95,7 @@ while(nrDoF < maxNrDoF && curLevel < maxLevel) || (curLevel < minLevel)
     curLevel = curLevel + 1;
     nrDoF = p.level(end).nrDoF;
     estimatedError = p.level(end).estimatedError;
-    fprintf('Level = %d \t Error = %.2g \t DoF = %d\n',curLevel,estimatedError,nrDoF);
+    fprintf(stderr,'Level = %d \t Error = %.2g \t DoF = %d\n',curLevel,estimatedError,nrDoF);
     p.level(end).level = curLevel;    
     maxNrDoF = p.params.maxNrDoF;
 

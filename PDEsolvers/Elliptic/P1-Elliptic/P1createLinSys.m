@@ -4,8 +4,7 @@ function p = P1createLinSys(p)
 % The differential operator is full elliptic with piecewise constant
 % coefficients (one point gauss integration). 
 
-% Copyright 2007 Jan Reininghaus, David Guenther, 
-%                Joscha Gedicke, Andreas Byfut
+% Copyright 2007 Jan Reininghaus, David Guenther, Joscha Gedicke
 %
 % This file is part of FFW.
 %
@@ -23,7 +22,7 @@ function p = P1createLinSys(p)
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % load geometry
 n4e = p.level(end).geom.n4e;
 c4n = p.level(end).geom.c4n;
@@ -34,6 +33,7 @@ kappa = p.problem.kappa;
 lambda = p.problem.lambda;
 mu = p.problem.mu;
 u_D = p.problem.u_D;
+g = p.problem.g;
 
 % load enumerated data
 fixedNodes = p.level(end).enum.fixedNodes;
@@ -46,78 +46,81 @@ dofU4e = p.level(end).enum.dofU4e;
 e4ed = p.level(end).enum.e4ed;
 NbEd = p.level(end).enum.NbEd;
 
-% load integration parameters
-% degreeStima = p.params.integrationDegrees.createLinSys.Stima;
-% degreeDama = p.params.integrationDegrees.createLinSys.Dama;
-% degreeMama = p.params.integrationDegrees.createLinSys.Mama;
-degreeRhs = p.params.integrationDegrees.createLinSys.Rhs;
-degreeNeumann = p.params.integrationDegrees.createLinSys.Neumann;
-
-% get current level number
 curLvl = length(p.level);
+degree = loadField('p.params','rhsIntegtrateExactDegree',p,1);
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Assembling global energy matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Assembling global energy matrix				   %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-kappa4e = kappa(midPoint4e,p);
-lambda4e = lambda(midPoint4e,p);
-mu4e = mu(midPoint4e,p);
+% S = zeros(3,3,nrElems);
+% genericMama = (ones(3)+eye(3))/12;
+% genericDama = [1 1 1]/3;
 
-% local energy matrix: loop version
-S = zeros(3,3,nrElems);
-genericMama = (ones(3)+eye(3))/12;
-genericDama = [1 1 1]/3;
+kappa4e = kappa(midPoint4e(:,1),midPoint4e(:,2),p);
+lambda4e = lambda(midPoint4e(:,1),midPoint4e(:,2),p);
+mu4e = mu(midPoint4e(:,1),midPoint4e(:,2),p);
 
-for curElem = 1:nrElems	
-	grad = grad4e(:,:,curElem);
-	area = area4e(curElem);
-	curKappa = kappa4e(:,:,curElem);
-    curLambda = lambda4e(curElem,:)';
-    curMu = mu4e(curElem);
-    
-	localStima = grad*curKappa*grad'*area;
-	localDama  = grad*curLambda*area*genericDama;
-	localMama  = curMu*area*genericMama;
-	
-	S(:,:,curElem) = localStima + localMama + localDama;
-end
+% for curElem = 1:nrElems	
+% 	grad = grad4e(:,:,curElem);
+% 	area = area4e(curElem);
+% 	curKappa = kappa4e(:,:,curElem);
+%     curLambda = lambda4e(curElem,:)';
+%     curMu = mu4e(curElem);
+%     
+% 	localStima = grad*curKappa*grad'*area;
+% 	localDama  = grad*curLambda*area*genericDama;
+% 	localMama  = curMu*area*genericMama;
+% 	
+% 	S(:,:,curElem) = localStima + localMama + localDama;
+% end
 
-% local energy matrix: loop free version 
-% area = reshape(repmat(area4e',[9 1]),[3 3 nrElems]);
-% lambda4e = reshape(lambda4e',[2,1,nrElems]);
-% mu4e = reshape(repmat(mu4e',[9 1]),[3 3 nrElems]);
-% 
-% grad4eT = permute(grad4e,[2 1 3]);
-% dama = ones(1,3,nrElems)/3;
-% mama = repmat((ones(3)+eye(3))/12,[1,1,nrElems]);
-% 
-% localStima = matMul(matMul(grad4e,kappa4e),grad4eT);
-% localDama = matMul(matMul(grad4e,lambda4e),dama);
-% localMama = mu4e.*mama;
-% 
-% S = (localStima + localMama + localDama).*area;
+area = reshape(repmat(area4e',[9 1]),[3 3 nrElems]);
+lambda4e = reshape(lambda4e',[2,1,nrElems]);
+mu4e = reshape(repmat(mu4e',[9 1]),[3 3 nrElems]);
+
+grad4eT = permute(grad4e,[2 1 3]);
+dama = ones(1,3,nrElems)/3;
+mama = repmat((ones(3)+eye(3))/12,[1,1,nrElems]);
+
+localStima = matMul(matMul(grad4e,kappa4e),grad4eT);
+localDama = matMul(matMul(grad4e,lambda4e),dama);
+localMama = mu4e.*mama;
+
+S = (localStima + localMama + localDama).*area;
 
 [I,J] = localDoFtoGlobalDoF(dofU4e,dofU4e);
 A = sparse(I(:),J(:),S(:));
 
+S = mama.*area;
+B = sparse(I(:),J(:),S(:));
 
-%% Assembling Righthandside %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-f4e = integrateVectorised(n4e,curLvl,degreeRhs,@funcHandleRHSVolumeVectorised,p);
-b = accumarray(n4e(:),f4e(:));
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Assembling Righthandside					   %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Include Neumann conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+f4e = integrateVectorised(n4e,curLvl,degree,@funcHandleRHSVolumeVectorised,p);
+b = full(sparse(n4e(:),ones(size(n4e,1)*size(n4e,2),1),f4e(:),nrNodes,1));
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Include boundary conditions						  %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if ~isempty(Nb)
-     g4NbEd = integrateVectorised(Nb,curLvl,degreeNeumann,@funcHandleRHSNbVectorised,p);
+     g4NbEd = integrateVectorised(Nb,curLvl,degree,@funcHandleRHSNbVectorised,p);
      n4NbElem = n4e(e4ed(NbEd),:);
-     neumann = accumarray(n4NbElem(:),g4NbEd(:),[nrNodes,1]);     
+     neumann = sparse(n4NbElem(:),ones(size(n4NbElem,1)*size(n4NbElem,2),1), ...
+                           g4NbEd(:),nrNodes,1);     
      b = b + neumann;
 end
  
-%% Include Dirichlet conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 u = zeros(nrNodes,1);
-u(fixedNodes) = u_D(c4n(fixedNodes,:),p);
+u(fixedNodes) = u_D(c4n(fixedNodes,1),c4n(fixedNodes,2),p);
 b = b - A*u;
 
-%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-p.level(end).A = A;
-p.level(end).b = b;
-p.level(end).x = u;
+%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+p.level(end).A = real(A);
+p.level(end).B = real(B);
+p.level(end).b = real(b);
+p.level(end).x = real(u);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

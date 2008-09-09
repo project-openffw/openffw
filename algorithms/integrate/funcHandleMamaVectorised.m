@@ -1,4 +1,4 @@
-function val = funcHandleMamaVectorised(pts,pts_ref,parts,curLvl,p)
+function val = funcHandleMamaVectorised(x,y,x_ref,y_ref,parts,curLvl,p)
 % Function handle to calculate the local mass matrix.
 
 % Copyright 2007 Joscha Gedicke
@@ -23,11 +23,10 @@ mu = p.problem.mu;
 basis = p.statics.basisVectorised;
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-nrPts = size(pts,1);
-curMu = mu(pts,p);
-curBasis = basis(pts,pts_ref,parts,curLvl,p);
+curMu = mu(x,y,p);
+curBasis = basis(x,y,x_ref,y_ref,parts,curLvl,p);
 curBasis = reshape(curBasis',[size(curBasis,2) 1 size(curBasis,1)]);
-curMu = reshape( (curMu(:)*ones(1,size(curBasis,1)^2))',[size(curBasis,1) size(curBasis,1) nrPts]);
+curMu = reshape( (curMu(:)*ones(1,size(curBasis,1)^2))',[size(curBasis,1) size(curBasis,1) length(x)]);
 
 val = matMul(curBasis,permute(curBasis,[ 2 1 3 ]));
 val = curMu.*val;

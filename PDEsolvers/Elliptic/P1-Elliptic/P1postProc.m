@@ -2,8 +2,7 @@ function p = P1postProc(p)
 % computes the post-processing datas
 % for a conforming P1-FE method.
 
-% Copyright 2007 Jan Reininghaus, David Guenther, 
-%                Joscha Gedicke
+% Copyright 2007 Jan Reininghaus, David Guenther, Joscha Gedicke
 %
 % This file is part of FFW.
 %
@@ -28,7 +27,8 @@ grad4e = p.level(end).enum.grad4e;
 nrNodes = p.level(end).nrNodes;
 dofU4e = p.level(end).enum.dofU4e;
 
-%% PostProc %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 u = x(1:nrNodes);
 
 u4e = u(dofU4e);
@@ -41,3 +41,4 @@ gradU4e = [sum(u4e.*grad_x,2),sum(u4e.*grad_y,2)];
 p.level(end).u = u;
 p.level(end).u4e = u4e;
 p.level(end).gradU4e = gradU4e;
+

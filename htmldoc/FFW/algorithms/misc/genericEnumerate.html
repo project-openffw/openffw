@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of genericEnumerate</title>
+  <meta name="keywords" content="genericEnumerate">
+  <meta name="description" content="generate the generic data structures">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../../menu.html FFW -->
+<!-- ../menu.html algorithms -->
+<!-- menu.html misc -->
+<h1>genericEnumerate
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function p = genericEnumerate(p) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> generate the generic data structures</pre></div>
+
+
+<h2><a name="_input"></a>INPUT <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>n4e = p.level(end).geom.n4e;
+c4n = p.level(end).geom.c4n;
+Db = p.level(end).geom.Db;
+Nb = p.level(end).geom.Nb;</pre></div>
+
+
+<h2><a name="_output"></a>OUTPUT <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>p.level(end).enum.ed4n = ed4n;
+p.level(end).enum.ed4e = ed4e;
+p.level(end).enum.e4n = e4n;
+p.level(end).enum.n4ed = n4ed;
+p.level(end).enum.e4ed = e4ed;
+p.level(end).enum.DbEd = DbEd;
+p.level(end).enum.NbEd = NbEd;
+p.level(end).enum.area4e = area4e;
+p.level(end).enum.area4n = area4n;
+p.level(end).enum.length4ed = length4ed;
+p.level(end).enum.normals4e = normals4e;
+p.level(end).enum.normals4ed = normals4ed;
+p.level(end).enum.tangents4e = tangents4e;
+p.level(end).enum.tangents4ed = tangents4ed;
+p.level(end).enum.angles4e = angles4e;
+p.level(end).enum.angle4n = angle4n;
+p.level(end).enum.normals4NbEd = normals4NbEd;
+p.level(end).enum.normals4DbEd = normals4DbEd;
+p.level(end).enum.midPoint4e = midPoint4e;
+p.level(end).enum.midPoint4ed = midPoint4ed;
+p.level(end).nrNodes = nrNodes;
+p.level(end).nrElems = nrElems;
+p.level(end).nrEdges = nrEdges;</pre></div>
+
+
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+
+
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+
+<li><a href="../../../FFW/PDEsolvers/Elliptic/CR-Elliptic/CRenumerate.html" class="code" title="function p = CRenumerate(p)">CRenumerate</a>	creates all necessarily data for a</li>
+<li><a href="../../../FFW/PDEsolvers/Elliptic/P0-P1-mixed-Elliptic/P1P0enumerate.html" class="code" title="function p = P1P0enumerate(p)">P1P0enumerate</a>	creates all necessarily data</li>
+<li><a href="../../../FFW/PDEsolvers/Elliptic/P1-Elliptic/P1enumerate.html" class="code" title="function p = P1enumerate(p)">P1enumerate</a>	creates all necessarily data</li>
+<li><a href="../../../FFW/PDEsolvers/Elliptic/P2-Elliptic/P2enumerate.html" class="code" title="function p = P2enumerate(p)">P2enumerate</a>	creates all necessarily data</li>
+<li><a href="../../../FFW/PDEsolvers/Elliptic/P3-Elliptic/P3enumerate.html" class="code" title="function p = P3enumerate(p)">P3enumerate</a>	creates all necessarily data</li>
+</ul>
+
+
+
+
+
+<hr><address>Generated on Thu 22-Nov-2007 15:17:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

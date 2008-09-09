@@ -26,70 +26,67 @@ function p = Elliptic_Square_exact(p)
 
 
 % PDE definition
-p.problem.geom = 'Square';%'SquareArbitrary1';%
+p.problem.geom = 'Square';
 p.problem.f = @f;
 p.problem.g = [];
 p.problem.u_D = @u_D;
 p.problem.kappa = @kappa;
-p.problem.Dkappa = @Dkappa;
 p.problem.lambda = @lambda;
 p.problem.mu = @mu;
 
 % load exact solution
 p.problem.u_exact = @u_exact;
 p.problem.gradU_exact = @gradU_exact;
-return
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Volume force %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function z = f(pts,p)
-x = pts(:,1);
-y = pts(:,2);
+% Volume force
+function z = f(x,y,p)
 z = 2*((x-x.^2)+(y-y.^2));
 
-%% Dirichlet boundary values %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function z = u_D(pts,p)
-z = u_exact(pts,p);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Neumann boundary values %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% not given
+% Dirichlet boundary values
+function z = u_D(x,y,p)
+z = u_exact(x,y,p);
 
-%% elliptic PDE coefficent kappa ( div(kappa*grad_u) ) %%%%%%%%%%%%%%%%%%%%
-function z = kappa(pts,p)
-nrPts = size(pts,1);
-dim = size(pts,2);
-z = zeros(dim,dim,nrPts);
-for curPt = 1:nrPts 
-    z(:,:,curPt) = eye(dim);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% elliptic PDE coefficent kappa ( div(kappa*grad_u) )
+function z = kappa(x,y,p)
+
+nrPoints = length(x);
+z = zeros(2,2,nrPoints);
+
+for curPoint = 1:nrPoints 
+    z(:,:,curPoint) = [1 0;
+                       0 1];
 end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function z = Dkappa(pts,p)
-nrElems = size(pts,1);
-% 3rd dimension is derivative with respect to space-dimensions
-z = zeros(2,2,2,nrElems);
+% elliptic PDE coefficent lambda ( lambda*grad_u )
+function z = lambda(x,y,p)
+nrPoints = length(x);
+z = zeros(nrPoints,2);
+for curPoint = 1:nrPoints 
+    z(curPoint,:) = [0 , 0];
+end
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% elliptic PDE coefficent lambda ( lambda*grad_u ) %%%%%%%%%%%%%%%%%%%%%%%
-function z = lambda(pts,p)
-nrPts = size(pts,1);
-dim = size(pts,2);
-z = zeros(nrPts,dim);
+% elliptic PDE coefficent mu ( mu*u )
+function z = mu(x,y,p)
+z = zeros(length(x),1);
  
-%% elliptic PDE coefficent mu ( mu*u ) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function z = mu(pts,p)
-nrPts = size(pts,1);
-z = zeros(nrPts,1);
- 
-%% exact solution %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function z = u_exact(pts,p)
-x = pts(:,1);
-y = pts(:,2);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% exact solution
+function z = u_exact(x,y,p)
 z = x.*(1-x).*y.*(1-y);
 
-%% gradient of exact solution %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function z = gradU_exact(pts,p)
-nrPts = size(pts,1);
-x = pts(:,1);
-y = pts(:,2);
-z = zeros(nrPts,2);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% (approximated) gradU
+function z = gradU_exact(x,y,p)
+z = zeros(length(x),2);
 z(:,1) = (1-2*x).*y.*(1-y);
 z(:,2) = (1-2*y).*x.*(1-x);

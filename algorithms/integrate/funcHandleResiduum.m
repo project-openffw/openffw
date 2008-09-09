@@ -1,4 +1,4 @@
-function val = funcHandleResiduum(pts,curElem,curLvl,p)
+function val = funcHandleResiduum(x,y,curElem,curLvl,p)
 % function handle to calculate the residuum
 
 % Copyright 2007 Joscha Gedicke
@@ -19,7 +19,7 @@ function val = funcHandleResiduum(pts,curElem,curLvl,p)
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-%% Input %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Input %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 f = p.problem.f;
 kappa = p.problem.kappa;
 lambda = p.problem.lambda;
@@ -31,15 +31,15 @@ D2U_h    = p.statics.d2U_h;
 %% assume piecewise constant coefficients %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 midPoint4e = p.level(curLvl).enum.midPoint4e;
 curMidPoint = midPoint4e(curElem,:);
-curKappa = kappa(curMidPoint,p);
-curLambda = lambda(curMidPoint,p);
-curMu = mu(curMidPoint,p);
+curKappa = kappa(curMidPoint(1),curMidPoint(2),p);
+curLambda = lambda(curMidPoint(1),curMidPoint(2),p);
+curMu = mu(curMidPoint(1),curMidPoint(2),p);
 
 %% Residuum %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-curU_h = u_h(pts,curElem,curLvl,p);
-curGradU_h = permute(gradU_h(pts,curElem,curLvl,p),[3 2 1]);
-curD2U_h = permute(D2U_h(pts,curElem,curLvl,p),[3 1 2]);
-curf     = f(pts,p);
+curU_h = u_h(x,y,curElem,curLvl,p);
+curGradU_h = permute(gradU_h(x,y,curElem,curLvl,p),[3 2 1]);
+curD2U_h = permute(D2U_h(x,y,curElem,curLvl,p),[3 1 2]);
+curf     = f(x,y,p);
 
 %-div(kappa gradU_h) + lambda*gradU_h + mu u_h - f
 residuum = -curKappa(1,1)*curD2U_h(:,1,1) - curKappa(1,2)*curD2U_h(:,2,1) ...

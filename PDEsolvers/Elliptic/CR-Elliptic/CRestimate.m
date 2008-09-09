@@ -21,7 +21,7 @@ function p = CRestimate(p)
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % load discrete solution
 ph = p.level(end).grad4e;
 
@@ -37,14 +37,8 @@ area4e = p.level(end).enum.area4e;
 midpoint4e = p.level(end).enum.midPoint4e;
 midPoint4ed = p.level(end).enum.midPoint4ed;
 normals4NbEd = p.level(end).enum.normals4NbEd;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% load integration parameters
-degreeJumpTerm = p.params.integrationDegrees.estimate.jumpTerm;
-degreeVolumeTerm = p.params.integrationDegrees.estimate.volumeTerm;
-degreeOscTerm = p.params.integrationDegrees.estimate.oscTerm;
-
-%% Estimate %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% jump term
 phU = ph(:,1);
 phV = ph(:,2);
 
@@ -64,14 +58,14 @@ jump4ed = length4ed.^2 .* (ph4edU.^2 + ph4edV.^2);
 
 % Neumann boundary
 if ~isempty(NbEd) 
-	g4NbEd = g(midPoint4ed(NbEd,:),normals4NbEd,p);
+	g4NbEd = g(midPoint4ed(NbEd,1),midPoint4ed(NbEd,2),normals4NbEd,p);
 	ph4Nb = [ph4edU1(NbEd),ph4edV1(NbEd)];
 	ph4NbNormal = sum(ph4Nb .* normals4NbEd,2);
 	
 	jump4ed(NbEd) = length4ed(NbEd).^2 .* (g4NbEd - ph4NbNormal).^2;
 end
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Oscillations 
 % boundary elements are considered to be their own neighbours
 [I,dontUse] = find(e4ed == 0);
@@ -83,8 +77,8 @@ secElem = e4ed(:,2);
 area4firstElem = area4e(firstElem);
 area4secElem = area4e(secElem);
 
-f4firstElem = f(midpoint4e(firstElem,:),p);
-f4secElem = f(midpoint4e(secElem,:),p);
+f4firstElem = f(midpoint4e(firstElem,1),midpoint4e(firstElem,2),p);
+f4secElem = f(midpoint4e(secElem,1),midpoint4e(secElem,2),p);
 
 f4patch = (area4firstElem.*f4firstElem + area4secElem.*f4secElem)./...
             (area4secElem + area4secElem);
@@ -93,13 +87,13 @@ f4T1 = area4e(firstElem).*(f4firstElem - f4patch).^2;
 f4T2 = area4e(secElem).*(f4secElem - f4patch).^2;
 
 osc4ed = length4ed.^2 .* ( f4T1 + f4T2 );
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-% estimate
 eta4ed = sqrt(jump4ed + osc4ed);
 
-%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 p.level(end).jump4ed = sqrt(jump4ed);
 p.level(end).osc4ed = sqrt(osc4ed);
 p.level(end).etaEd = eta4ed;
 p.level(end).estimatedError = norm(eta4ed,2);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

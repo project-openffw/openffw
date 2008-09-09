@@ -1,4 +1,4 @@
-function val = funcHandleResiduumVectorised(pts,pts_ref,parts,curLvl,p)
+function val = funcHandleResiduumVectorised(x,y,x_ref,y_ref,parts,curLvl,p)
 % function handle for calculation of the residuum
 
 % Copyright 2007 Joscha Gedicke
@@ -30,15 +30,16 @@ D2U_h    = p.statics.d2U_hVectorised;
 
 %% assume piecewise constant coefficients %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 midPoint4e = p.level(curLvl).enum.midPoint4e(parts,:);
-kappa4e = permute(kappa(midPoint4e,p),[3 1 2]);
-lambda4e = lambda(midPoint4e,p);
-mu4e = mu(midPoint4e,p);
+kappa4e = permute(kappa(midPoint4e(:,1),midPoint4e(:,2),p),[3 1 2]);
+lambda4e = lambda(midPoint4e(:,1),midPoint4e(:,2),p);
+mu4e = mu(midPoint4e(:,1),midPoint4e(:,2),p);
 
 %% Residuum %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-curf = f(pts,p);
-curU_h = u_h(pts,pts_ref,parts,curLvl,p);
-curGradU_h = permute(gradU_h(pts,pts_ref,parts,curLvl,p),[3 2 1]);
-curD2U_h = permute(D2U_h(pts,pts_ref,parts,curLvl,p),[3 1 2]);
+curf = f(x,y,p);
+curU_h = u_h(x,y,x_ref,y_ref,parts,curLvl,p);
+curGradU_h = permute(gradU_h(x,y,x_ref,y_ref,parts,curLvl,p),[3 2 1]);
+curD2U_h = permute(D2U_h(x,y,x_ref,y_ref,parts,curLvl,p),[3 1 2]);
+
 
 %-div(kappa gradU_h) + lambda*gradU_h + mu u_h - eigenvalue_h*u_h
 residuum = -kappa4e(:,1,1).*curD2U_h(:,1,1) - kappa4e(:,1,2).*curD2U_h(:,2,1) ...

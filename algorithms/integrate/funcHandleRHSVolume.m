@@ -1,4 +1,4 @@
-function val = funcHandleRHSVolume(pts,curElem,curLvl,p)
+function val = funcHandleRHSVolume(x,y,curElem,curLvl,p)
 % function handle for RHS f*phi_j
 % use: val = funcHandleRHSVolume(x,y,curElem,curlvl,p)
 
@@ -27,13 +27,12 @@ dofU4e = p.level(curLvl).enum.dofU4e;
 nrBasisFuncU = size(dofU4e,2);
 
 %% f*phi_j %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-nrPts = size(pts,1);
-evalF = f(pts,p);
+evalF = f(x,y,p);
 dimf = size(evalF,2);
-evalBasisU = basisU(pts,curElem,curLvl,p);
-evalBasisU = reshape(evalBasisU, [nrPts dimf nrBasisFuncU]);
+evalBasisU = basisU(x,y,curElem,curLvl,p);
+evalBasisU = reshape(evalBasisU, [length(x) dimf nrBasisFuncU]);
 evalF = evalF(:)*ones(1,nrBasisFuncU);
-evalF = reshape(evalF,[nrPts dimf nrBasisFuncU ]);
+evalF = reshape(evalF,[length(x) dimf nrBasisFuncU ]);
 integrand = evalF .* evalBasisU;
 integrand = sum(integrand,2);
 

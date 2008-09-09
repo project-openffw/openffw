@@ -28,49 +28,52 @@ p.problem.f = @f;
 p.problem.g = @g;
 p.problem.u_D = @u_D;
 p.problem.kappa = @kappa;
-p.problem.Dkappa = @Dkappa;
 p.problem.lambda = @lambda;
 p.problem.mu = @mu;
-return
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Volume force %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function z = f(pts,p)
-nrPts = size(pts,1);
-z = ones(nrPts,1);
+% Volume force
+function z = f(x,y,p)
+z = ones(length(x),1);
 
-%% Dirichlet boundary values %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function z = u_D(pts,p)
-nrPts = size(pts,1);
-z = zeros(nrPts,1);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Neumann boundary values %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function z = g(pts,normals,p)
-nrPts = size(pts,1);
-z = zeros(nrPts,1);
+% Dirichlet boundary values
+function z = u_D(x,y,p)
+z = zeros(length(x),1);
 
-%% elliptic PDE coefficent kappa ( div(kappa*grad_u) ) %%%%%%%%%%%%%%%%%%%%
-function z = kappa(pts,p)
-nrPts = size(pts,1);
-dim = size(pts,2);
-nrPoints = size(pts,1);
-z = zeros(dim,dim,nrPts);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Neumann boundary values
+function z = g(x,y,n,p)
+z = zeros(length(x),1);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% elliptic PDE coefficent kappa ( div(kappa*grad_u) )
+function z = kappa(x,y,p)
+nrPoints = length(x);
+z = zeros(2,2,nrPoints);
 for curPoint = 1:nrPoints 
-    z(:,:,curPoint) = eye(dim);
+    z(:,:,curPoint) = [1 0;
+                       0 1];
 end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function z = Dkappa(pts,p)
-nrElems = size(pts,1);
-% 3rd dimension is derivative with respect to space-dimensions
-z = zeros(2,2,2,nrElems);
-
-%% elliptic PDE coefficent lambda ( lambda*grad_u ) %%%%%%%%%%%%%%%%%%%%%%%
-function z = lambda(pts,p)
-nrPts = size(pts,1);
-dim = size(pts,2);
-z = zeros(nrPts,dim);
+% elliptic PDE coefficent lambda ( lambda*grad_u )
+function z = lambda(x,y,p)
+nrPoints = length(x);
+z = zeros(nrPoints,2);
+for curPoint = 1:nrPoints 
+    z(curPoint,:) = [0 , 0];
+end
  
-%% elliptic PDE coefficent mu ( mu*u ) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function z = mu(pts,p)
-nrPts = size(pts,1);
-z = zeros(nrPts,1);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% elliptic PDE coefficent mu ( mu*u )
+function z = mu(x,y,p)
+z = zeros(length(x),1);
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+

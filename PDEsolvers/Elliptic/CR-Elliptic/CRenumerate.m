@@ -19,18 +19,17 @@ function p = CRenumerate(p)
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-%% Generic Enumeration %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 p = genericEnumerate(p);
 
-%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Db = p.level(end).geom.Db;
 area4e = p.level(end).enum.area4e;
 DbEd = p.level(end).enum.DbEd;
 midPoint4ed = p.level(end).enum.midPoint4ed;
 ed4e = p.level(end).enum.ed4e;
 nrEdges = p.level(end).nrEdges;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Enumeration %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % gradients of P1NC-Hat functions
 gradNC4e = getGradNC4e(midPoint4ed,ed4e,area4e);
 
@@ -47,10 +46,11 @@ dofU4e = ed4e;
 ed4ed = [1:nrEdges]';
 dofU4ed = ed4ed;
 
-%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 p.level(end).enum.dofU4e = dofU4e;
 p.level(end).enum.dofU4ed = dofU4ed;
 p.level(end).enum.gradNC4e = gradNC4e;
 p.level(end).nrDoF = nrDoF;
 p.level(end).enum.freeNodes = freeNodes;
 p.level(end).enum.fixedNodes = fixedNodes;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

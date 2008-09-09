@@ -2,8 +2,7 @@ function p = P1enumerate(p)
 % creates all necessarily data 
 % for a conforming P1-FE method.
 
-% Copyright 2007 Jan Reininghaus, David Guenther, 
-%                Joscha Gedicke
+% Copyright 2007 Jan Reininghaus, David Guenther, Joscha Gedicke
 %
 % This file is part of FFW.
 %
@@ -20,17 +19,19 @@ function p = P1enumerate(p)
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-%% Generic Enumeration %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 p = genericEnumerate(p);
 
-%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 n4e = p.level(end).geom.n4e;
 c4n = p.level(end).geom.c4n;
 Db = p.level(end).geom.Db;
 area4e = p.level(end).enum.area4e;
 nrNodes = p.level(end).nrNodes;
+area4n   = p.level(end).enum.area4n;
 
-%% Enumeration %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % gradients of P1-Hat functions
 grad4e = getGrad4e(c4n,n4e,area4e);
 
@@ -43,9 +44,13 @@ nrDoF = length(freeNodes);
 
 dofU4e = n4e;
 
-%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+patch4dof = area4n;
+
+%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 p.level(end).enum.dofU4e = dofU4e;
 p.level(end).enum.grad4e = grad4e;
 p.level(end).nrDoF = nrDoF;
 p.level(end).enum.freeNodes = freeNodes;
 p.level(end).enum.fixedNodes = fixedNodes;
+p.level(end).enum.patch4dof = patch4dof;
+

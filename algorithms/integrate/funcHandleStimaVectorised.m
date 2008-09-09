@@ -1,4 +1,4 @@
-function val = funcHandleStimaVectorised(pts,pts_ref,parts,curLvl,p)
+function val = funcHandleStimaVectorised(x,y,x_ref,y_ref,parts,curLvl,p)
 % Function handle to calculate the local stiffness matrix.
 
 % Copyright 2007 Joscha Gedicke
@@ -18,13 +18,16 @@ function val = funcHandleStimaVectorised(pts,pts_ref,parts,curLvl,p)
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Input %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 kappa = p.problem.kappa;
 gradBasis  = p.statics.gradBasisVectorised;
 
-%% Calculate local stiffness matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-curKappa = kappa(pts,p);
-curGrad = gradBasis(pts,pts_ref,parts,curLvl,p);
+%% 
+
+curKappa = kappa(x,y,p);
+curGrad = gradBasis(x,y,x_ref,y_ref,parts,curLvl,p);
 
 val = matMul(curKappa,permute(curGrad,[ 2 1 3 ]));
 val = matMul(curGrad,val);
+
+
