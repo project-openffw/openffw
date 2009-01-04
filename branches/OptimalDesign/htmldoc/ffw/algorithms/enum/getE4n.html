@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getE4n</title>
+  <meta name="keywords" content="getE4n">
+  <meta name="description" content="e4n">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../../menu.html ffw -->
+<!-- ../menu.html algorithms -->
+<!-- menu.html enum -->
+<h1>getE4n
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function e4n = getE4n(n4e) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> e4n
+ The function getE4n returns a nrNodes times nrNodes sparse matrix. 
+ NOTE:
+ The sparsity constant is bounded due to the used mesh generation. The
+ input is n4e. In this matrix each entry (j,k) is the number of the
+ element, whose boundary contains the nodes j and k in
+ counter clockwise order as vertices or zero if the there is no such
+ element. Since the nodes in n4e are oriented counter clockwise e4n
+ gives you the number of the row in which the sequence j k is found. 
+ Note that in this context k i j also contains the sequence j k.
+ To find the patch of a node k, i.e all elements containing node k,
+ just get the non zero entries of the k-th row or column.</pre></div>
+
+
+
+
+
+
+
+
+
+
+
+<hr><address>Generated on Thu 27-Sep-2007 10:19:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

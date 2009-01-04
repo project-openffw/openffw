@@ -1,0 +1,62 @@
+\bigskip
+\subsection{FEM for Elasticity}
+
+\noindent In theory of linear elasticity one is interested in the solution of the following system of elliptic PDE's:
+\begin{align}\label{elasticity strong form}
+-\ddiv\, \C\,\varepsilon(u)&=f &&\text{in }\Omega,\nonumber\\
+u&=u_D &&\text{on }\Gamma_D,\\
+(\C\,\varepsilon(u))\cdot \nu&=g &&\text{on }\Gamma_N,\nonumber
+\end{align}
+with $u_D\in H^1(\Omega;\R^2)$, $f\in L^2(\Omega;\R^2)$, $g\in L^2(\Gamma_N;\R^2)$. Here and throughout, $\varepsilon(v)=\frac{1}{2}(\grad v+(\grad v)^T)$ denotes the linearized Green strain tensor, $\C$ is the reduced symmetric fourth order bounded and positive definite elasticity tensor defined by the Lam\'e parameters $\lambda$ and $\mu$. In Voigt notation the tensor $\C$ and its inverse is given through
+\begin{equation*}
+\C:=\begin{pmatrix}
+2\mu+\lambda & \lambda       & 0\\
+\lambda      & 2\mu+\lambda  & 0\\
+0            & 0             & \mu
+\end{pmatrix} \quad\text{and}\quad
+\Cinv:=\begin{pmatrix}
+\frac{\lambda+2 \mu}{4\mu(\lambda+\mu)} & \frac{-\lambda}{4\mu(\lambda+\mu)}            & 0\\
+\frac{-\lambda}{4\mu(\lambda+\mu)}          & \frac{\lambda+2 \mu}{4\mu(\lambda+\mu)} & 0\\
+0 & 0 & \frac{1}{\mu}
+\end{pmatrix}.
+\end{equation*}
+
+\noindent There are several formulations of the problem \eqref{elasticity strong form} depending on the focus of interest. For instant, \eqref{elasticity strong form} is a displacement based formulation. Here, one computes an approximation of the displacement $u$ and afterwards the discrete solution $u_h$ is post-processed to get the discrete strain and stress of the problem. In other formulations strain or stress are computed directly. The \FFW offers a displacement-based and a stress-displacement-based formulation. Both can be found in \cite{Bra}.
+
+\bigskip
+
+\noindent Similar to the elliptic problems, there are conforming and nonconforming FE-methods which one can choose to solve \eqref{elasticity strong form}. At first, the weak formulation is given: Seek $u\in V$ such that
+\begin{equation}\label{elasticity weak form}
+\int_{\Omega} \varepsilon(u):\C\varepsilon(v) \, dx = \int_{\Omega}
+f \cdot v \, dx + \int_{\Gamma_N} g\cdot v \, ds_x \quad\text{for
+all } v \in V.
+\end{equation}
+
+\noindent The conforming $P_1-P_1$ FE-method approximates the displacement $u\in H^1(\Omega)^2$ in each component with the linear ansatz space $P_1$. Since this kind of approximations does not work for incompressible materials like rubber or water, the so-called locking effect, there is also a nonconforming method available. The Kouhia-Stenberg element ($P_1-CR$) approximates the first component of $u$ with the globally continuous piecewise linear ansatz-space ($P_1$) and the second one with the Crouzeix-Raviart ansatz-space ($CR$). The Kouhia-Stenberg element is able to handle also incompressible materials. Details can be found in \cite{Bra,KoSt}. Problems will arise in the condition number of the energy matrix for incompressible materials. To get rid of it one has to change the problem formulation. A stress-displacement formulation which results in a mixed scheme handles then both problems: the locking effect and the dependence of the condition number for incompressible materials. This formulation and the FE-spaces we will describe as next.
+
+\bigskip
+
+%\noindent If the main interest is on an accurate stress or flux approximation and some strict equilibration
+%condition rather than the displacement, it might be advantageous to consider an operator split: Instead of
+%one partial differential equation of order $2m$ one considers two equations of order $m$.
+%To be more precise, given one equation in an abstract form $\mathcal{L}u = G$ with some differential
+%operator $\mathcal{L} = \mathcal{A}\mathcal{B}$ composed of $\mathcal{A}$ and $\mathcal{B}$, define $p := \mathcal{B}u$ and solve the two equations
+%$\mathcal{A}p = G$ and $\mathcal{B}u = p$.\smallskip\\
+%\noindent
+%The mixed form of \eqref{elasticity strong form} reads:
+
+\noindent The stress-displacement formulation of \eqref{elasticity strong form} is given through: Seek $(\sigma,u)\in\Sigma\times V$ such that
+\begin{align}\label{elasticity mixed strong form}
+		-\ddiv\, \sigma&=f&  &\text{ and }& \sigma&=\C\,\varepsilon(u)&\text{  in }\Omega,\\
+		u&=u_D\text{ on }\Gamma_D& &\text{ and }& \sigma \nu&=g \text{ on }\Gamma_N.\nonumber
+\end{align}
+Then, the corresponding weak form reads
+\begin{align*}
+\int_{\Omega} \sigma:\C^{-1}\tau \, dx + \int_{\Omega} u\cdot\ddiv\,
+\tau \,dx
+&= \int_{\Gamma_D} u_D\cdot (\tau \,\nu) \, ds_x &&\text{for all } \tau \in \Sigma,\\
+\int_{\Omega} v\cdot\ddiv\, \sigma\,dx &= - \int_{\Omega} f \cdot v
+\, dx &&\text{for all } v \in V.
+\end{align*}
+
+\noindent One way to handle \eqref{elasticity mixed strong form} is the Peers-element which is described in \cite{CCDo}. The problem with that element is symmetry of the stress $\sigma$. This is only enforced weakly with a side constraint. In the \FFW we have implemented another mixed finite element based on the work of Arnold and Winther \cite{ArWi}. They have introduced a mixed finite element of problem \eqref{elasticity mixed strong form} which is locking-free (with a condition number which is independent of the current material) and the discrete stress $\sigma_h$ is symmetric in a natural way. Details on the implementation can be found in \cite{CCGuReTh}.

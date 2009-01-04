@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of drawErrorOnGrid</title>
+  <meta name="keywords" content="drawErrorOnGrid">
+  <meta name="description" content="draw error on the mesh">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../../menu.html ffw -->
+<!-- ../menu.html evaluation -->
+<!-- menu.html draw -->
+<h1>drawErrorOnGrid
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function p =  drawErrorOnGrid(p,lvl,errType) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> draw error on the mesh</pre></div>
+
+
+<h2><a name="_input"></a>INPUT <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>
+<span class="keyword">if</span>(nargin &lt; 3)
+    error(<span class="string">'You have to specify a the type of error ''(e.g. H1semiError)'''</span>);
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> isempty(lvl)
+    lvl = p.level(end).level;
+<span class="keyword">end</span>
+
+<span class="comment">% set graphic options from structure p</span>
+drawInfo = <a href="../../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>(<span class="string">'p.params.output'</span>,<span class="string">'drawInfo'</span>,p,false);
+drawWalls = <a href="../../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>(<span class="string">'p.params.output'</span>,<span class="string">'drawWalls'</span>,p,true);
+
+<span class="comment">% load geometry</span>
+n4e = p.level(lvl).geom.n4e;
+c4n = p.level(lvl).geom.c4n;
+
+<span class="comment">% load enumerated data</span>
+nrElems = p.level(lvl).nrElems;
+nrDoF = p.level(lvl).nrDoF;
+ed4e = p.level(end).enum.ed4e;
+
+<span class="comment">% integration parameters</span>
+degree = <a href="../../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>(<span class="string">'p.params'</span>,<span class="string">'errorIntegtrateExactDegree'</span>,p,19);
+intMode = <a href="../../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>(<span class="string">'p.params'</span>,<span class="string">'IntegrationMode'</span>,p,<span class="string">'elementwise'</span>);</pre></div>
+
+
+
+
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+
+<li><a href="../../../ffw/algorithms/integrate/integrate.html" class="code" title="function val = integrate( parts, curLvl,  degree, integrand, p )">integrate</a>	Integrates function handle integrand over given domain 1D or 2D.</li>
+<li><a href="../../../ffw/algorithms/integrate/integrateVectorised.html" class="code" title="function val = integrateVectorised( parts, curLvl,  degree, integrand, p )">integrateVectorised</a>	Integrates function handle integrand over given domain 1D or 2D.</li>
+<li><a href="../../../ffw/helpers/loadField.html" class="code" title="function data = loadField(field,member,p,defaultValue)">loadField</a>	load a field from a structure</li>
+</ul>
+
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+
+<li><a href="../../../ffw/scripts/teach/teachError.html" class="code" title="function teachError">teachError</a>	draws the errror on the grid</li>
+</ul>
+
+
+
+
+
+<hr><address>Generated on Thu 27-Sep-2007 10:19:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>
