@@ -51,6 +51,7 @@ midPoint4ed = p.level(end).enum.midPoint4ed;
 
 % additional data
 C = p.statics.basisCoefficients;
+f4e = loadField('p.level(end)','f4e',p,[]);
 
 % load integration parameters
 % degreeStima = p.params.integrationDegrees.createLinSys.Stima;
@@ -122,8 +123,11 @@ A = sparse(I(:),J(:),S(:));
 
 
 %% Assembling Righthandside %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% f4e = integrate(n4e,curLvl,degreeRhs,@funcHandleRHSVolume,p);
-f4e = integrateVectorised(n4e,curLvl,degreeRhs,@funcHandleRHSVolumeVectorised,p);
+if (~f4e)
+    % f4e = integrate(n4e,curLvl,degreeRhs,@funcHandleRHSVolume,p);
+    f4e = integrateVectorised(n4e,curLvl,degreeRhs,@funcHandleRHSVolumeVectorised,p);
+end
+
 b = accumarray(dofU4e(:),f4e(:));
 
 
