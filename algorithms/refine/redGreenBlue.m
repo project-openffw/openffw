@@ -158,10 +158,10 @@ if ~isempty(bisec5Elems)
 					edgeNodes(:,3),edgeNodes(:,1),innerNode;...
 					n4e(bisec5Elems,3),edgeNodes(:,3),innerNode;...
 					edgeNodes(:,2),n4e(bisec5Elems,3),innerNode];
-	newn4e = [newn4e; newOscElems];
 	nrOscElems = size(newOscElems,1);
 	dummy = repmat(bisec5Elems,6,1);
 	parents4e( size(newn4e,1)+1 : size(newn4e,1)+nrOscElems ) = dummy;
+   	newn4e = [newn4e; newOscElems];
 end
 
 % reduce the size of parents4e to the new number of elements
