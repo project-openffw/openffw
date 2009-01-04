@@ -22,11 +22,11 @@ function p = startElliptic
 
 %% Problem Type
 
-problem = 'Elliptic_Square';
+% problem = 'Elliptic_Square';
 % problem = 'Elliptic_Lshape';
 % problem = 'Elliptic_Square_exact';
 % problem = 'Elliptic_Lshape_exact';
-% problem = 'Elliptic_Waterfall_exact';
+problem = 'Elliptic_Waterfall_exact';
 % problem = 'Elliptic_SquareFullElliptic_exact';
 % problem = 'Elliptic_HexagonalSlit_exact';
 
@@ -38,7 +38,7 @@ pdeSolver = 'P1';         %'P1-Elliptic';
 % pdeSolver = 'RT0P0';      %'RT0-P0-mixed-Elliptic';
 
 %% Maximum Number Degrees of Freedom
-maxNrDoF = 100;
+maxNrDoF = 1000;
 
 %% Mark Criterion
 mark = 'bulk';

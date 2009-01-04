@@ -57,12 +57,12 @@ eval(exec,'disp(''errsigma_exact'')');
 f_dummy = -[diff(sigma_exact_dummy(1,1),x) + diff(sigma_exact_dummy(1,2),y),...
             diff(sigma_exact_dummy(2,1),x) + diff(sigma_exact_dummy(2,2),y)];
 charF = Matlab4Maple(f_dummy);
-exec = ['p.problem.f_dummy = @(x,y,p)(',charF,');'];
+exec = ['p.problem.f = @(x,y,p)(',charF,');'];
 eval(exec,'disp(''errF'')');
 
 % exact solution
 charU = Matlab4Maple(u);
-exec = ['p.problem.u_exact_dummy = @(x,y,p)(',charU,');'];
+exec = ['p.problem.u_exact = @(x,y,p)(',charU,');'];
 eval(exec,'disp(''errU'')');
 return
 
