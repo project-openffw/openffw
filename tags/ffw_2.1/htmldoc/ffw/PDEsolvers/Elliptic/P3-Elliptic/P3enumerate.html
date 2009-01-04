@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of P3enumerate</title>
+  <meta name="keywords" content="P3enumerate">
+  <meta name="description" content="creates all necessarily data">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../../../menu.html ffw -->
+<!-- ../../menu.html PDEsolvers -->
+<!-- ../menu.html Elliptic -->
+<!-- menu.html P3-Elliptic -->
+<h1>P3enumerate
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function p = P3enumerate(p) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> creates all necessarily data 
+ for a conforming P3-FE method.</pre></div>
+
+
+<h2><a name="_input"></a>INPUT <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>n4e = p.level(end).geom.n4e;
+c4n = p.level(end).geom.c4n;
+Db = p.level(end).geom.Db;
+area4e = p.level(end).enum.area4e;
+nrNodes = p.level(end).nrNodes;
+n4ed    = p.level(end).enum.n4ed;
+nrNodes = p.level(end).nrNodes;
+nrEdges = p.level(end).nrEdges;
+nrElems = p.level(end).nrElems;
+DbEd = p.level(end).enum.DbEd;
+ed4e = p.level(end).enum.ed4e;
+e4ed = p.level(end).enum.e4ed;
+area4n   = p.level(end).enum.area4n;</pre></div>
+
+
+<h2><a name="_output"></a>OUTPUT <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>p.level(end).enum.dofU4e = dofU4e;
+p.level(end).enum.P1grad4e = P1grad4e;
+p.level(end).nrDoF = nrDoF;
+p.level(end).enum.freeNodes = freeNodes;
+p.level(end).enum.fixedNodes = fixedNodes;
+p.level(end).enum.patch4dof = patch4dof;</pre></div>
+
+
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+
+<li><a href="../../../../ffw/algorithms/enum/getGrad4e.html" class="code" title="function grad4e = getGrad4e(c4n,n4e,area4e)">getGrad4e</a>	grad4e</li>
+<li><a href="../../../../ffw/algorithms/misc/genericEnumerate.html" class="code" title="function p = genericEnumerate(p)">genericEnumerate</a>	generate the generic data structures</li>
+</ul>
+
+
+
+
+
+
+<hr><address>Generated on Thu 27-Sep-2007 10:19:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

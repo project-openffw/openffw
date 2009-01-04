@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of funcHandleRHSVolumeVectorised</title>
+  <meta name="keywords" content="funcHandleRHSVolumeVectorised">
+  <meta name="description" content="function handle for RHS f*phi_j">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+
+<!-- ../../menu.html ffw -->
+<!-- ../menu.html algorithms -->
+<!-- menu.html integrate -->
+<h1>funcHandleRHSVolumeVectorised
+
+</h1>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function val = funcHandleRHSVolumeVectorised(x,y,x_ref,y_ref,parts,curLvl,p) </strong></div>
+
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> function handle for RHS f*phi_j
+ use: val = funcHandleRHSVolume(x,y,x_ref,y_ref,parts,curlvl,p)</pre></div>
+
+
+<h2><a name="_input"></a>INPUT <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>f = p.problem.f;
+basisU = p.statics.basisVectorised;
+dofU4e = p.level(curLvl).enum.dofU4e;
+nrBasisFuncU = size(dofU4e,2);</pre></div>
+
+
+
+
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+
+
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+
+<li><a href="../../../ffw/PDEsolvers/Elliptic/P1-Elliptic/P1createLinSys.html" class="code" title="function p = P1createLinSys(p)">P1createLinSys</a>	creates the energy matrix A</li>
+<li><a href="../../../ffw/PDEsolvers/Elliptic/P2-Elliptic/P2createLinSys.html" class="code" title="function p = P2createLinSys(p)">P2createLinSys</a>	creates the energy matrix A</li>
+<li><a href="../../../ffw/PDEsolvers/Elliptic/P3-Elliptic/P3createLinSys.html" class="code" title="function p = P3createLinSys(p)">P3createLinSys</a>	creates the energy matrix A</li>
+</ul>
+
+
+
+
+
+<hr><address>Generated on Thu 27-Sep-2007 10:19:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

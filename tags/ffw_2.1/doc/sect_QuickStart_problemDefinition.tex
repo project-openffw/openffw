@@ -1,0 +1,145 @@
+\subsection{Problem Definition}
+\label{sect:QuickStart:ProblemDefinition}
+
+\subsubsection{Problem Definition for given right hand side}
+\label{sect:QuickStart:ProblemDefinition:RHS}
+
+In this Subsection we present the general format of problem definitions for given right hand sides (RHS). To make this more practical we will consider our elliptic example from Subsection~\ref{sect:QuickStart:gettingStarted}. It was created from the template \path{.\problems\Elliptic\Elliptic_Template.m}.\medskip\\
+The actual problem definition is given through:
+
+\begin{pcode}
+function p = <name>(p)
+
+p.problem.geom = <shape>;
+p.problem.f = @<f>;
+p.problem.g = @<g>;
+p.problem.u_D = @<u_D>;
+p.problem.kappa = @<kappa>;
+p.problem.lambda = @<lambda>;
+p.problem.mu = @<mu>;
+\end{pcode}
+
+\noindent In the table below the interfaces of function handles, which are needed during the computation, are defined. Here \code{<f>}, \code{<g>}, \code{<u\_D>} are functions which represent the external load or boundary constraints respectively. \code{<kappa>}, \code{<lambda>}, \code{<mu>} are functions which are given through the differential operator which defines the problem of interest. In general, function handles in the \FFW have the following form: \verb"function z = <name>(pts,p)". Here \code{pts} are coordinates of given nodes, i.e. $\code{pts}=(x,y)$ where $x$ denotes the $x$-coordinate and $y$ the $y$-coordinate. The number of points which are stored in the array \code{pts} is denoted by $N$. \code{p} is the structure where all informations are saved.\medskip
+
+\begin{tabular}{p{0.2\textwidth}p{0.7\textwidth}}
+\textit{} & Description\\\hline\\[-1ex]
+\code{<name>}   & Any function name valid in MATLAB (should describes the problem definition).\\
+\code{<shape>}  & This is the name of the folder that contains the data for a geometry.
+                  Those folders have to be located at \path{.\problems\geometries\}.
+                  For more information about what defines a geometry see Section~\ref{sect:DataStructures}\\
+\code{<f>}      & Returns a vector with function values of $f$ of length $N$ calculated at \code{pts}.\\
+\code{<g>}      & Returns a vector with function values of $g$ of length $N$ calculated at \code{pts}.\\
+\code{<u\_D>}   & Returns a vector with function values of $u_D$ of length $N$ calculated at \code{pts}.\\
+\code{<kappa>}  & Returns a $(2\times 2\times N)$ matrix, where the entry $(:,:,i)$ is the value of
+                  $\kappa$ at node $i$, i.e., $\kappa(x_i,y_i) = z(:,:,i)$.\\
+\code{<lambda>} & Returns a $(2\times N)$ matrix, where the entry $(:,i)$ is the value of
+                  $\lambda$ at node $i$, i.e., $\lambda(x_i,y_i) = z(:,i)$.\\
+\code{<mu>}     & Returns a vector of length $N$ that contains the function values of $\mu$ for every
+                  \code{pts}.\\
+\end{tabular}
+
+\bigskip
+
+\noindent To define a problem, one uses the template \path{Elliptic_Template.m} in \path{.\problems\elliptic}. In the renamed copy one has to change the function definitions of the data. The relevant part of the template \path{Elliptic_Template.m} looks as follows:
+
+\begin{pcode}
+% Volume force
+function z = f(pts,p)
+nrPts = size(pts,1);
+z = ones(nrPts,1);
+
+% Dirichlet boundary values
+function z = u_D(pts,p)
+nrPts = size(pts,1);
+z = zeros(nrPts,1);
+
+% Neumann boundary values
+function z = g(pts,normals,p)
+nrPts = size(pts,1);
+z = zeros(nrPts,1);
+
+% elliptic PDE coefficent kappa ( div(kappa*grad_u) )
+function z = kappa(pts,p)
+nrPts = size(pts,1);
+dim = size(pts,2);
+z = zeros(dim,dim,nrPts);
+for curPt = 1:nrPts 
+    z(:,:,curPt) = eye(dim);
+end
+
+% elliptic PDE coefficent lambda ( lambda*grad_u )
+function z = lambda(pts,p)
+nrPts = size(pts,1);
+dim = size(pts,2);
+z = zeros(nrPts,dim);
+
+% elliptic PDE coefficent mu ( mu*u )
+function z = mu(pts,p)
+nrPts = size(pts,1);
+z = zeros(nrPts,1);
+\end{pcode}
+
+\subsubsection{Problem definition for given exact solution}
+\label{sect:QuickStart:ProblemDefinition:Exact}
+
+\noindent
+In this Subsection the handling of the template file \path{Elliptic_Exact_Template.m} in \path{.\problems\elliptic} for the problem definition with given exact solution is explained. Here we make use of the MAPLE-toolbox, i.e. the symbolic toolbox, of MATLAB. For a given analytic function $u$ the load $f$ and the boundary constraints $u_D$ and $g$ will be computed. To explain how to change the data, we will have a look on an example of an elliptic PDE in the form
+\begin{align*}
+- \ddiv (\kappa \,\grad u) + \lambda \,\grad u + \mu \, u &= f &&\text{in } \Omega,\\
+u &= u_D &&\text{on } \Gamma,\\
+\frac{\partial u}{\partial n} &= g &&\text{on } \partial\Omega \setminus \Gamma,
+\end{align*}
+One has to copy the file \path{Elliptic_Exact_Template.m} and to rename it afterwards. In the copy of the template one can change the symbolic expressions for $u$, $\kappa$, $\lambda$ and $\mu$ then the right hand side $f$ is calculated automatically such that $u$ is the solution of the PDE. The relevant part of the template \path{.\Elliptic_Exact_Template.m} looks as follows:
+
+\begin{pcode}
+% Specification of exact solution and differential Operator
+u = sin(x^3)*cos(y^pi)+x^8-y^9+x^6*y^10;
+lambda = [0, 0];
+mu = 0;
+kappa = [1 0; 0 1];
+\end{pcode}
+
+\bigskip
+
+\noindent For this example, the RHS $f$ is then given through $f = -\ddiv\nabla u$. In the \FFW this is realized in the following way:
+
+\bigskip
+
+\begin{pcode}
+% volume force 
+gradU = [diff(u,x); diff(u,y)];
+paramF = -simple(diff(gradU(1),x) + diff(gradU(2),y));
+charF = Matlab4Maple(paramF);
+exec = ['p.problem.f_dummy = @(x,y,p)(',charF,');'];
+eval(exec,'disp(''err'')');
+\end{pcode}
+
+\bigskip
+
+\noindent In the final step a wrapper function is defined which calls the function handle $f_{dummy}$ in a proper way.
+
+\bigskip
+
+\begin{pcode}
+function z = f(pts,p)
+z = p.problem.f_dummy(pts(:,1),pts(:,2),p);
+\end{pcode}
+
+\subsubsection{Definition of geometry}
+\label{sect:QuickStart:ProblemDefinition:Geometry}
+
+\noindent If one wants to change the geometry of $\Omega$, one can use one of the implemented geometries in \path{.\problems\geometries} by changing the geometry in the PDE definition in the copy of the template file to the name of the folder containing the data.
+% PDE definition
+p.problem.geom = 'Lshape';\bigskip
+
+\noindent To use a new geometry one has to create a new folder in \path{.\problems\geometries} which contains the data files \path{<geometry name>_n4e.dat}, \path{<geometry name>_c4n.dat}, \path{<geometry name>_Db.dat} and \path{<geometry name>_Nb.dat}. Here \path{<geometry name>} is the name of the created folder. To see how the geometry data must be structured see Section~\ref{sect:DataStructures} and the already existing folders.
+
+\subsubsection{Choose new problem}
+
+\noindent In \path{start_elliptic.m} the new Problem is chosen by
+\begin{pcode}
+problem = '<name of file>'
+\end{pcode}
+where \path{<name of file>} is the name of the copy from the template.
+
+\clearpage

@@ -1,0 +1,68 @@
+\subsection{Initialization of the FFW}
+\label{sect:QuickStart:Initialization}
+
+\noindent
+The initialization of the \FFW\! is called as follows:
+\begin{pcode}
+p = initFFW(pdeSolver,problem,mark,maxNrDoF,problemType)
+\end{pcode}
+or with optional Parameter
+\begin{pcode}
+p = initFFW(pdeSolver,problem,mark,maxNrDoF,problemType,solver,refine,estimate)
+\end{pcode}
+
+\noindent
+After the initialization of the structure, in the following refered to as \code{p}, it is still possible to 
+change specific parameters in the structure if needed.
+In the initialization progress at first all parameters given with the function call as well as the default parameters
+are stored in \code{p.params.}, then the function handles to the files needed in the AFEM loop are
+stored in \code{p.statics.} and the problem definition is loaded. The geometry is stored in \code{p.level(end).geom}, see section~\ref{sect:ImplementedProblems_Geometries}. After that the problem type specific initialisation in \path{.\PDESolver\<problemType>\<problemType>_init.m} as well as the pde solver specific initialization routine in 
+\path{.\PDESolver\<problemType>\<pdeSolver>\<pdeSolver_init.m>} are executed. The following table gives an overview 
+of the possible parameters for \code{initFFW.m}.\bigskip
+
+\begin{longtable}[h]{lll}
+token & parameter & description \\\hline\\[-1ex]
+
+\verb+pdeSolver+
+&\verb+'P1'+	&         P1-Elliptic\\
+&\verb+'P2'+	&         P2-Elliptic\\
+&\verb+'P3'+	&         P3-Elliptic\\
+&\verb+'CR'+	&         CR-Elliptic\\
+&\verb+'P1P0'+	&       P0-P1-mixed-Elliptic (unstable element,\\
+    & & works only with uniform refinement)\\
+&\verb+'RT0P0'+	&      RT0-P0-mixed-Elliptic\\
+&		&choose different Finite Element Methods\\
+\\
+\verb+problem+& <problem name>
+		&a string which represents \\ %\verb+'Elliptic_Lshape_exact'+
+ &		&the name of a file in the folder\\
+&		&\verb+\problems\elliptic+\\
+&		&or \verb+\problems\elasticity+\\
+\\
+\verb+mark+&
+ \verb+'bulk'+	&a string which represents \\
+&\verb+'graded'+& a marking algorithm \\
+&\verb+'maximum'+&specified in \verb+\algorithms\mark+\\
+&\verb+'uniform'+&\\
+\\
+\verb+maxNrDoF+& a non &there will be no more \\
+ &negative & refinement if this number of degrees of freedom \\
+&integer &is reached\\
+\\
+\verb+problemType+&\verb+'elliptic'+ &defines the type of problem \\
+ &\verb+'elasticity'+&\\
+\\
+\verb+solver+&\verb+'direct'+ &method how the resulting linear system \\
+ (optional)&\verb+'multigrid'+&will be solved \\
+&&(name of a file in \verb+\algorithms\linSysSolvers\+)\\
+\\
+\verb+refine+&\verb+'bisection'+ &method how to refine \\
+ (optional)&\verb+'redGreenBlue'+&(name of a file in \verb+\algorithms\refine\+)\\
+\\
+\verb+estimate+&\verb+'estimate'+ &a string which represents an \\
+ (optional)&&error estimating routine, \\
+&& for future implementation of other\\
+&& error estimators
+\end{longtable}
+
+\clearpage
