@@ -46,6 +46,9 @@ dofU4e = p.level(end).enum.dofU4e;
 e4ed = p.level(end).enum.e4ed;
 NbEd = p.level(end).enum.NbEd;
 
+% load additional data
+f4e = loadField('p.level(end)','f4e',p,[]);
+
 % load integration parameters
 % degreeStima = p.params.integrationDegrees.createLinSys.Stima;
 % degreeDama = p.params.integrationDegrees.createLinSys.Dama;
@@ -101,7 +104,10 @@ A = sparse(I(:),J(:),S(:));
 
 
 %% Assembling Righthandside %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-f4e = integrateVectorised(n4e,curLvl,degreeRhs,@funcHandleRHSVolumeVectorised,p);
+if (~f4e)
+    % f4e = integrate(n4e,curLvl,degreeRhs,@funcHandleRHSVolume,p);
+    f4e = integrateVectorised(n4e,curLvl,degreeRhs,@funcHandleRHSVolumeVectorised,p);
+end
 b = accumarray(n4e(:),f4e(:));
 
 %% Include Neumann conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
