@@ -1,4 +1,23 @@
 function p = startOptimalDesign
+% Copyright 2007 David Guenther
+%
+% This file is part of FFW.
+%
+% FFW is free software; you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation; either version 3 of the License, or
+% (at your option) any later version.
+%
+% FFW is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%
+%
+%
 % start script for the nonlinear design problem to find the optimal
 % material distribution
 %
@@ -16,8 +35,8 @@ function p = startOptimalDesign
 % author: David Guenther 
 
 %% discretization methods
-pdeSolver = 'ODP1';
-% pdeSolver = 'ODP2';
+% pdeSolver = 'ODP1';
+pdeSolver = 'ODP2';
 % pdeSolver = 'ODRT';
 
 %% goal oriented discretization methods
@@ -37,8 +56,8 @@ pdeSolver = 'ODP1';
 
 % solver = 'ODeps_h_dependence';
 % solver = 'ODlimitEps';
-solver = 'ODoptimalLambda';
-% solver = 'ODdirectFsolve';
+% solver = 'ODoptimalLambda';
+solver = 'ODdirectFsolve';
 
 % set up error estimator
 
@@ -52,15 +71,15 @@ solver = 'ODoptimalLambda';
 % estimator = 'estimate_Avg';
 % estimator = 'estimate_Jump';
 % ODP2 / ODRTGOAL
-% estimator = 'estimate';
+estimator = 'estimate';
 % ODRT
 % estimator = 'estimate_Proj';
-estimator = 'estimate_Jump';
+% estimator = 'estimate_Jump';
 
 %% choose the problem
 % model problems
-problem = 'OptimalDesign_Square';
-% problem = 'OptimalDesign_Lshape';
+% problem = 'OptimalDesign_Square';
+problem = 'OptimalDesign_Lshape';
 % problem = 'OptimalDesign_Octagon';
 % problem = 'OptimalDesign_SquareSlit';
 
@@ -71,8 +90,8 @@ problem = 'OptimalDesign_Square';
 maxNrDoF = 1000;
 
 % set up marking strategy
-mark = 'uniform'
-% mark = 'bulk'
+% mark = 'uniform'
+mark = 'bulk'
 % mark = 'max'
 
 % material parameters mu_1 and mu_2
@@ -81,9 +100,9 @@ mu2 = 2;
 
 % Lagrange mupltiplier for the model problems
 %Square
-lambda = 0.0084;
+% lambda = 0.0084;
 %L-shape
-% lambda = 0.0143;
+lambda = 0.0143;
 %Octagon
 % lambda = 0.0284;
 %Square-Slit
@@ -97,7 +116,7 @@ t1 = (2*lambda*mu1/mu2).^(1/2);
 t2 = mu2/mu1*t1;
 
 % parameters for the nonlinear solver 'fsolve' of MATLAB
-options = optimset('Display','iter','Jacobian','on','NonlEqnAlgorithm','gn','MaxIter',10,'TolFun',1e-10,'TolX',1e-10);
+options = optimset('Display','iter','Jacobian','on','NonlEqnAlgorithm','dogleg','MaxIter',10,'TolFun',1e-10,'TolX',1e-10);
 
 %% COMPUTE DISCRETE SOLUTION
 p = initFFW(pdeSolver,problem,mark,maxNrDoF,'optimalDesign',solver,'redGreenBlue',estimator);
@@ -122,9 +141,10 @@ p = ODcomputeSolution(p);
 % hold all
 
 % p = show('drawGrid',p);
+p = ODshowVolumeFraction(p,p.level(end).level);
 
-% p.params.output.fontSize = 12;
-% p.params.output.holdIt = true;
+p.params.output.fontSize = 12;
+p.params.output.holdIt = true;
 % p = drawFigures(p);
 
 %% draw convergence history
