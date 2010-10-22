@@ -1,37 +1,16 @@
 function p = graded(p)
-% graded meshes
-% generates graded meshes using the red-green-blue refinement
 
-% Copyright 2007 Jan Reininghaus, David Guenther
-%
-% This file is part of FFW.
-%
-% FFW is free software; you can redistribute it and/or modify
-% it under the terms of the GNU General Public License as published by
-% the Free Software Foundation; either version 3 of the License, or
-% (at your option) any later version.
-%
-% FFW is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
-%
-% You should have received a copy of the GNU General Public License
-% along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
-%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 level = p.level(end).level;
+
 beta = loadField('p.params.modules.mark.graded','beta',p,1/3);
 N = loadField('p.params.modules.mark.graded','gradeN',p,1);
-
-
-%% Graded Refinement %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 H = (1/2)^N;
 % max_h = (6/7)^N;
 mu = beta;
+mu = 0.1;
 
 count = 1;
 nextLevel = level + 1;
@@ -51,7 +30,8 @@ while count ~= 0
     nrEdges = p.level(end).nrEdges;
     nrElems = p.level(end).nrElems;
     
-    markedEdges = false(nrEdges,1);
+    
+    refineEdges = false(nrEdges,1);
     refineElems = false(nrElems,1);
     
     for curElem = 1:nrElems
@@ -65,13 +45,12 @@ while count ~= 0
         end
     end
 
-    markedEdges4e = ed4e(refineElems,:);
-    markedEdges(markedEdges4e(:)) = true;
+    refineEdges4e = ed4e(refineElems,:);
+    refineEdges(refineEdges4e(:)) = true;
     
-    p.level(end).markedEdges = markedEdges';
-    q = p.statics.closure(p);
+    p.level(end).refineEdges = refineEdges';
+    q = closure(p);
     q.level(end).refineElemsBisec5 = false(nrElems,1);
-    q.level(end).level = length(q.level);
     q = refine(q);
     p.level(end).geom = q.level(end).geom;
     p = enumerate(p);
@@ -79,11 +58,11 @@ end
 
 nrEdges = p.level(end).nrEdges;
 nrElems = p.level(end).nrElems;
-markedEdges = false(nrEdges,1);
+refineEdges = false(nrEdges,1);
 
-%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-p.level(end).markedEdges = markedEdges';
+%%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+p.level(end).refineEdges = refineEdges';
 p.level(end).refineElemsBisec5 = false(nrElems,1);
-p = p.statics.closure(p);
+p = closure(p);
 p.params.modules.mark.graded.gradeN = N+1;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

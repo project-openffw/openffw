@@ -1,45 +1,30 @@
 function p = Elasticity_Cooks(p)
 
-% Copyright 2007 Jan Reininghaus, David Guenther
-%
-% This file is part of FFW.
-%
-% FFW is free software; you can redistribute it and/or modify
-% it under the terms of the GNU General Public License as published by
-% the Free Software Foundation; either version 3 of the License, or
-% (at your option) any later version.
-%
-% FFW is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
-%
-% You should have received a copy of the GNU General Public License
-% along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
-%% Problem definition %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PDE definition
 p.problem.geom = 'Cooks';
 p.problem.f = @f;
 p.problem.g = @g;
 p.problem.u_D = @u_D;
-
-% set Lamé parameters
+p.problem.u_exact = [];
 p.PDE.E = 2900; 
 p.PDE.nu = 0.3;
-return
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Volume force %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function z = f(pts,p)
-z = zeros(size(pts,1),2);
+% Volume force
+function z = f(x,y,p)
+z = zeros(size(x,1),2);
 
-%% Dirichlet boundary values %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function z = u_D(pts,p)
-z = zeros(size(pts,1),2);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Neumann boundary values %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function z = g(pts,n,p)
-z = zeros(size(pts,1),2);
+function z = g(x,y,n,p)
+z = zeros(size(x,1),2);
 z(find(n(:,1)==1),2) = 1000;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Dirichlet boundary values
+function z = u_D(x,y,p)
+z = zeros(length(x),2);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

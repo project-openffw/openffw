@@ -1,29 +1,13 @@
 function p = RT0P0createLinSys(p)
-% creates the energy matrix A 
-% and the right-hand side b for the mixed RT0-P0-FE method. 
-% The differential operator is full elliptic with piecewise constant
-% coefficients \lambda and \mu (one-point gauss integration). \kappa
-% has to be the identity matrix.
+%createLinSys.m creates the energy matrix A 
+%and the right-hand side b for the mixed RT0-P0-FE method. 
+%The differential operator is full elliptic with piecewise constant
+%coefficients \lambda and \mu (one-point gauss integration). \kappa
+%has to be the identity matrix.
+%
+%authors: David Guenther, Jan Reininghaus
 
-% Copyright 2007 Jan Reininghaus, David Guenther
-%
-% This file is part of FFW.
-%
-% FFW is free software; you can redistribute it and/or modify
-% it under the terms of the GNU General Public License as published by
-% the Free Software Foundation; either version 3 of the License, or
-% (at your option) any later version.
-%
-% FFW is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
-%
-% You should have received a copy of the GNU General Public License
-% along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
-%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % load geometry
 n4e = p.level(end).geom.n4e;
 c4n = p.level(end).geom.c4n;
@@ -34,7 +18,7 @@ g = p.problem.g;
 u_D = p.problem.u_D;
 
 mu = p.problem.mu;
-% kappa = p.problem.kappa;
+kappa = p.problem.kappa;
 lambda = p.problem.lambda;
 
 % load enumerated data
@@ -54,17 +38,13 @@ dofSigma4e = p.level(end).enum.dofSigma4e;
 nrElems = p.level(end).nrElems;
 nrEdges = p.level(end).nrEdges;
 
-% load integration parameters
-degreeStima = p.params.integrationDegrees.createLinSys.Stima;
-degreeDama = p.params.integrationDegrees.createLinSys.Dama;
-degreeMama = p.params.integrationDegrees.createLinSys.Mama;
-degreeRhs = p.params.integrationDegrees.createLinSys.Rhs;
-degreeNeumann = p.params.integrationDegrees.createLinSys.Neumann;
-
-% get current level number
 curLvl = length(p.level);
+degree = loadField('p.params','rhsIntegtrateExactDegree',p,1);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Assembling global energy matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Assembling global energy matrix				   %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 BT = zeros(3,3,nrElems);
 CT = zeros(1,3,nrElems);
 DT = zeros(1,3,nrElems);
@@ -80,8 +60,8 @@ M = [2 0 1 0 1 0;
 N = zeros(6,3);
 
 kappa4e = repmat([1 0; 0 1],[1,1,nrElems]);
-lambda4e = lambda(midPoint4e,p);
-mu4e = mu(midPoint4e,p);
+lambda4e = lambda(midPoint4e(:,1),midPoint4e(:,2),p);
+mu4e = mu(midPoint4e(:,1),midPoint4e(:,2),p);
 
 for curElem = 1:nrElems
 	curEdges = ed4e(curElem,:);
@@ -116,21 +96,21 @@ for curElem = 1:nrElems
 	DT(:,:,curElem) = 1/2*signum.*curEdgeLengths.*(curLambda'*(curMidPoint'-curCoords));
 end
 
-% bilinear form b(p,q)
+%%%%%%%%%% bilinear form b(p,q) %%%%%%%%%%%%%
 % local DoF -> global DoF
 [I,J] = localDoFtoGlobalDoF(dofSigma4e,dofSigma4e);
 B = sparse(I(:),J(:),BT(:));
 
-% bilinear form c(p,v)
+%%%%%%%%%% bilinear form c(p,v) %%%%%%%%%%%%%
 [I,J] = localDoFtoGlobalDoF(dofU4e,dofSigma4e);
 C = sparse(I(:),J(:),CT(:),nrElems,nrEdges);
 F = sparse(I(:),J(:),FT(:),nrElems,nrEdges);
 
-% bilinear form d(p,v)
+%%%%%%%%%% bilinear form d(p,v) %%%%%%%%%%%%%
 [I,J] = localDoFtoGlobalDoF(dofU4e,dofSigma4e);
 D = sparse(I(:),J(:),DT(:),nrElems,nrEdges);
 
-% bilinear form e(u,v)
+%%%%%%%%%% bilinear form e(u,v) %%%%%%%%%%%%%
 %calc int_T u_h*v_h
 [I,J] = localDoFtoGlobalDoF(dofU4e,dofU4e);
 E = sparse(I,J,mu4e.*area4e);
@@ -141,27 +121,30 @@ E = sparse(I,J,mu4e.*area4e);
 A = [B			C';
 	 (F-D)		-E];
 
-%% Assembling Righthandside %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Assembling Righthandside					   %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % calc \int u_D*(q_h*\nu)
 % note that (q_h*\nu)(midPoint4ed) = 1
 b = zeros(nrEdges + nrElems,1);
-% b(DbEd) = length4ed(DbEd).*u_D(midPoint4ed(DbEd,:),p);
+b(DbEd) = length4ed(DbEd).*u_D(midPoint4ed(DbEd,1),...
+								 midPoint4ed(DbEd,2),p);
 
-f4e = integrate(n4e,curLvl,degreeRhs,@funcHandleRHSVolume,p);
+f4e = integrate(n4e,curLvl,degree,@funcHandleRHSVolume,p);
 b(nrEdges+1:end) = -f4e;
 
-%% Include Neumann conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Include boundary conditions						  %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 x = zeros(nrEdges + nrElems,1);
 if ~isempty(Nb)  
-	x(NbEd) = g(midPoint4ed(NbEd,:),normals4NbEd,p);
+	x(NbEd) = g(midPoint4ed(NbEd,1),midPoint4ed(NbEd,2),normals4NbEd,p);
 	b = b - A*x;
 end
 
-%% Include Dirichlet conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-b(DbEd) = length4ed(DbEd).*u_D(midPoint4ed(DbEd,:),p);
-
-%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% OUTPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 p.level(end).A = A;
 p.level(end).b = b;
 p.level(end).x = x;
 p.level(end).BT = BT;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
