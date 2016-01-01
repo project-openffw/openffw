@@ -6,4 +6,4 @@ This MATLAB software package contains an algorithmic framework for rapid prototy
     2. linear ellasticity PDEs with non-constant material parameters
 * various a posteriori error estimators
 * adaptive mesh refinement
-* a comprehensive documentation
+* a comprehensive 50 page pdf [documentation](https://github.com/project-openffw/openffw/blob/master/documentation.pdf)
